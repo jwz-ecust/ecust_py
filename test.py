@@ -2,6 +2,7 @@ import datetime
 import os
 from random import randint
 
+
 now = datetime.datetime.now()
 start = now.replace(year=2016)
 
@@ -27,3 +28,4 @@ while commit_date < now:
         f.close()
         os.system('git add .')
         os.system('git commit --date={time} -m "Update {time}"'.format(time=commit_date.isoformat()))
+
