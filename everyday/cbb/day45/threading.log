@@ -1,0 +1,18 @@
+2016-08-21 14:40:13,957-Mike-DEBUG-Calling doubler
+2016-08-21 14:40:13,957-Mike-DEBUG-double function executing
+2016-08-21 14:40:13,958-Mike-DEBUG-doubler function ended with: 0
+2016-08-21 14:40:13,958-Dick-DEBUG-Calling doubler
+2016-08-21 14:40:13,958-Dick-DEBUG-double function executing
+2016-08-21 14:40:13,958-Dick-DEBUG-doubler function ended with: 2
+2016-08-21 14:40:13,962-Ass-DEBUG-Calling doubler
+2016-08-21 14:40:13,962-Ass-DEBUG-double function executing
+2016-08-21 14:40:13,962-Ass-DEBUG-doubler function ended with: 4
+2016-08-21 14:40:13,963-Hole-DEBUG-Calling doubler
+2016-08-21 14:40:13,963-Hole-DEBUG-double function executing
+2016-08-21 14:40:13,963-Hole-DEBUG-doubler function ended with: 6
+2016-08-21 14:40:13,964-Harden-DEBUG-Calling doubler
+2016-08-21 14:40:13,964-Harden-DEBUG-double function executing
+2016-08-21 14:40:13,964-Harden-DEBUG-doubler function ended with: 8
+2016-08-21 14:40:13,964-Curry-DEBUG-Calling doubler
+2016-08-21 14:40:13,964-Curry-DEBUG-double function executing
+2016-08-21 14:40:13,965-Curry-DEBUG-doubler function ended with: 10

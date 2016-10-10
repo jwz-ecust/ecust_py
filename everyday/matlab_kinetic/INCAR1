@@ -1,0 +1,65 @@
+% '%' and '!' for comments
+% From Reaction Mechanism Equations To Kinetic Equations
+% Create Reaction Mechanism Equations in file ReactionEquation.m 
+% examples :
+% CO + #1 <-> CO#1
+% O2 + #1 + #1 <-> O#1 + O#1
+% CO#1 + O#1 <-> CO2 + #1 + #1
+% CO(p) + #2 <-> CO#2
+% O2(p) + #2 + #2 <-> O#2 + O#2
+% CO#2 + O#2 <-> CO2(p) + #2 + #2
+% CO#1 + #2  CO#2 + #1
+% O#1 + #2 <-> O#2 + #1
+% #i for site i, #1 for site 1,#2 for site 2
+% forwards and reverse reaction separated by <-> , 
+% and use it as an identifier for Reaction Mechanism Equations 
+% CO O2 CO2 for gas phase 
+% CO#i CO2#i O#i for adsorbed species
+% Species(p) : relative pressure item of Species in rate equation
+% Species(c) : relative coverage item of Species in rate equation
+% instead of 2A by repeative writing A + A
+
+H2O(c) + #1 <-> OH_minus#1 + proton(c)       
+OH_minus#1 + hole(c) <-> OH_rad#1            
+OH_rad#1 <-> O_minus#1 + proton(c)           
+O_minus#1 + O_minus#1 <-> O2_2minus#1 + #1   
+O2_2minus#1 + hole(c) <-> O2_minus#1         
+O2_minus#1 + hole(c) <-> O2(p) + #1          
+Obr_2minus#2 + hole(c) <-> Obr_minus#2       
+Obr_minus#2 + OH_rad#1 <-> ObrOH_minus#2 + #1
+ObrOH_minus#2 + hole(c) <-> ObrOH#2          
+ObrOH#2 <-> ObrO_minus#2 + proton(c)         
+ObrO_minus#2 + hole(c) <-> O2(p) + #2        
+H2O(c) + #2 <-> H2O#2                        
+H2O#2 <-> OH_minus#2 + proton(c)             
+OH_minus#2 <-> Obr_2minus#2 + proton(c)      
+
+% format : variable = value; Or matlab command;
+% Q0 : initial coverage state
+% Ea : energy barriers of each reaction
+% G0 : Gibbs free energy of each reaction
+% T  : temperature of the reaction
+% P_Species : relative pressure of the Species
+% C_Species : relative concentration of the Species
+% Qi_Species : relative coverage of the Species at site i, v for vacancy
+% Q_Species : relative coverage of the Species for only one site case 
+% X_Species_INIT : the initial Species parameters X: P C Qi
+% X_Species_FROZ : freeze the Species parameters X: P C Qi
+% X_Species_EQUI : deal with Reaction i in equilibrium to solve X_Species
+% matlab codes are acceptable in this file
+
+Q0 = [1 1];
+C_H2O_FROZ = 1;
+C_hole_FROZ = 1E-9;
+C_proton_FROZ = 1e-7;
+P_O2_FROZ = 1e-7;
+Q1_v_INIT = 1;
+Q2_Obr_2minus_INIT = 1;
+dS_O2 = 205.33/1000/96.45;
+T = 300;
+Ea = [ 0.51,    0,  0.41,  0.24,     0,     0,     0,  0.32,     0,   0.23,     0,     0,  0.32,  0.37];
+G0 = [0.11, -0.19, -0.54, -1.35, -1.55, -1.13,  0.05, -1.62, -1.22,  -0.18, -1.27, -0.91, -0.11, -0.25];
+G0(6) = G0(6) + T*dS_O2;
+G0(11) = G0(11) + T*dS_O2;
+
+Ea([2,5,6,7,9,11]) = 0.25; 

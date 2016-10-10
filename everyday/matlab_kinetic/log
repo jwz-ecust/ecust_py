@@ -1,0 +1,605 @@
+07-Sep-2016 16:43:11
+Kinetic_fsolve_module is Running now...
+Written By Chen JianFu @ ECUST at 2014/4/4
+Find 7 Recation Equation(s) : 
+NO + #1 <-> ON#1         
+ON#1 + O#2 <-> ONO#2 + #1
+ONO#2 <-> NO2 + #2       
+O2 + #2 <-> O2#2         
+O2#2 + ON#1 <-> N#2 + #1 
+N#2 + #1 <-> NO2#1 + O#2 
+NO2#1 <-> NO2 + #1       
+Find 2 Reaction Site(s) : #1 #2 
+Reactant Species : NO O2 
+Production Species : NO2 
+Intermediate Species : N O ON ONO 
+Find 7 Reaction Species : N NO NO2 O O2 ON ONO 
+
+Try to Generate Reaction Kinetic Rate Equation now...
+
+Try to Generate Kinetic Rate Equations in myRatefun.m for check now...
+
+The equations based on rate of every reaction :
+dP_NO/dt = -RT*r(1)
+dP_NO2/dt = RT*(r(3) + r(7))
+dP_O2/dt = -RT*r(4)
+dQ1_NO2/dt = r(6) - r(7)
+dQ1_ON/dt = r(1) - r(2) - r(5)
+dQ1_v/dt = r(2) - r(1) + r(5) - r(6) + r(7)
+dQ2_N/dt = r(5) - r(6)
+dQ2_O/dt = r(6) - r(2)
+dQ2_O2/dt = r(4) - r(5)
+dQ2_ONO/dt = r(2) - r(3)
+dQ2_v/dt = r(3) - r(4)
+
+The rate equations of every reaction :
+r(1) = P_NO*Q1_v*kf(1) - Q1_ON*kr(1)
+r(2) = Q2_O*Q1_ON*kf(2) - Q1_v*Q2_ONO*kr(2)
+r(3) = Q2_ONO*kf(3) - P_NO2*Q2_v*kr(3)
+r(4) = P_O2*Q2_v*kf(4) - Q2_O2*kr(4)
+r(5) = Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kr(5)
+r(6) = Q2_N*Q1_v*kf(6) - Q2_O*Q1_NO2*kr(6)
+r(7) = Q1_NO2*kf(7) - P_NO2*Q1_v*kr(7)
+
+The equations based on P C Q kr kf :
+dP_NO/dt = RT*(Q1_ON*kr(1) - P_NO*Q1_v*kf(1))
+dP_NO2/dt = RT*(Q1_NO2*kf(7) - P_NO2*Q1_v*kr(7)) + RT*(Q2_ONO*kf(3) - P_NO2*Q2_v*kr(3))
+dP_O2/dt = RT*(Q2_O2*kr(4) - P_O2*Q2_v*kf(4))
+dQ1_NO2/dt = P_NO2*Q1_v*kr(7) - Q1_NO2*kf(7) + Q2_N*Q1_v*kf(6) - Q2_O*Q1_NO2*kr(6)
+dQ1_ON/dt = P_NO*Q1_v*kf(1) - Q1_ON*kr(1) - Q2_O*Q1_ON*kf(2) - Q2_O2*Q1_ON*kf(5) + Q2_N*Q1_v*kr(5) + Q1_v*Q2_ONO*kr(2)
+dQ1_v/dt = Q1_NO2*kf(7) + Q1_ON*kr(1) - P_NO*Q1_v*kf(1) - P_NO2*Q1_v*kr(7) - Q2_N*Q1_v*kf(6) + Q2_O*Q1_ON*kf(2) + Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kr(5) + Q2_O*Q1_NO2*kr(6) - Q1_v*Q2_ONO*kr(2)
+dQ2_N/dt = Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kf(6) - Q2_N*Q1_v*kr(5) + Q2_O*Q1_NO2*kr(6)
+dQ2_O/dt = Q2_N*Q1_v*kf(6) - Q2_O*Q1_ON*kf(2) - Q2_O*Q1_NO2*kr(6) + Q1_v*Q2_ONO*kr(2)
+dQ2_O2/dt = P_O2*Q2_v*kf(4) - Q2_O2*kr(4) - Q2_O2*Q1_ON*kf(5) + Q2_N*Q1_v*kr(5)
+dQ2_ONO/dt = P_NO2*Q2_v*kr(3) - Q2_ONO*kf(3) + Q2_O*Q1_ON*kf(2) - Q1_v*Q2_ONO*kr(2)
+dQ2_v/dt = Q2_ONO*kf(3) + Q2_O2*kr(4) - P_O2*Q2_v*kf(4) - P_NO2*Q2_v*kr(3)
+
+Try to Read Input Parameters in INCAR now...
+Q0 = [1 1];
+P_O2_FROZ = 0.021;
+P_NO_FROZ = 0.00005;
+P_NO2_FROZ = 0.00004;
+Q1_v_INIT = 1;
+Q2_O_INIT = 1;
+T = 300;
+npar = 1;
+Ex = [-1:0.1:3.5];
+Try to Initialize now...
+
+Try to Generate Kinetic Rate Equations in odefun.m for ODE solver now...
+
+The Symbol-Cross-References : 
+[ y(1), Q1_NO2]
+[ y(2),  Q1_ON]
+[ y(3),   Q1_v]
+[ y(4),   Q2_N]
+[ y(5),   Q2_O]
+[ y(6),  Q2_O2]
+[ y(7), Q2_ONO]
+[ y(8),   Q2_v]
+ 
+
+Try to Generate Kinetic Rate Steady-State Equation now...
+r(6) - r(7)
+r(1) - r(2) - r(5)
+Q1_v + Q1_ON + Q1_NO2 - Q0(1)
+r(5) - r(6)
+r(6) - r(2)
+r(4) - r(5)
+r(2) - r(3)
+Q2_N + Q2_O + Q2_O2 + Q2_v + Q2_ONO - Q0(2)
+
+Expand Equations Based On P C Q :
+P_NO2*Q1_v*kr(7) - Q1_NO2*kf(7) + Q2_N*Q1_v*kf(6) - Q2_O*Q1_NO2*kr(6)
+P_NO*Q1_v*kf(1) - Q1_ON*kr(1) - Q2_O*Q1_ON*kf(2) - Q2_O2*Q1_ON*kf(5) + Q2_N*Q1_v*kr(5) + Q1_v*Q2_ONO*kr(2)
+Q1_v + Q1_ON + Q1_NO2 - 1
+Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kf(6) - Q2_N*Q1_v*kr(5) + Q2_O*Q1_NO2*kr(6)
+Q2_N*Q1_v*kf(6) - Q2_O*Q1_ON*kf(2) - Q2_O*Q1_NO2*kr(6) + Q1_v*Q2_ONO*kr(2)
+P_O2*Q2_v*kf(4) - Q2_O2*kr(4) - Q2_O2*Q1_ON*kf(5) + Q2_N*Q1_v*kr(5)
+P_NO2*Q2_v*kr(3) - Q2_ONO*kf(3) + Q2_O*Q1_ON*kf(2) - Q1_v*Q2_ONO*kr(2)
+Q2_N + Q2_O + Q2_O2 + Q2_v + Q2_ONO - 1
+Starting matlabpool ... [Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',7,9)">File: SessionManager.m Line: 7 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/getInteractiveObject.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',16,9)">File: SessionManager.m Line: 16 Column: 9
+</a>Unrecognized Compiler pragma "%#no previous equivalent".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',22,9)">File: SessionManager.m Line: 22 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/clearInteractiveObject.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',34,1)">File: SessionManager.m Line: 34 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/pGetInteractiveObject.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',15,9)">File: InteractiveClient.m Line: 15 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/interactiveclient.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',24,9)">File: InteractiveClient.m Line: 24 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/cleanup.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',63,9)">File: InteractiveClient.m Line: 63 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/client2lab.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',118,9)">File: InteractiveClient.m Line: 118 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/isPossiblyRunning.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',142,9)">File: InteractiveClient.m Line: 142 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/lab2client.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',197,9)">File: InteractiveClient.m Line: 197 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/start.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',347,9)">File: InteractiveClient.m Line: 347 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/stopLabsAndDisconnect.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',379,9)">File: InteractiveClient.m Line: 379 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pRemoveOldJobs.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',436,9)">File: InteractiveClient.m Line: 436 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pCheckAndSetInteractiveType.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',456,9)">File: InteractiveClient.m Line: 456 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetClusterAdaptor.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',497,9)">File: InteractiveClient.m Line: 497 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pStopLabsAndDisconnect.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',590,9)">File: InteractiveClient.m Line: 590 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetSockets.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',619,9)">File: InteractiveClient.m Line: 619 Column: 9
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pCreateParallelJob.m".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',652,1)">File: InteractiveClient.m Line: 652 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetClusterAdaptor.m
+iGetDebugLog".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',666,1)">File: InteractiveClient.m Line: 666 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetClusterAdaptor.m
+iAddFilesAndPaths".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',677,1)">File: InteractiveClient.m Line: 677 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetClusterAdaptor.m
+iCreateCommunicatingJob".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',712,1)">File: InteractiveClient.m Line: 712 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetSockets.m
+iGetSingleConnection".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',756,1)">File: InteractiveClient.m Line: 756 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetSockets.m
+iThrowIfBadParallelJobStatus".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',791,1)">File: InteractiveClient.m Line: 791 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetSockets.m iThrowTimeoutError".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',810,1)">File: InteractiveClient.m Line: 810 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetSockets.m
+iIsJobWaitingOrRunning".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',818,1)">File: InteractiveClient.m Line: 818 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetSockets.m iGetErrorMessage".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',845,1)">File: InteractiveClient.m Line: 845 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetSockets.m iGetJobState".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',856,1)">File: InteractiveClient.m Line: 856 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/pGetSockets.m
+iGetJobStatusDescription".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',897,1)">File: InteractiveClient.m Line: 897 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/start.m iCleanupIfStartupFailed".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',920,1)">File: InteractiveClient.m Line: 920 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/start.m iGenerateMatlabpoolPath".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+[Warning: <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',945,1)">File: InteractiveClient.m Line: 945 Column: 1
+</a>Unrecognized Compiler pragma "%#cf matlab/toolbox/distcomp/@distcomp/@interactiveclient/lab2client.m
+iLoopUntilErrorOrTrue".] 
+[> In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',61,1)">SessionManager>iGetOrSetInteractiveObject at 61</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\SessionManager.m',13,1)">SessionManager>SessionManager.getSessionObject at 13</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',362,1)">MatlabpoolHelper>MatlabpoolHelper.doOpen at 362</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+cluster\MatlabpoolHelper.m',137,1)">MatlabpoolHelper>MatlabpoolHelper.doMatlabpool at 137</a>
+  In <a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',60,1)">Cluster.matlabpool at 60</a>
+  In <a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,1)">Kinetic_fsolve_module_O2_par2 at 154</a>] 
+stopped.
+
+{Error using <a href="matlab:helpUtils.errorDocCallback('parallel.Cluster/matlabpool', 'D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m', 64)" style="font-weight:bold">parallel.Cluster/matlabpool</a> (<a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\@Cluster\matlabpool.m',64,0)">line 64</a>)
+Failed to open matlabpool. (For information in addition to the causing error, validate the profile 'local' in the Cluster
+Profile Manager.)
+
+Error in <a href="matlab:helpUtils.errorDocCallback('Kinetic_fsolve_module_O2_par2', 'C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m', 154)" style="font-weight:bold">Kinetic_fsolve_module_O2_par2</a> (<a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\Kinetic_fsolve_module_O2_par2.m',154,0)">line 154</a>)
+        matlabpool(myCluster,npar);
+
+Caused by:
+    Error using <a href="matlab:helpUtils.errorDocCallback('parallel.internal.pool.InteractiveClient>iThrowIfBadParallelJobStatus', 'D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m', 783)" style="font-weight:bold">parallel.internal.pool.InteractiveClient>iThrowIfBadParallelJobStatus</a> (<a href="matlab: opentoline('D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m',783,0)">line 783</a>)
+    The interactive communicating job failed with no message.
+} 
+helpUtils.errorDocCallback('parallel.internal.pool.InteractiveClient>iThrowIfBadParallelJobStatus', 'D:\MATLAB\R2013a\toolbox\distcomp\cluster\+parallel\+internal\+pool\InteractiveClient.m', 783)
+disp([char(10) 'Try to Generate Reaction Kinetic Rate Equation now...']);
+
+Try to Generate Reaction Kinetic Rate Equation now...
+char(10)
+
+ans =
+
+
+
+
+length(char(10))
+
+ans =
+
+     1
+
+disp('z' 'j' 'w')
+ disp('z' 'j' 'w')
+          |
+{Error: Unexpected MATLAB expression.
+} 
+disp(['z' 'j' 'w'])
+zjw
+disp([char(10) 'Try to Generate Reaction Kinetic Rate Equation now...']);
+
+Try to Generate Reaction Kinetic Rate Equation now...
+disp([char(10) 'Try']);
+
+Try
+disp([char(10) 'Try' char(10)]);
+
+Try
+
+disp([char(10) 'Try' char(10)[]]);
+ disp([char(10) 'Try' char(10)[]]);
+                              |
+{Error: Unbalanced or unexpected parenthesis or bracket.
+} 
+
+
+[Reactions,Rline,Parameters,Pline] = ReadINCAR(INCAR1)
+{Undefined function or variable 'INCAR1'.
+} 
+[Reactions,Rline,Parameters,Pline] = ReadINCAR(INCAR)
+{Undefined function or variable 'INCAR'.
+} 
+[Reactions,Rline,Parameters,Pline] = ReadINCAR()
+
+Reactions = 
+
+  Columns 1 through 4
+
+    'NO+#1<->ON#1'    'ON#1+O#2<->ONO#2+#1'    'ONO#2<->NO2+#2'    'O2+#2<->O2#2'
+
+  Columns 5 through 7
+
+    'O2#2+ON#1<->N#2+#1'    'N#2+#1<->NO2#1+O#2'    'NO2#1<->NO2+#1'
+
+
+Rline =
+
+    22    23    24    25    26    27    28
+
+
+Parameters = 
+
+  Columns 1 through 4
+
+    'Q0 = [1 1];'    'P_O2_FROZ = 0.021;'    'P_NO_FROZ = 0.00005;'    'P_NO2_FROZ = 0.00004;'
+
+  Columns 5 through 9
+
+    'Q1_v_INIT = 1;'    'Q2_O_INIT = 1;'    'T = 300;'    'npar = 1;'    'Ex = [-1:0.1:3.5];'
+
+
+Pline =
+
+    44    46    47    48    49    50    51    52    53
+
+[Matrix,myBasic,mySite]=ExtractCoefficient(Reactions,Rline)
+
+Matrix(:,:,1) =
+
+     0     0     0     0     0     1     0    -1     0
+     0     0     0     0     0    -1     0     1     0
+     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0    -1     0     1     0
+     0     0     1     0     0     0     0    -1     0
+     0     0    -1     0     0     0     0     1     0
+
+
+Matrix(:,:,2) =
+
+     0     0     0     0     0     0     0     0     0
+     0     0     0    -1     0     0     1     0     0
+     0     0     0     0     0     0    -1     0     1
+     0     0     0     0     1     0     0     0    -1
+     1     0     0     0    -1     0     0     0     0
+    -1     0     0     1     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+
+
+Matrix(:,:,3) =
+
+     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+
+
+Matrix(:,:,4) =
+
+     0    -1     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+     0     0     1     0     0     0     0     0     0
+     0     0     0     0    -1     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0
+     0     0     1     0     0     0     0     0     0
+
+
+myBasic = 
+
+    'N'    'NO'    'NO2'    'O'    'O2'    'ON'    'ONO'
+
+
+mySite = 
+
+    '#1'    '#2'
+
+[fp,fc,fq,fpr,fcr,fqr,r,r0,Qsum]=CreateRateEquations(Matrix,myBasic,mySite)
+
+Try to Generate Kinetic Rate Equations in myRatefun.m for check now...
+
+The equations based on rate of every reaction :
+{Undefined function 'mywritefun' for input arguments of type 'sym'.
+
+Error in <a href="matlab:helpUtils.errorDocCallback('CreateRateEquations', 'C:\Users\xy\Desktop\matlab_kinetic\CreateRateEquations.m', 116)" style="font-weight:bold">CreateRateEquations</a> (<a href="matlab: opentoline('C:\Users\xy\Desktop\matlab_kinetic\CreateRateEquations.m',116,0)">line 116</a>)
+mywritefun(fid,FP,fpr);
+} 
+[fp,fc,fq,fpr,fcr,fqr,r,r0,Qsum]=CreateRateEquations(Matrix,myBasic,mySite)
+
+Try to Generate Kinetic Rate Equations in myRatefun.m for check now...
+
+The equations based on rate of every reaction :
+dP_NO/dt = -RT*r(1)
+dP_NO2/dt = RT*(r(3) + r(7))
+dP_O2/dt = -RT*r(4)
+dQ1_NO2/dt = r(6) - r(7)
+dQ1_ON/dt = r(1) - r(2) - r(5)
+dQ1_v/dt = r(2) - r(1) + r(5) - r(6) + r(7)
+dQ2_N/dt = r(5) - r(6)
+dQ2_O/dt = r(6) - r(2)
+dQ2_O2/dt = r(4) - r(5)
+dQ2_ONO/dt = r(2) - r(3)
+dQ2_v/dt = r(3) - r(4)
+
+The rate equations of every reaction :
+r(1) = P_NO*Q1_v*kf(1) - Q1_ON*kr(1)
+r(2) = Q2_O*Q1_ON*kf(2) - Q1_v*Q2_ONO*kr(2)
+r(3) = Q2_ONO*kf(3) - P_NO2*Q2_v*kr(3)
+r(4) = P_O2*Q2_v*kf(4) - Q2_O2*kr(4)
+r(5) = Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kr(5)
+r(6) = Q2_N*Q1_v*kf(6) - Q2_O*Q1_NO2*kr(6)
+r(7) = Q1_NO2*kf(7) - P_NO2*Q1_v*kr(7)
+
+The equations based on P C Q kr kf :
+dP_NO/dt = RT*(Q1_ON*kr(1) - P_NO*Q1_v*kf(1))
+dP_NO2/dt = RT*(Q1_NO2*kf(7) - P_NO2*Q1_v*kr(7)) + RT*(Q2_ONO*kf(3) - P_NO2*Q2_v*kr(3))
+dP_O2/dt = RT*(Q2_O2*kr(4) - P_O2*Q2_v*kf(4))
+dQ1_NO2/dt = P_NO2*Q1_v*kr(7) - Q1_NO2*kf(7) + Q2_N*Q1_v*kf(6) - Q2_O*Q1_NO2*kr(6)
+dQ1_ON/dt = P_NO*Q1_v*kf(1) - Q1_ON*kr(1) - Q2_O*Q1_ON*kf(2) - Q2_O2*Q1_ON*kf(5) + Q2_N*Q1_v*kr(5) + Q1_v*Q2_ONO*kr(2)
+dQ1_v/dt = Q1_NO2*kf(7) + Q1_ON*kr(1) - P_NO*Q1_v*kf(1) - P_NO2*Q1_v*kr(7) - Q2_N*Q1_v*kf(6) + Q2_O*Q1_ON*kf(2) + Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kr(5) + Q2_O*Q1_NO2*kr(6) - Q1_v*Q2_ONO*kr(2)
+dQ2_N/dt = Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kf(6) - Q2_N*Q1_v*kr(5) + Q2_O*Q1_NO2*kr(6)
+dQ2_O/dt = Q2_N*Q1_v*kf(6) - Q2_O*Q1_ON*kf(2) - Q2_O*Q1_NO2*kr(6) + Q1_v*Q2_ONO*kr(2)
+dQ2_O2/dt = P_O2*Q2_v*kf(4) - Q2_O2*kr(4) - Q2_O2*Q1_ON*kf(5) + Q2_N*Q1_v*kr(5)
+dQ2_ONO/dt = P_NO2*Q2_v*kr(3) - Q2_ONO*kf(3) + Q2_O*Q1_ON*kf(2) - Q1_v*Q2_ONO*kr(2)
+dQ2_v/dt = Q2_ONO*kf(3) + Q2_O2*kr(4) - P_O2*Q2_v*kf(4) - P_NO2*Q2_v*kr(3)
+ 
+fp =
+ 
+[ 0, RT*(Q1_ON*kr(1) - P_NO*Q1_v*kf(1)), RT*(Q1_NO2*kf(7) - P_NO2*Q1_v*kr(7)) + RT*(Q2_ONO*kf(3) - P_NO2*Q2_v*kr(3)), 0, RT*(Q2_O2*kr(4) - P_O2*Q2_v*kf(4)), 0, 0, 0, 0]
+ 
+ 
+fc =
+ 
+[ 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ 
+ 
+fq =
+ 
+[                                                                         0, 0, P_NO2*Q1_v*kr(7) - Q1_NO2*kf(7) + Q2_N*Q1_v*kf(6) - Q2_O*Q1_NO2*kr(6),                                                                          0,                                                                   0, P_NO*Q1_v*kf(1) - Q1_ON*kr(1) - Q2_O*Q1_ON*kf(2) - Q2_O2*Q1_ON*kf(5) + Q2_N*Q1_v*kr(5) + Q1_v*Q2_ONO*kr(2),                                                                      0, Q1_NO2*kf(7) + Q1_ON*kr(1) - P_NO*Q1_v*kf(1) - P_NO2*Q1_v*kr(7) - Q2_N*Q1_v*kf(6) + Q2_O*Q1_ON*kf(2) + Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kr(5) + Q2_O*Q1_NO2*kr(6) - Q1_v*Q2_ONO*kr(2),                                                               0]
+[ Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kf(6) - Q2_N*Q1_v*kr(5) + Q2_O*Q1_NO2*kr(6), 0,                                                                     0, Q2_N*Q1_v*kf(6) - Q2_O*Q1_ON*kf(2) - Q2_O*Q1_NO2*kr(6) + Q1_v*Q2_ONO*kr(2), P_O2*Q2_v*kf(4) - Q2_O2*kr(4) - Q2_O2*Q1_ON*kf(5) + Q2_N*Q1_v*kr(5),                                                                                                          0, P_NO2*Q2_v*kr(3) - Q2_ONO*kf(3) + Q2_O*Q1_ON*kf(2) - Q1_v*Q2_ONO*kr(2),                                                                                                                                                                                  0, Q2_ONO*kf(3) + Q2_O2*kr(4) - P_O2*Q2_v*kf(4) - P_NO2*Q2_v*kr(3)]
+ 
+ 
+fpr =
+ 
+[ 0, -RT*r(1), RT*(r(3) + r(7)), 0, -RT*r(4), 0, 0, 0, 0]
+ 
+ 
+fcr =
+ 
+[ 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ 
+ 
+fqr =
+ 
+[           0, 0, r(6) - r(7),           0,           0, r(1) - r(2) - r(5),           0, r(2) - r(1) + r(5) - r(6) + r(7),           0]
+[ r(5) - r(6), 0,           0, r(6) - r(2), r(4) - r(5),                  0, r(2) - r(3),                                0, r(3) - r(4)]
+ 
+ 
+r =
+ 
+        P_NO*Q1_v*kf(1) - Q1_ON*kr(1)
+ Q2_O*Q1_ON*kf(2) - Q1_v*Q2_ONO*kr(2)
+      Q2_ONO*kf(3) - P_NO2*Q2_v*kr(3)
+        P_O2*Q2_v*kf(4) - Q2_O2*kr(4)
+  Q2_O2*Q1_ON*kf(5) - Q2_N*Q1_v*kr(5)
+  Q2_N*Q1_v*kf(6) - Q2_O*Q1_NO2*kr(6)
+      Q1_NO2*kf(7) - P_NO2*Q1_v*kr(7)
+ 
+ 
+r0 =
+ 
+[   P_NO*Q1_v*kf(1),       Q1_ON*kr(1)]
+[  Q2_O*Q1_ON*kf(2), Q1_v*Q2_ONO*kr(2)]
+[      Q2_ONO*kf(3),  P_NO2*Q2_v*kr(3)]
+[   P_O2*Q2_v*kf(4),       Q2_O2*kr(4)]
+[ Q2_O2*Q1_ON*kf(5),   Q2_N*Q1_v*kr(5)]
+[   Q2_N*Q1_v*kf(6), Q2_O*Q1_NO2*kr(6)]
+[      Q1_NO2*kf(7),  P_NO2*Q1_v*kr(7)]
+ 
+ 
+Qsum =
+ 
+[ Q1_v + Q1_ON + Q1_NO2, Q2_N + Q2_O + Q2_O2 + Q2_v + Q2_ONO]
+ 
+myBasic
+
+myBasic = 
+
+    'N'    'NO'    'NO2'    'O'    'O2'    'ON'    'ONO'
+
+Exception "java.lang.ClassNotFoundException: com.intellij.codeInsight.editorActions.FoldingData"while constructing DataFlavor for: application/x-java-jvm-local-objectref; class=com.intellij.codeInsight.editorActions.FoldingData
+Exception "java.lang.ClassNotFoundException: com.intellij.codeInsight.editorActions.FoldingData"while constructing DataFlavor for: application/x-java-jvm-local-objectref; class=com.intellij.codeInsight.editorActions.FoldingData
+Exception "java.lang.ClassNotFoundException: com.intellij.codeInsight.editorActions.FoldingData"while constructing DataFlavor for: application/x-java-jvm-local-objectref; class=com.intellij.codeInsight.editorActions.FoldingData
+Exception "java.lang.ClassNotFoundException: com.intellij.codeInsight.editorActions.FoldingData"while constructing DataFlavor for: application/x-java-jvm-local-objectref; class=com.intellij.codeInsight.editorActions.FoldingData

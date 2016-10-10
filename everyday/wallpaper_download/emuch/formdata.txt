@@ -1,0 +1,4 @@
+username = aaronzjw
+password = zjw897978644
+cookietime = 31536000
+loginsubmit = ��½Сľ��
