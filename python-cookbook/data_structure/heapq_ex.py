@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import heapq
 
 
@@ -13,12 +14,14 @@ class PriorityQueue(object):
     def pop(self):
         return heapq.heappop(self._queue)[-1]
 
+
 class Item(object):
     def __init__(self, name):
         self.name = name
 
     def __repr__(self):
         return "Item({!r})".format(self.name)
+        # 使用惊叹号！后接a 、r、 s，声明 是使用何种模式， acsii模式、引用__repr__ 或 __str__
 
 
 q = PriorityQueue()
