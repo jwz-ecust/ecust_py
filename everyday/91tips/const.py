@@ -1,6 +1,9 @@
 class _const(object):
-    class ConstError(TypeError): pass
-    class ConstCaseError(ConstError): pass
+    class ConstError(TypeError):
+        pass
+
+    class ConstCaseError(ConstError):
+        pass
 
     def __setattr__(self, name, value):
         if self.__dict__.has_key(name):
