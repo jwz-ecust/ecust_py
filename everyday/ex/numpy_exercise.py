@@ -1,16 +1,128 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Created by jwz@ecust on 16/10/15
+# -*-  coding: utf-8 -*-
 
-import numpy as np
+'''
+创建数组:
+arange
+array
+copy
+empty
+empty_like
+eye
+fromfile
+fromfunction
+identity
+linspace
+logspace
+mgrid
+ogrid
+ones
+ones_like
+r
+zeros
+zeros_like
 
-person_type = np.dtype({
-    "names": ["name", "age", "weight"],
-    "formats": ['S32', 'i', 'f']})
+转化:
+astype
+atleast 1d
+atleast 2d
+atleast 3d
+mat
 
-a = np.array([("Zhangjiawei", 26, "84.0"), ("chenbeibei", 26, 65.2)], dtype=persontype)
-print a, '\n', a.dtype,  type(a[:]['name']), a[:]['age']
-# a.tofile("test.bin")       #通过调用a.tofile方法,可以将构建的数据转换成二进制形式
+操作:
+array split
+column stack
+concatenate
+diagonal
+dsplit
+dstack
+hsplit
+hstack
+item
+newaxis
+ravel
+repeat
+reshape
+resize
+squeeze
+swapaxes
+take
+transpose
+vsplit
+vstack
 
-z = np.arange(0, 100, 10)
-print z
+询问:
+all
+any
+nonzero
+where
+
+排序:
+argmax
+argmin
+argsort
+max
+min
+ptp
+searchsorted
+sort
+
+运算:
+choose
+compress
+cumprod
+cumsum
+inner
+fill
+imag
+prod
+put
+putmask
+real
+sum
+
+基本统计:
+cov
+mean
+std
+var
+
+基本线性代数:
+cross
+dot
+outer
+svd
+vdot
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
