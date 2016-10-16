@@ -7,7 +7,6 @@ this is a script uesed for factor calculation
 output: 100=2*2*5*5
 """
 
-
 def factor(num):
     t = num
     prime_list = [i for i in range(2,t/2+1) if is_prime(i)]
