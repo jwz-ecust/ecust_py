@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 def filter_word(input_word):
     input_word = input_word.split()
     filter_word_list = []
@@ -7,6 +8,7 @@ def filter_word(input_word):
         for content in f:
             filter_word_list.append(content.strip('\n'))
     return filter_word_list
+
 
 if __name__ == '__main__':
     input_words = input('Input some words:\n')
@@ -16,7 +18,7 @@ if __name__ == '__main__':
     word_string = ''
     for word in input_words_list:
         if word in filter_word_list:
-            word = '*'*len(word)
+            word = '*' * len(word)
         word_string += word + ' '
     print word_string
     print filter_word_list

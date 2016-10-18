@@ -5,7 +5,7 @@ Counter
 '''
 
 
-with open('test.txt','r') as f:
+with open('test.txt', 'r') as f:
     from collections import Counter
     c = Counter()
     for line in f:

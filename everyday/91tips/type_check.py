@@ -15,13 +15,13 @@ class UserInt(int):
         return self._val + val
 
     def __iadd__(self, val):
-        raise  NotImplementedError("not support operation")
+        raise NotImplementedError("not support operation")
 
     def __str__(self):
         return str(self._val)
 
     def __repr__(self):
-        return "Integer(%s)" %self._val
+        return "Integer(%s)" % self._val
 
 
 n = UserInt()
@@ -30,6 +30,6 @@ print n
 m = UserInt(2)
 print m
 
-print m+n
+print m + n
 
 print isinstance(type(n), types.IntType)

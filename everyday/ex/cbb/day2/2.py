@@ -14,4 +14,5 @@ for x in dirlist:
         words = [x for x in result if x != '']
         items = dict([(i, words.count(i)) for i in words])
         items = sorted(items.iteritems(), key=lambda d: d[1], reverse=True)
-        print abspath, '中出现最多的是', items[0][0], '出现了', items[0][1], '次', '，其次是', items[1][0], '出现了', items[1][1], '次'
+        print abspath, '中出现最多的是', items[0][0], '出现了', items[0][1],
+        '次', '，其次是', items[1][0], '出现了', items[1][1], '次'

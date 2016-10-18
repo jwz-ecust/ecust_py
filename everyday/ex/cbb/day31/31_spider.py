@@ -12,27 +12,30 @@ import threading
 fake = Factory.create()
 luoo_site = 'http://www.luoo.net/music/'
 luoo_site_mp3 = 'http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio%s/%s.mp3'
-proxy_ips = [    '27.15.236.236'    ]
+proxy_ips = ['27.15.236.236']
 headers = {
-    'Connection':'keep-alive',
-    'user-Agent':fake.user_agent()
-    }
+    'Connection': 'keep-alive',
+    'user-Agent': fake.user_agent()
+}
+
 
 def random_proxies():
-    ip_index = random.randint(0,len(proxy_ips)-1)
+    ip_index = random.randint(0, len(proxy_ips) - 1)
     res = {'http': proxy_ips[ip_index]}
     return res
 
+
 def fix_characters(s):
-    for c in ['<','>',':', '"', '/', '\\\\', '|', '?', '*']:
-        s = s.replace(c,'')
-    return  s
+    for c in ['<', '>', ':', '"', '/', '\\\\', '|', '?', '*']:
+        s = s.replace(c, '')
+    return s
+
 
 class LuooSpider(threading.Thread):
-    def __init__(self,url,vols,queue=None):
+    def __init__(self, url, vols, queue=None):
         threading.Thread.__init__(self)
         print '[luoo spider]'
-        print '='*20
+        print '=' * 20
         self.url = url
         self.queue = queue
         self.vol = '1'
@@ -43,21 +46,22 @@ class LuooSpider(threading.Thread):
             self.spider(vol)
         print '\\ncrawl end\\n\\n'
 
-    def spider(self,vol):
+    def spider(self, vol):
         url = luoo_site + vol
-        print 'crawling : '+ url + '\\n'
-        res = requests.get(url,proxies=random_proxies())
-        soup = BeautifulSoup(res.text,'html.parser')
-        title = soup.find('span',attrs={'class','vol-title'}).text
-        cover = soup.find('img',attrs={'class','vol-cover'})['src']
-        desc = soup.find('div',attrs={'class','vol-desc'})
-        track_names = soup.find_all('a',attrs={'class':'trackname'})
+        print 'crawling : ' + url + '\\n'
+        res = requests.get(url, proxies=random_proxies())
+        soup = BeautifulSoup(res.text, 'html.parser')
+        title = soup.find('span', attrs={'class', 'vol-title'}).text
+        cover = soup.find('img', attrs={'class', 'vol-cover'})['src']
+        desc = soup.find('div', attrs={'class', 'vol-desc'})
+        track_names = soup.find_all('a', attrs={'class': 'trackname'})
         track_count = len(track_names)
         tracks = []
         for track in track_names:
-            _id = str(int(track.text[:2])) if (int(vol))<12 else track.text[:2]
+            _id = str(int(track.text[:2])) if (int(vol)) < 12 else\
+                track.text[: 2]
             _name = fix_characters(track.text[4:])
-            tracks.append({'id':_id,'name':_name})
+            tracks.append({'id': _id, 'name': _name})
             phases = {
                 'phase': vol,
                 'title': title,
@@ -68,8 +72,9 @@ class LuooSpider(threading.Thread):
             }
             self.queue.put(phases)
 
+
 class LuooDownloader(threading.Thread):
-    def __init__(self,url,dist,queue=None):
+    def __init__(self, url, dist, queue=None):
         threading.Thread.__init__(self)
         self.url = url
         self.queue = queue
@@ -78,35 +83,42 @@ class LuooDownloader(threading.Thread):
 
     def run(self):
         while True:
-            if self.queue.qsize() <=0:
+            if self.queue.qsize() <= 0:
                 pass
             else:
                 phases = self.queue.get()
-                slef.download(phases)
+                self.download(phases)
 
-    def download(self,phases):
+    def download(self, phases):
         for track in phases['tracks']:
-            file_url = self.url %(phases['phase'],track['id'])
+            file_url = self.url % (phases['phase'], track['id'])
             if not os.path.exists(local_file_dict):
                 os.makedirs(local_file_dict)
             local_file = '%s%s.%s.mp3' % (local_file_dict, track['id'], track['name'])
             if not os.path.isfile(local_file):
                 print 'downloading: ' + track['name']
-                res = requests.get(file_url,proxies=random_proxies(),headers=headers)
-                with open(local_file,'wb') as f:
+                res = requests.get(
+                    file_url,
+                    proxies=random_proxies(),
+                    headers=headers)
+                with open(local_file, 'wb') as f:
                     f.write(res.content)
                 print 'done.\\n'
             else:
-                print 'break: '+track['name']
+                print 'break: ' + track['name']
+
 
 if __name__ == '__main__':
     spider_queue = Queue.Queue()
-    luoo = LuooSpider(luoo_site,vols=['680','721','725','720'],queue=spider_queue)
+    luoo = LuooSpider(
+        luoo_site,
+        vols=['680', '721', '725', '720'],
+        queue=spider_queue)
     luoo.setDaemon(True)
     luoo.start()
 
     downloader_count = 5
     for i in range(downloader_count):
-        luoo_download = LuooDownloader(luoo_site_mp3,'.',queue=spider_queue)
+        luoo_download = LuooDownloader(luoo_site_mp3, '.', queue=spider_queue)
         luoo_download.setDaemon(True)
         luoo_download.start()

@@ -15,13 +15,13 @@ d = deque()
 d.append('1')
 d.append('2')
 d.append('3')
-print len(d),d
+print len(d), d
 dd = deque(range(5))
 d.popleft()
 d.pop()
 print d
 d.extendleft([111])
-d.extend([6,7,8])
+d.extend([6, 7, 8])
 print d
 
 
@@ -32,6 +32,3 @@ while True:
     fancy_loading.rotate(1)
     sys.stdout.flush()
     time.sleep(0.08)
-
-
-

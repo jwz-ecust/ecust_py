@@ -28,6 +28,7 @@ print(func())
 
 from functools import wraps
 
+
 def a_new_decorator(a_func):
     @wraps(a_func)  # this is used to keep the function name as you want
     def wrapTheFunction():
@@ -36,9 +37,12 @@ def a_new_decorator(a_func):
         print "I have done with func"
     return wrapTheFunction
 
+
 @a_new_decorator
 def a_func_requiring_decoration():
-    print "I am the function which needs some decoration to remove my foul smell"
+    print "I am the function which needs some decoration to remove my foul sme\
+    ll"
+
 
 a_func_requiring_decoration()
 print a_func_requiring_decoration.__name__

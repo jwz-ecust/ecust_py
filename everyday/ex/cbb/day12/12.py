@@ -3,9 +3,11 @@
 import glob
 from collections import Counter
 
+
 def mostImportantWord(filePath):
-    for file in glob.glob(filePath+'*.txt'):
+    for file in glob.glob(filePath + '*.txt'):
         calcTimes(file)
+
 
 def calcTimes(fileName):
     cc = Counter()
@@ -16,6 +18,7 @@ def calcTimes(fileName):
             cc[i] = cc[i] + 1
         maxInDict(cc)
 
+
 def maxInDict(dict):
     max = 0
     for key, value in dict.items():
@@ -24,6 +27,6 @@ def maxInDict(dict):
             goal = key
     print goal + "and its time's " + str(max)
 
-mostImportantWord('diaries/')
 
+mostImportantWord('diaries/')
 

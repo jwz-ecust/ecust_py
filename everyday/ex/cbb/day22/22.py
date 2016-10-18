@@ -8,9 +8,6 @@ def divide(numerator, denominator, detect_repetition=True, digit_limit=None):
     # digit_limit = 5，表示小数位数5位，注意这里的小数位数是截取，不是四舍五入.
     if not detect_repetition and digit_limit is None:
         return None
-
-    decimal_found = False
-
     v = numerator // denominator
     numerator = 10 * (numerator - v * denominator)
     answer = str(v)
@@ -48,6 +45,7 @@ def divide(numerator, denominator, detect_repetition=True, digit_limit=None):
     if numerator > 0:
         return answer + '...'
     return answer
+
 
 if __name__ == "__main__":
     print "5divide2\n",

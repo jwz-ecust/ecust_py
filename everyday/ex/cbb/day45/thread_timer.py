@@ -2,7 +2,7 @@
 import subprocess
 from threading import Timer
 
-kill = lambda process : process.kill()
+kill = lambda process: process.kill()
 
 cmd = ['ping','www.google.com']
 ping = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE)

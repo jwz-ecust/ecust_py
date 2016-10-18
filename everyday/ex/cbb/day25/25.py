@@ -6,12 +6,13 @@ from sys import stderr
 from traceback import print_exc
 import urllib2
 
+
 class _DeHTMLParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
         self.__text = []
 
-    def handle_data(self,data):
+    def handle_data(self, data):
         text = data.strip()
         if len(text) > 0:
             text = re.sub('[\t\r\n]+', ' ', text)
@@ -30,6 +31,7 @@ class _DeHTMLParser(HTMLParser):
     def text(self):
         return ''.join(self.__text).strip()
 
+
 def dehtml(text):
     try:
         parser = _DeHTMLParser()
@@ -40,11 +42,12 @@ def dehtml(text):
         print_exc(file=stderr)
         return text
 
+
 if __name__ == '__main__':
     url = 'http://tech.163.com/14/1219/01/ADPT7MTE000915BF.html'
     html = urllib2.urlopen(url)
     html_code = html.read()
-    html_code = re.sub('<script>(.*?)</script>','',html_code)
+    html_code = re.sub('<script>(.*?)</script>', '', html_code)
     print dehtml(html_code).decode('gbk').encode('utf-8')
-    with open('result.txt','w') as f:
+    with open('result.txt', 'w') as f:
         f.write(dehtml(html_code).decode('gbk').encode('utf-8'))

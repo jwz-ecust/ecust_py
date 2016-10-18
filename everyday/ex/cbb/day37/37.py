@@ -3,6 +3,7 @@
 协程
 '''
 
+
 def grep(pattern):
     print "Searching for", pattern
     while True:

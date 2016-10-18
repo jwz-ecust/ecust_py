@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 
+
 class Stack():
-    def __init__(self,size=20):
-        self.stack  = []
+    def __init__(self, size=20):
+        self.stack = []
         self.size = size
         self.top = -1
 
-    def setsize(self,size):
+    def setsize(self, size):
         self.size = size
 
-    def push(self,element):
+    def push(self, element):
         if self.isFull():
             raise "StackOverflow"
         else:
             self.stack.append(element)
-            self.top  += 1
+            self.top += 1
 
     def pop(self):
         if self.isEmpty():
@@ -38,10 +39,11 @@ class Stack():
             return False
 
     def isFull(self):
-        if self.top == self.size-1:
+        if self.top == self.size - 1:
             return True
         else:
             return False
+
 
 if __name__ == "__main__":
     stack = Stack()
@@ -50,29 +52,28 @@ if __name__ == "__main__":
         stack.push(i)
         print stack.Top()
 
-
-
 # 队列
-#可以删除左边或者右边的元素 或者 在左边或者右边添加元素
+# 可以删除左边或者右边的元素 或者 在左边或者右边添加元素
 
 
 class Queue():
-    def __init__(self,size=20):
+    def __init__(self, size=20):
         self.queue = []
         self.size = size
         self.end = -1
 
-    def setSize(self,size):
+    def setSize(self, size):
         self.size = size
 
-    def leftIn(self,element):
-        if self.end <self.size -1:
+    def leftIn(self, element):
+        if self.end < self.size - 1:
             self.queue = [element] + self.queue
             self.end = self.end + 1
         else:
             raise "QueueFull"
-    def rightIn(self,element):
-        if self.end < self.size -1:
+
+    def rightIn(self, element):
+        if self.end < self.size - 1:
             self.queue.append(element)
             self.end = self.end + 1
         else:
@@ -86,12 +87,14 @@ class Queue():
             return element
         else:
             raise "QueueEmpty"
+
     def rightOut(self):
         if self.end != -1:
             element = self.queue[-1]
-            self.queue = self.queue[0:len(self.queue)-2]
+            self.queue = self.queue[0:len(self.queue) - 2]
             self.end = self.end - 1
             return element
+
     def End(self):
         return self.end
 
@@ -100,24 +103,25 @@ class Queue():
         self.end = -1
 
 
-#二叉树
+# 二叉树
 
 class BTree():
-    def __init__(self,value):
+    def __init__(self, value):
         self.left = None
         self.data = value
         self.right = None
 
-    def insertLeft(self,value):
+    def insertLeft(self, value):
         self.left = BTree(value)
         return self.left
 
-    def insertRight(self,value):
+    def insertRight(self, value):
         self.right = BTree(value)
         return self.right
 
     def show(self):
         print self.data
+
 
 def preorder(node):
     if node.data:
@@ -127,12 +131,14 @@ def preorder(node):
         if node.right:
             preorder(node.right)
 
+
 def inorder(node):
     if node.data:
         if node.left:
             inorder(node.left)
         if node.right:
             inorder(node.right)
+
 
 def postorer(node):
     if node.data:
@@ -141,6 +147,7 @@ def postorer(node):
         if node.right:
             postorer(node.right)
         node.show()
+
 
 if __name__ == "__main__":
     Root = BTree("root")
@@ -153,7 +160,7 @@ if __name__ == "__main__":
     E = B.insertRight("E")
 
     preorder(Root)
-    print "="*30
+    print "=" * 30
     inorder(Root)
-    print "+"*30
+    print "+" * 30
     postorer(Root)

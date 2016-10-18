@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 BeautifulSoup的用法
 '''
 
+
 def show_content(url, content_tag, content_tag_class):
     content = urllib2.urlopen(url).read()
 
@@ -17,4 +18,4 @@ def show_content(url, content_tag, content_tag_class):
 
 
 if __name__ == '__main__':
-    show_content('http://v2ex.com/t/157721#reply10','div','topic_content')
+    show_content('http://v2ex.com/t/157721#reply10', 'div', 'topic_content')

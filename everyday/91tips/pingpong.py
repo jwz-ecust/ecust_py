@@ -1,8 +1,9 @@
 import itertools
 
-def check(a,b):
-    for i in zip(a,b):
-        if i in [('a','x'), ('c', 'x'), ('c', 'z')]:
+
+def check(a, b):
+    for i in zip(a, b):
+        if i in [('a', 'x'), ('c', 'x'), ('c', 'z')]:
             return
     else:
         return a, b
