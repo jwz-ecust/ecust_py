@@ -1,11 +1,7 @@
-f = open('zzz.txt','r')
-z = open('cbb.txt','w')
+f = open('catalysis.txt','r')
+zz = open('zjw.txt','w')
 for i in f.readlines():
-    if len(i.strip())>6:
-        i = i.strip()
-        i = ''.join([i for i in i.split() if i])
-        z.write('\n'+i.strip()+"  ")
-    else:
-        z.write("    "+i.strip())
+    p = [k.rjust(9) for k in i.strip().split() if k]
+    zz.write(''.join(p)+'\n')
 f.close()
-z.close()
+zz.close()
