@@ -38,7 +38,6 @@ def tokenize(string):
     return shlex.split(string)
 
 
-
 def preprocess(tokens):
 
     # 用于处理之后的token
@@ -198,7 +197,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-

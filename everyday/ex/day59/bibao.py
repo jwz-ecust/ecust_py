@@ -4,16 +4,18 @@ def test(func):
     b = 2
     cc = 2
     ccc = 2
+
     def inner(*args):
-        print a,b,cc,ccc
+        print a, b, cc, ccc
         print func.__closure__
         if len(args) == 0:
             return "null"
         for i in args:
-            if not isinstance(i,int):
+            if not isinstance(i, int):
                 return "type error"
         else:
             return func(*args)
+
     return inner
 
 
@@ -25,13 +27,11 @@ def my_sum(*args):
 
 @test
 def my_average(*args):
-    return sum(args)/len(args)
+    return sum(args) / len(args)
 
 
-d1 = [1,2,3]
-d2 = [1,2,3,4,'i']
+d1 = [1, 2, 3]
+d2 = [1, 2, 3, 4, 'i']
 d3 = []
-
-
 
 print my_sum(*d1)
