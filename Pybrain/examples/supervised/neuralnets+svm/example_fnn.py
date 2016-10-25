@@ -6,42 +6,39 @@ __author__ = "Martin Felder"
 __version__ = '$Id$'
 
 from pylab import figure, ioff, clf, contourf, ion, draw, show
-from pybrain.utilities           import percentError
-from pybrain.tools.shortcuts     import buildNetwork
+from pybrain.utilities import percentError
+from pybrain.tools.shortcuts import buildNetwork
 from pybrain.supervised.trainers import BackpropTrainer
-from pybrain.structure.modules   import SoftmaxLayer
-
-from .datasets import generateGridData, generateClassificationData, plotData
+from pybrain.structure.modules import SoftmaxLayer
+from datasets import generateGridData, generateClassificationData, plotData
 
 # load the training data set
 trndata = generateClassificationData(250)
 
 # neural networks work better if classes are encoded using
 # one output neuron per class
-trndata._convertToOneOfMany( bounds=[0,1] )
+trndata._convertToOneOfMany(bounds=[0, 1])
 
 # same for the independent test data set
 tstdata = generateClassificationData(100)
-tstdata._convertToOneOfMany( bounds=[0,1] )
+tstdata._convertToOneOfMany(bounds=[0, 1])
 
 # build a feed-forward network with 20 hidden units, plus
 # a corresponding trainer
-fnn = buildNetwork( trndata.indim, 5, trndata.outdim, outclass=SoftmaxLayer )
-trainer = BackpropTrainer( fnn, dataset=trndata, momentum=0.1, verbose=True, weightdecay=0.01)
+fnn = buildNetwork(trndata.indim, 5, trndata.outdim, outclass=SoftmaxLayer)
+trainer = BackpropTrainer(fnn, dataset=trndata, momentum=0.1, verbose=True, weightdecay=0.01)
 
 # generate a grid of data points for visualization
-griddata, X, Y = generateGridData([-3.,6.,0.2],[-3.,6.,0.2])
+griddata, X, Y = generateGridData([-3., 6., 0.2], [-3., 6., 0.2])
 
 # repeat 20 times
 for i in range(20):
     # train the network for 1 epoch
-    trainer.trainEpochs( 1 )
+    trainer.trainEpochs(1)
 
     # evaluate the result on the training and test data
-    trnresult = percentError( trainer.testOnClassData(),
-                              trndata['class'] )
-    tstresult = percentError( trainer.testOnClassData(
-           dataset=tstdata ), tstdata['class'] )
+    trnresult = percentError(trainer.testOnClassData(), trndata['class'])
+    tstresult = percentError( trainer.testOnClassData(dataset=tstdata), tstdata['class'])
 
     # print the result
     print("epoch: %4d" % trainer.totalepochs, \
@@ -61,7 +58,7 @@ for i in range(20):
     # plot the datapoints
     plotData(tstdata)
     # overlay a contour plot of the functional margin
-    if out.max()!=out.min():
+    if out.max() != out.min():
         CS = contourf(X, Y, out)
     ion()   # interactive graphics on
     draw()  # update the plot
@@ -69,4 +66,3 @@ for i in range(20):
 # show the plot until user kills it
 ioff()
 show()
-
