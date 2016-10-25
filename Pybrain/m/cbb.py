@@ -31,8 +31,9 @@ def netBuild(ds):
     fnn.sortModules()
     print "Trainging starting==========>"
     trainer = BackpropTrainer(fnn, ds, verbose=True, learningrate=0.01)
-    trainer.trainUntilConvergence(maxEpochs=1000)
+    trainer.trainUntilConvergence(maxEpochs=10000)
     print "Finish training"
+    print fnn.params
     return fnn
 
 
@@ -49,7 +50,7 @@ def dsBuild(data):
     return dsTrain, dsTest
 
 
-dsTrain, dsTest = dsBuild(readData('./data.txt'))
+dsTrain, dsTest = dsBuild(readData('/Users/zhangjiawei/Dropbox/zjw/everyday/Pybrain/data_core-shell.txt'))
 netModel = netBuild(dsTrain)
 res = []
 result = []
@@ -69,6 +70,7 @@ for j in result:
 ion()
 draw()
 ioff()
-savefig('./Figure/myfig.jpg')
+# show()
+# savefig('./Figure/myfig.jpg')
 
-print "the RMSE (root-mean-square error): {}".format(np.sqrt(RMSE/58.0))
+print "the RMSE (root-mean-square error): {}".format(np.sqrt(RMSE/51.0))
