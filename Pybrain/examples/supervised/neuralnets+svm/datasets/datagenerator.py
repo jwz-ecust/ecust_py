@@ -16,11 +16,12 @@ def generateClassificationData(size, nClasses=3):
         means = [(-1, 0), (2, 4), (3, 1)]
     else:
         means = [(-2, 0), (2, 1), (6, 0)]
-
     cov = [diag([1, 1]), diag([0.5, 1.2]), diag([1.5, 0.7])]
     dataset = ClassificationDataSet(2, 1, nb_classes=nClasses)
-    for _ in range(size):
+    s=0
+    for m in range(size):
         for c in range(3):
+            s = s+1
             input = multivariate_normal(means[c], cov[c])
             dataset.addSample(input, [c%nClasses])
     dataset.assignClasses()
@@ -33,7 +34,6 @@ def generateGridData(x, y, return_ticks=False):
     x = np.arange(x[0], x[1], x[2])
     y = np.arange(y[0], y[1], y[2])
     X, Y = np.meshgrid(x, y)
-    shape = X.shape
     # need column vectors in dataset, not arrays
     ds = ClassificationDataSet(2, 1)
     ds.setField('input', np.concatenate((X.reshape(X.size, 1), Y.reshape(X.size, 1)), 1))
@@ -71,5 +71,5 @@ def plotData(ds):
 
 
 if __name__ == '__main__':
-    plotData(generateClassificationData(150))
+    plotData(generateClassificationData(1500))
     show()
