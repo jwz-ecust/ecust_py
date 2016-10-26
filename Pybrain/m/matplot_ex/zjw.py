@@ -21,5 +21,5 @@ plt.ylabel("Probability")
 plt.title(r"Histogram of IQ: $mu=100$, $\sigma=15$")
 
 plt.subplots_adjust(left=0.15)
-plt.savefig('zjw.jpg', bbox_inches='tight', dpi=800)
+plt.savefig('zjw.pdf', bbox_inches='tight', dpi=800)
 plt.show()
