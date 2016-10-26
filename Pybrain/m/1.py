@@ -48,8 +48,19 @@ it is highly advisable to encode classes with one output neuron per class.
 Note that this operation duplicates the original targets and
  stores them in an (integer) field named 'class'.
 '''
+
 trndata._convertToOneOfMany()
 tstdata._convertToOneOfMany()
+'''
+there is relationship
+[0] ==> [1, 0, 0]
+[1] ==> [0, 1, 0]
+[2] ==> [0, 0, 1]
+
+generally: for n
+[i] ==> a=[0,0,0...,1,...0,0,0]
+(a[i]=1)
+'''
 
 print "Number of training patterns: ", len(trndata)
 print "Input and output dimensions: ", trndata.indim, trndata.outdim
@@ -69,8 +80,7 @@ fnn = buildNetwork(trndata.indim, 5, trndata.outdim, outclass=SoftmaxLayer)
 # as input (using BackpropTrainer for this)
 # Backpropagation BP --> 误差反向传播算法
 # verbose = True 表示训练时会把Total error打印出来
-trainer = BackpropTrainer(fnn, dataset=trndata, momentum=0.1, verbose=True,\
-    weightdecay=0.01)
+trainer = BackpropTrainer(fnn, dataset=trndata, momentum=0.1, verbose=True, weightdecay=0.01)
 tricks = arange(-3., 6., 0.2)
 
 # generate a square grid of data points and put it into a dataset
@@ -81,6 +91,7 @@ X, Y = meshgrid(tricks, tricks)
 gridata = ClassificationDataSet(2, 1, nb_classes=3)
 for i in xrange(X.size):
     gridata.addSample([X.ravel()[i], Y.ravel()[i]], [0])
+
 gridata._convertToOneOfMany()
 
 # train the network for some  epochs.
@@ -90,15 +101,16 @@ for i in range(50):
     trainer.trainEpochs(5)
     # evalueate the network on the training and test data
     trnresult = percentError(trainer.testOnClassData(), trndata['class'])
-    tstresult = percentError(trainer.testOnClassData(dataset=tstdata),\
-        tstdata['class'])
+    tstresult = percentError(trainer.testOnClassData(dataset=tstdata), tstdata['class'])
     print "epoch: %4d" % trainer.totalepochs, \
           " train error: %5.2f%%" % trnresult, \
           " test error: %5.2f%%" % tstresult
     # run our grid data throught the FNN,
     # get the most likely class and shape it into a aquare array again
     out = fnn.activateOnDataset(gridata)
+    print out
     out = out.argmax(axis=1)
+
     out = out.reshape(X.shape)
     # plot the test date and the underlying grid as a filled contour
     figure(1)
