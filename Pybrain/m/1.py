@@ -108,12 +108,7 @@ for i in range(20):
     # run our grid data throught the FNN,
     # get the most likely class and shape it into a aquare array again
     out = fnn.activateOnDataset(gridata)
-
-    print out
-
-
     out = out.argmax(axis=1)
-
     out = out.reshape(X.shape)
     # plot the test date and the underlying grid as a filled contour
     figure(1)
