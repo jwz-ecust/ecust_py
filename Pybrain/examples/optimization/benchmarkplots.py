@@ -21,4 +21,5 @@ pylab.title('Rosenbrock')
 FitnessPlotter(GlasmachersFunction(2), -2., 2., -2., 2.).plotAll(popup=False)
 pylab.title('Glasmachers')
 
+pylab.savefig('zjw.jpg')
 pylab.show()
