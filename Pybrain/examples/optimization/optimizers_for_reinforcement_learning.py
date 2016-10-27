@@ -9,7 +9,7 @@ __author__ = 'Tom Schaul, tom@idsia.ch'
 from pybrain.utilities import fListToString
 from pybrain.rl.environments.cartpole.balancetask import BalanceTask
 from pybrain.tools.shortcuts import buildNetwork
-from pybrain.optimization import HillClimber, CMAES #@UnusedImport
+from pybrain.optimization import HillClimber, CMAES     # @UnusedImport
 # from pybrain.rl.learners.continuous.policygradients import ENAC
 # from pybrain.rl.agents.learning import LearningAgent
 from pybrain.rl.agents import OptimizationAgent
