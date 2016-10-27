@@ -4,7 +4,7 @@ from pybrain.utilities import percentError
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.structure.modules import SoftmaxLayer
-from pylab import ion, ioff, figure, draw, contourf, clf, show, hold, plot
+from pylab import ion, ioff, figure, draw, contourf, clf, show, hold, plot, savefig
 from scipy import diag, arange, meshgrid, where
 from numpy.random import multivariate_normal
 
@@ -33,14 +33,17 @@ for n in xrange(400):
 # randomly split the dataset into 75% training and 25% test data sets.
 # We could also have created two different datasets to begin with.
 tstdata_temp, trndata_temp = alldata.splitWithProportion(0.25)
-tstdata = ClassificationDataSet(2, 1, nb_classes=3)
-for n in xrange(0, tstdata_temp.getLength()):
-    tstdata.addSample(tstdata_temp.getSample(n)[0], tstdata_temp.getSample(n)[1])
+
+tstdata = ClassificationDataSet(inp=tstdata_temp['input'].copy(),
+                                target=tstdata_temp['target'].copy(),
+                                nb_classes=3
+                                )
 
 trndata = ClassificationDataSet(2, 1, nb_classes=3)
-for n in xrange(0, trndata_temp.getLength()):
-    trndata.addSample(trndata_temp.getSample(n)[0],\
-        trndata_temp.getSample(n)[1])
+trndata = ClassificationDataSet(inp=trndata_temp['input'].copy(),
+                                target=trndata_temp['target'].copy(),
+                                nb_classes=3
+                                )
 
 '''
 for neural classfication,
@@ -51,6 +54,8 @@ Note that this operation duplicates the original targets and
 
 trndata._convertToOneOfMany()
 tstdata._convertToOneOfMany()
+
+
 '''
 there is relationship
 [0] ==> [1, 0, 0]
@@ -61,11 +66,6 @@ generally: for n
 [i] ==> a=[0,0,0...,1,...0,0,0]
 (a[i]=1)
 '''
-
-print "Number of training patterns: ", len(trndata)
-print "Input and output dimensions: ", trndata.indim, trndata.outdim
-print "First sample (input, target, class):"
-print trndata['input'][0], trndata['target'][0], trndata['class'][0]
 
 # build a feed-forward network with 5 hidden units
 # use the shortcut buildNetwork()
@@ -97,8 +97,8 @@ gridata._convertToOneOfMany()
 # train the network for some  epochs.
 # Usally you would set something like 5 here,
 # but for visualization purposes we do this one epoch at a time
-for i in range(50):
-    trainer.trainEpochs(5)
+for i in range(20):
+    trainer.trainEpochs(1)
     # evalueate the network on the training and test data
     trnresult = percentError(trainer.testOnClassData(), trndata['class'])
     tstresult = percentError(trainer.testOnClassData(dataset=tstdata), tstdata['class'])
@@ -108,7 +108,10 @@ for i in range(50):
     # run our grid data throught the FNN,
     # get the most likely class and shape it into a aquare array again
     out = fnn.activateOnDataset(gridata)
+
     print out
+
+
     out = out.argmax(axis=1)
 
     out = out.reshape(X.shape)
@@ -124,6 +127,7 @@ for i in range(50):
         contourf(X, Y, out)
     ion()
     draw()
+    savefig('figure' + str(i) + '.jpg')
 # keep showing the plot until user kills it
 ioff()
 show()
