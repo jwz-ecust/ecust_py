@@ -92,7 +92,7 @@ l = algo(task, nnet)
 # Normally optimization algorithms have reasonable default settings (meta-parameters).
 # In case you want to be more specific, use keyword arguments, like this:
 
-l = ES(f, mu = 10, lambada=20)
+l = ES(f, mu=10, lambada=20)
 l = OriginalNES(f, batchSize=25, importanceMixing=False)
 
 # if you mistype a keyword, or specify one that is not applicable,
