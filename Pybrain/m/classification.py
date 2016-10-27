@@ -6,6 +6,7 @@ from numpy import zeros, where, ravel, r_, single
 from numpy.random import permutation
 from pybrain.datasets import SupervisedDataSet, SequentialDataSet
 
+
 class ClassificationDataSet(SupervisedDataSet):
     """ Specialized data set for classification data. Classes are to be numbered from 0 to nb_classes-1. """
 
@@ -30,7 +31,6 @@ class ClassificationDataSet(SupervisedDataSet):
             self.class_labels = class_labels
         # copy classes (may be changed into other representation)
         self.setField('class', self.getField('target'))
-
 
     @classmethod
     def load_matlab(cls, fname):
@@ -339,12 +339,12 @@ class SequenceClassificationDataSet(SequentialDataSet, ClassificationDataSet):
 
 if __name__ == "__main__":
     dataset = ClassificationDataSet(2, 1, class_labels=['Urd', 'Verdandi', 'Skuld'])
-    dataset.appendLinked([ 0.1, 0.5 ]   , [0])
-    dataset.appendLinked([ 1.2, 1.2 ]   , [1])
-    dataset.appendLinked([ 1.4, 1.6 ]   , [1])
-    dataset.appendLinked([ 1.6, 1.8 ]   , [1])
-    dataset.appendLinked([ 0.10, 0.80 ] , [2])
-    dataset.appendLinked([ 0.20, 0.90 ] , [2])
+    dataset.appendLinked([0.1, 0.5], [0])
+    dataset.appendLinked([1.2, 1.2], [1])
+    dataset.appendLinked([1.4, 1.6], [1])
+    dataset.appendLinked([1.6, 1.8], [1])
+    dataset.appendLinked([0.10, 0.80], [2])
+    dataset.appendLinked([0.20, 0.90], [2])
 
     dataset.calculateStatistics()
     print(("class histogram:", dataset.classHist))
