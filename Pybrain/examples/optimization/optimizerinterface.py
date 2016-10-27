@@ -92,12 +92,12 @@ l = algo(task, nnet)
 # Normally optimization algorithms have reasonable default settings (meta-parameters).
 # In case you want to be more specific, use keyword arguments, like this:
 
-l = ES(f, mu = 10, lambada = 20)
-l = OriginalNES(f, batchSize = 25, importanceMixing = False)
+l = ES(f, mu = 10, lambada=20)
+l = OriginalNES(f, batchSize=25, importanceMixing=False)
 
 # if you mistype a keyword, or specify one that is not applicable,
 # you will see a warning (but the initialization still takes place, ignoring those).
-l = algo(f, batchSise = 10, theMiddleOfTheTutorial = 'here')
+l = algo(f, batchSise=10, theMiddleOfTheTutorial='here')
 
 
 # -----------------------
@@ -113,16 +113,16 @@ print(l.learn(5))
 # The argument is not mandatory, in that case it will run until
 # one of the stopping criteria is reached. For example:
 # a) maximal number of evaluations (accessible in .numEvaluations)
-l = algo(f, maxEvaluations = 20)
+l = algo(f, maxEvaluations=20)
 l.learn()
 print(l.learn(), 'in', l.numEvaluations, 'evaluations.')
 
 # b) desiredValue
-l = algo(f, desiredEvaluation = 10)
+l = algo(f, desiredEvaluation=10)
 print(l.learn(), ': fitness below 10 (we minimize the function).')
 
 # c) maximal number of learning steps
-l = algo(f, maxLearningSteps = 25)
+l = algo(f, maxLearningSteps=25)
 l.learn()
 print(l.learn(), 'in', l.numLearningSteps, 'learning steps.')
 
@@ -132,11 +132,11 @@ print(l.learn(75), 'in', l.numLearningSteps, 'total learning steps.')
 
 # Finally you can set storage settings and then access all evaluations made
 # during learning, e.g. for plotting:
-l = algo(f, x0, storeAllEvaluations = True, storeAllEvaluated = True, maxEvaluations = 150)
+l = algo(f, x0, storeAllEvaluations=True, storeAllEvaluated=True, maxEvaluations=150)
 l.learn()
 try:
     import pylab
-    pylab.plot(list(map(abs,l._allEvaluations)))
+    pylab.plot(list(map(abs, l._allEvaluations)))
     pylab.semilogy()
     pylab.show()
 except ImportError as e:
