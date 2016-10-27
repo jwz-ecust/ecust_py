@@ -12,12 +12,14 @@
 2. 最后所写的哪个数是多少
 '''
 
-number = range(1,101)
+number = range(1, 101)
+
 while len(number) > 6:
     part_sum = []
     for i in range(6):
         part_sum.append(number.pop(0))
     number.append(sum(part_sum))
 else:
-    print 'the last number: ',number[-1]
     print 'the sum of the remain is: ', sum(number)
+    print 'the last number: ', number[-1]
+
