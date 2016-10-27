@@ -81,7 +81,7 @@ fnn = buildNetwork(trndata.indim, 5, trndata.outdim, outclass=SoftmaxLayer)
 # Backpropagation BP --> 误差反向传播算法
 # verbose = True 表示训练时会把Total error打印出来
 trainer = BackpropTrainer(fnn, dataset=trndata, momentum=0.1, verbose=True, weightdecay=0.01)
-tricks = arange(-3., 6., 0.2)
+tricks = arange(-5., 8., 0.2)
 
 # generate a square grid of data points and put it into a dataset
 # classify to obtain a nice contour field for visualization
@@ -118,12 +118,12 @@ for i in range(20):
     hold(True)     # overplot on
     for c in [0, 1, 2]:
         here, _ = where(tstdata['class']==c)
-        plot(tstdata['input'][here, 0], tstdata['input'][here, 1], 'o')
+        plot(tstdata['input'][here, 0], tstdata['input'][here, 1], 'p')
     if out.max() != out.min():       # safety check against flat field
         contourf(X, Y, out)          # plot the contour
     ion()                            # interacive graphics on
     draw()                           # update the plot
-    savefig('figure' + str(i) + '.jpg')
+    # savefig('figure' + str(i) + '.jpg')
 # keep showing the plot until user kills it
 ioff()
 show()
