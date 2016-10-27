@@ -16,7 +16,7 @@ __author__ = 'Tom Schaul, tom@idsia.ch'
 
 from scipy import array
 
-from pybrain.optimization import * #@UnusedWildImport
+from pybrain.optimization import *     # @UnusedWildImport
 from pybrain.structure.parametercontainer import ParameterContainer
 from pybrain.rl.environments.functions.unimodal import TabletFunction
 from pybrain.rl.environments.shipsteer.northwardtask import GoNorthwardTask
