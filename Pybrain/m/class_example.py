@@ -110,18 +110,19 @@ for i in range(20):
     out = fnn.activateOnDataset(gridata)
     out = out.argmax(axis=1)
     out = out.reshape(X.shape)
+    print out
     # plot the test date and the underlying grid as a filled contour
     figure(1)
-    ioff()
-    clf()
-    hold(True)
+    ioff()         # interactive graphics off
+    clf()          # clear the plot
+    hold(True)     # overplot on
     for c in [0, 1, 2]:
         here, _ = where(tstdata['class']==c)
         plot(tstdata['input'][here, 0], tstdata['input'][here, 1], 'o')
-    if out.max() != out.min():
-        contourf(X, Y, out)
-    ion()
-    draw()
+    if out.max() != out.min():       # safety check against flat field
+        contourf(X, Y, out)          # plot the contour
+    ion()                            # interacive graphics on
+    draw()                           # update the plot
     savefig('figure' + str(i) + '.jpg')
 # keep showing the plot until user kills it
 ioff()
