@@ -3,7 +3,8 @@ from pybrain.structure import FeedForwardNetwork, LinearLayer,SigmoidLayer, Full
 from pybrain.supervised import BackpropTrainer
 from pybrain.datasets import SupervisedDataSet
 import numpy as np
-from pylab import ion, ioff, figure, draw, show, plot, savefig
+from scipy.optimize import leastsq
+from pylab import ion, ioff, figure, draw, show, plot, savefig, legend
 
 
 def netBuild(ds):
@@ -29,7 +30,7 @@ def netBuild(ds):
     fnn.addConnection(hidden2_to_out)
     # 让神经网络可用
     fnn.sortModules()
-    print "Trainging starting==========>"
+    print
     trainer = BackpropTrainer(fnn, ds, verbose=True, learningrate=0.01)
     trainer.trainUntilConvergence(maxEpochs=10000)
     print "Finish training"
@@ -45,32 +46,63 @@ def readData(path):
 def dsBuild(data):
     ds = SupervisedDataSet(13, 1)
     for ele in data:
-        ds.addSample(tuple(ele[1:]),(ele[0]))
+        ds.addSample(tuple(ele[1:]), (ele[0]))
     dsTrain, dsTest = ds.splitWithProportion(0.8)
     return dsTrain, dsTest
 
 
-dsTrain, dsTest = dsBuild(readData('/Users/zhangjiawei/Dropbox/zjw/everyday/Pybrain/data_core-shell.txt'))
+dsTrain, dsTest = dsBuild(readData('./data_core-shell.txt'))
 netModel = netBuild(dsTrain)
 res = []
-result = []
+
+result = np.zeros((dsTest.getLength(), 2))
 RMSE = 0
 print len(dsTest['input'])
 for i in range(len(dsTest['input'])):
-    figure(1, dpi=200)
+    # figure(1, dpi=800)
     predict_value = netModel.activate(dsTest['input'][i])
     test_value = dsTest['target'][i]
     error = test_value - predict_value
     RMSE = RMSE + np.square(error)
     res.append(error)
-    result.append((predict_value, test_value))
+    result[i][0], result[i][1] = predict_value, test_value
 
+def func(x, p):
+    '''
+    数据拟合所用的函数: y = a*x + b
+    '''
+    a, b = p
+    return a*x + b
+
+
+def residuals(p, x, y):
+    '''
+    实验数据x,y和拟合函数之间的差, p为拟合得到的系数
+    '''
+    return y - func(x, p)
+
+print "the result is: ", result
+
+
+x, y_o = result[:, 0], result[:, 1]
+print x, y_o
+
+p0 = np.array([1., 0.], dtype=float)
+plsq = leastsq(residuals, p0, args=(x, y_o))
+print u"拟合参数", plsq[0]
+# plot(x, y_o, 'o', label='original data')
 for j in result:
     plot(j[0], j[1], 'o')
-ion()
-draw()
-ioff()
-# show()
-# savefig('./Figure/myfig.jpg')
+plot(x, func(x, plsq[0]), label='fitting data')
+legend()
+show()
+
+# for j in result:
+#     plot(j[0], j[1], 'o')
+# ion()
+# draw()
+# ioff()
+# # show()
+# savefig('./Figure/myfig.jpg', bbox_inches='tight', dpi=800)
 
 print "the RMSE (root-mean-square error): {}".format(np.sqrt(RMSE/51.0))
