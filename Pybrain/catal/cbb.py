@@ -103,6 +103,6 @@ show()
 # draw()
 # ioff()
 # # show()
-# savefig('./Figure/myfig.jpg', bbox_inches='tight', dpi=800)
+# savefig('./cat_figure.jpg', bbox_inches='tight', dpi=800)
 
 print "the RMSE (root-mean-square error): {}".format(np.sqrt(RMSE/51.0))
