@@ -7,6 +7,7 @@ def read_poscar(poscat_file_path):
         # get the first line, usually called name
         factor = float(file_poscar.readline().strip())
         lattice = np.zeros((3, 3))
+
         for i in range(3):
             tem_line = file_poscar.readline().strip().split(' ')
             tem_line = [j for j in tem_line if j]
@@ -17,12 +18,16 @@ def read_poscar(poscat_file_path):
         # return a list containing Atom type
         atom_number = file_poscar.readline().strip().split('    ')
         atom = {}
+        # return a dictoion key=atom type, value=atom number
         for i in range(len(atom_type)):
             atom[atom_type[i]] = int(atom_number[i])
         total_number = sum(atom.values())
         coordinate = np.zeros((total_number, 4))
+        # jump two lines (null)
         for i in range(2):
             _ = file_poscar.readline()
+        # read coordinate data
+        # coordinate(x, y, z)  (fix or unfix)
         for i in range(total_number):
             temp = file_poscar.readline()
             tt = temp.strip().split(' ')
@@ -33,7 +38,6 @@ def read_poscar(poscat_file_path):
                 coordinate[i, 3] = 1
             else:
                 coordinate[i, 3] = 0
-
     return lattice, atom, coordinate
 
 
