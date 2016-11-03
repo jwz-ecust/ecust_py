@@ -18,7 +18,7 @@ while ttt ~=-1
         POSCAR_num = POSCAR_num + 1;
     end
     ttt = fgetl ( fp );
-    
+
 end
 fclose(fp);
 %%
@@ -27,14 +27,14 @@ fid=fopen(inputfilename,'r');
 temp=fgetl( fid );
 gen=1;
 while temp ~= -1
-  %  gen=1;         %´úÊý
+  %  gen=1;         %ï¿½ï¿½ï¿½ï¿½
      aaa=findstr(temp,' ');
      if aaa
          filename_new=[temp(1:aaa(1)) '_generation_' num2str(gen) '.xtl'];
      else
          filename_new=[temp '_generation_' num2str(gen) '.xtl'];
      end
-     temp=fgetl(fid);     % ·Å´óÏµÊý
+     temp=fgetl(fid);     % ï¿½Å´ï¿½Ïµï¿½ï¿½
      factor=str2num(temp);
      LATT=zeros(3);
      for ii=1:3
@@ -42,24 +42,24 @@ while temp ~= -1
          LATT(ii,:)=str2num(line);
      end
      Bulk_lat=LATT*factor;
-     
+
      temp=fgetl(fid);
-     ntype=str2num(temp);  % Ã¿ÖÖÔ­×ÓµÄ¸öÊý
+     ntype=str2num(temp);  % Ã¿ï¿½ï¿½Ô­ï¿½ÓµÄ¸ï¿½ï¿½ï¿½
      if isempty(ntype)
          tmp=fgetl(fid);
          ntype = str2num(tmp);
      end
-     natom=sum(ntype);     % Ô­×ÓµÄ×ÜÊý
+     natom=sum(ntype);     % Ô­ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½
      temp=fgetl(fid);         %  the direct
-     Sel_POS = findstr(temp, 'S'); % ÓÐÃ»ÓÐ Sel ×Ö¶Î
-     
-     if Sel_POS    %¡¡Èç¹ûÓÐ¡¡£§wel ' , ÔÙ¶ÁÒ»ÐÐ ¡£
+     Sel_POS = findstr(temp, 'S'); % ï¿½ï¿½Ã»ï¿½ï¿½ Sel ï¿½Ö¶ï¿½
+
+     if Sel_POS    %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½wel ' , ï¿½Ù¶ï¿½Ò»ï¿½ï¿½ ï¿½ï¿½
          temp = fgetl ( fid );
      end
      for ll = 1 : natom
          temp=fgetl(fid);
-         D_position = findstr( temp ,'.'); % Ð¡ÊýµãËùÔÚÎ»ÖÃ
-         for kp = 1 : length( D_position ) % Ð¡Êýµã¸öÊý
+         D_position = findstr( temp ,'.'); % Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
+         for kp = 1 : length( D_position ) % Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
              D_p = D_position( kp );
              string_temp= temp( D_p-2 : D_p + 6);
              coordinates ( ll , kp ) = str2num(string_temp);
@@ -67,11 +67,11 @@ while temp ~= -1
          %coordinates = fscanf(fid,'%g',[3,natom]);
          %coordinates = coordinates' ;
      end
-  %   temp=fgetl(fid);  % Ìøµ½ÎÄ¼þ¿ªÍ·
+  %   temp=fgetl(fid);  % ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Í·
      fp=fopen(filename_new,'w');
      fprintf(fp,['TITLE   ' filename_new ' \n']);
      fprintf(fp,'CELL\n');
-     lat_abc=latConverter(Bulk_lat);       % ¾§°û²ÎÊý
+     lat_abc=latConverter(Bulk_lat);       % ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      lat_abc(4)=lat_abc(4)*180/3.1416;
      lat_abc(5)=lat_abc(5)*180/3.1416;
      lat_abc(6)=lat_abc(6)*180/pi;
@@ -94,7 +94,7 @@ while temp ~= -1
              break;
          end
          temp = fgetl(fid);
-     
+
 end
 end
 
