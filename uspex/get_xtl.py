@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
 import numpy as np
+import sys
 
 
-def get_xtl(gatheredposcars_path, template_path='/Users/zhangjiawei/Code/zjw/uspex/template.xtl'):
+def get_xtl(gatheredposcars_path):
     # 将poscars的信息一次读取, 一步一步处理
     # 读取模板, 并将信息写入并存储
     with open(gatheredposcars_path) as gp:
@@ -11,7 +12,7 @@ def get_xtl(gatheredposcars_path, template_path='/Users/zhangjiawei/Code/zjw/usp
         num_of_each = len(content) / num_of_pos
         for i in range(num_of_pos):
             new_content = []
-            file_name = 'USPEX_generation_{}'.format(i)
+            file_name = 'USPEX_generation_{}.xtl'.format(i)
             title_line = 'TITLE   EA1 _generation_{}.xtl\n'.format(i)
             new_content.append(title_line)
             new_content.append('CELL\n')
@@ -66,10 +67,13 @@ def coordinateConverter(input, atom):
     for atom_type in atom.keys():
         for i in range(int(atom[atom_type])):
             tt = filter_blank(input[i].strip().split())
-            t = atom_type.rjust(2) + ' ' * 11 + '     '.join(tt) + '\n'
+            t = atom_type.ljust(2) + ' ' * 11 + '     '.join(tt) + '\n'
             lines.append(t)
     return lines
 
 
-path = '/Users/zhangjiawei/Code/zjw/uspex/gatheredPOSCARS'
-get_xtl(path)
+# path = '/Users/zhangjiawei/Code/zjw/uspex/gatheredPOSCARS'
+# get_xtl(path)
+
+if __name__ == '__main__':
+    get_xtl(sys.argv[1])
