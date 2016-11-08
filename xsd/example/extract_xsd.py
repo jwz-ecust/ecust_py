@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as etree
+import os
 
-path = '/Users/zhangjiawei/Code/zjw/xsd/example/1.xsd'
+path = os.getcwd()
+path = os.path.join(path, 'example/1.xsd')
 xml_string = open(path).read()
 root = etree.fromstring(xml_string)
 
