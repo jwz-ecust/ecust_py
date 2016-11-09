@@ -51,9 +51,9 @@ class InCar(VasPy):
             setattr(self, pname, data)
 
         # Set parameter names and data lists.
-#        sorted_pnames, sorted_datas = self.__sort_two_lists(tot_pnames, tot_datas)
-#        self.pnames = sorted_pnames
-#        self.datas = sorted_datas
+        #        sorted_pnames, sorted_datas = self.__sort_two_lists(tot_pnames, tot_datas)
+        #        self.pnames = sorted_pnames
+        #        self.datas = sorted_datas
         self.pnames = tot_pnames
         self.datas = tot_datas
 
@@ -106,8 +106,8 @@ class InCar(VasPy):
         >>> incar_obj.set("ISIF", 2)
         """
         if not hasattr(self, pname):
-            raise ValueError('%s is not in INCAR, ' +
-                             'Use add() instead.' % pname)
+            raise ValueError('%s is not in INCAR, ' + 'Use add() instead.' %
+                             pname)
         setattr(self, pname, str(data))
 
         return
@@ -160,7 +160,7 @@ class InCar(VasPy):
     def compare(self, another):
         """
         Function to compare two InCar objects.
-        
+
         Parameters:
         -----------
         another: Another InCar object.
@@ -230,4 +230,3 @@ class InCar(VasPy):
             f.write(content)
 
         return
-

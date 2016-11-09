@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as etree
+import os
 
-path = '/Users/zhangjiawei/Code/zjw/xsd/example/1.xsd'
+path = os.getcwd()
+path = os.path.join(path, 'example/1.xsd')
 xml_string = open(path).read()
 root = etree.fromstring(xml_string)
 
@@ -11,5 +13,3 @@ for element in root.iter():
     if element.attrib.has_key('XYZ'):
         print element.attrib['XYZ'].split(',')
         s = s + 1
-
-print s
