@@ -1,7 +1,34 @@
 # -*- coding: utf-8 -*-
+'''
+##取值过程## ==> 伪代码
+__getattribute__(propert) logic:
 
+descriptor = find first descriptor in class and base's dict (property)
+if descriptor:
+    return descriptor.__get__(instance, instance.__class__)
+else:
+    if value in instance.__dict
+        return value
+    value = find first value in class bases's dict(property)
+    if value is a function:
+        return bonded function(value)
+    else:
+        return value
+raise AttributeNotFundedException
+
+##赋值过程##  ==> 伪代码
+__setattr__(property, value) logic:
+
+descriptor = find fist descriptor in class and bases's dict(property)
+if descriptor:
+    descriptor.__set__(instance, value)
+else:
+    instance.__dict__[property] = value
+'''
 
 # __getattribute__ and __getattr__
+
+
 class tomorrow():
 
     def __init__(self, future, timeout):

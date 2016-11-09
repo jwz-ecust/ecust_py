@@ -15,10 +15,7 @@ class Proxy(object):
         一个通常的约定是只代理那些不以下划线 _ 开头的属性(代理类只暴露被代理类的公共属性)。
         """
         if key.startswith("_"):
-            print "in super"
-            print self.__class__
             super(Proxy, self).__setattr__(key, value)
-            print self.__class__
         else:
             setattr(self._obj, key, value)
 
