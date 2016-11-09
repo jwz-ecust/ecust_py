@@ -13,5 +13,3 @@ for element in root.iter():
     if element.attrib.has_key('XYZ'):
         print element.attrib['XYZ'].split(',')
         s = s + 1
-
-print s

@@ -7,10 +7,8 @@ if sys.version > "3":
 else:
     PY2 = True
 
-
 __version__ = '0.7.10'
 __all__ = ['atomco', 'electro', 'iter', 'matstudio', 'plotter', 'incar']
-
 
 # Initialize logger.
 logger = logging.getLogger("vaspy")
@@ -38,6 +36,7 @@ class LazyProperty(object):
     """
     Descriptor for lazy property.
     """
+
     def __init__(self, func):
         self.func = func
 
@@ -45,4 +44,3 @@ class LazyProperty(object):
         val = self.func(instance)
         setattr(instance, self.func.__name__, val)
         return val
-

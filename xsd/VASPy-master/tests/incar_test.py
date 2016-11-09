@@ -12,7 +12,6 @@ from __init__ import path
 
 
 class InCarTest(unittest.TestCase):
-
     def setUp(self):
         # Create an InCar object.
         self.maxDiff = True
@@ -52,14 +51,14 @@ class InCarTest(unittest.TestCase):
         # filename = path + "/INCAR"
         incar = InCar(filename)
 
-        ref_pnames = ['SYSTEM', 'ISTART', 'ISPIN', 'PREC', 'ENCUT',
-                      'NELM', 'NELMIN', 'ISMEAR', 'SIGMA', 'LREAL',
-                      'EDIFFG', 'ALGO', 'ISIF', 'NSW', 'IBRION', 'POTIM',
-                      'ISYM', 'NWRITE', 'LCHARG', 'LWAVE', 'NCORE']
+        ref_pnames = ['SYSTEM', 'ISTART', 'ISPIN', 'PREC', 'ENCUT', 'NELM',
+                      'NELMIN', 'ISMEAR', 'SIGMA', 'LREAL', 'EDIFFG', 'ALGO',
+                      'ISIF', 'NSW', 'IBRION', 'POTIM', 'ISYM', 'NWRITE',
+                      'LCHARG', 'LWAVE', 'NCORE']
 
-        ref_datas = ['per', '0', '2', 'Normal', '450', '400', '3',
-                     '1', '0.1', 'A', '-0.05', 'Fast', '2', '900',
-                     '1', '0.2', '0', '1', '.False.', '.False.', '4']
+        ref_datas = ['per', '0', '2', 'Normal', '450', '400', '3', '1', '0.1',
+                     'A', '-0.05', 'Fast', '2', '900', '1', '0.2', '0', '1',
+                     '.False.', '.False.', '4']
 
         for pname, data in zip(ref_pnames, ref_datas):
             self.assertEqual(getattr(incar, pname), data)
@@ -160,6 +159,7 @@ class InCarTest(unittest.TestCase):
         " Test INCAR content can be write to file. "
         # NEED IMPLEMENTATIN
         pass
+
 
 if "__main__" == __name__:
     suite = unittest.TestLoader().loadTestsFromTestCase(InCarTest)
