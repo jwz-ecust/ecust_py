@@ -1,12 +1,7 @@
 # -*- coding:utf-8 -*-
-"""
-========================================================================
-Exception classes.
-========================================================================
-Written by PytLab <shaozhengjiang@gmail.com>, July 2016
-Updated by PytLab <shaozhengjiang@gmail.com>, July 2016
-========================================================================
 
+"""
+Exception classes.
 """
 
 
@@ -18,4 +13,3 @@ class CarfileValueError(Exception):
 class UnmatchedDataShape(Exception):
     "Exception raised for errors in unmatched data shape."
     pass
-

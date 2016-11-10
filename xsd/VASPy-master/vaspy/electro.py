@@ -4,11 +4,8 @@
 ========================================================================
 Provide electro-related file class which do operations on these files.
 ========================================================================
-Written by PytLab <shaozhengjiang@gmail.com>, September 2015
-Updated by PytLab <shaozhengjiang@gmail.com>, August 2016
-========================================================================
-
 """
+
 import copy
 import logging
 from string import whitespace

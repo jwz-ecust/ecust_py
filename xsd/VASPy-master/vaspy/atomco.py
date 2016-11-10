@@ -1,13 +1,6 @@
 # -*- coding:utf-8 -*-
 """
-===================================================================
 Provide coordinate file class which do operations on these files.
-===================================================================
-Written by PytLab <shaozhengjiang@gmail.com>, November 2014
-Updated by PytLab <shaozhengjiang@gmail.com>, October 2016
-
-==============================================================
-
 """
 import numpy as np
 
@@ -18,6 +11,7 @@ from vaspy.functions import *
 
 class AtomCo(VasPy):
     "Base class to be inherited by atomco classes."
+
     def __init__(self, filename):
         VasPy.__init__(self, filename)
 
@@ -49,7 +43,7 @@ class AtomCo(VasPy):
         """
         # [1, 1, 1, 16] -> [0, 1, 2, 3, 19]
         idx_list = [sum(self.atoms_num[:i])
-                    for i in range(1, len(self.atoms)+1)]
+                    for i in range(1, len(self.atoms) + 1)]
         idx_list = [0] + idx_list
 
         data_list = data.tolist()
@@ -68,7 +62,7 @@ class AtomCo(VasPy):
         """
         # [1, 1, 1, 16] -> [0, 1, 2, 3, 19]
         idx_list = [sum(self.atoms_num[:i])
-                    for i in range(1, len(self.atoms)+1)]
+                    for i in range(1, len(self.atoms) + 1)]
         idx_list = [0] + idx_list
 
         tf_list = tf.tolist()
@@ -84,6 +78,7 @@ class AtomCo(VasPy):
     # decorator for get_**_content methods
     def content_decorator(func):
         "在执行方法前, 给AtomCo对象必要的属性进行赋值"
+
         def wrapper(self, **kwargs):
             # set attrs before call func
             for key in kwargs:
@@ -120,16 +115,16 @@ class AtomCo(VasPy):
             bases += "%14.8f%14.8f%14.8f\n" % tuple(basis)
         # atom info
         atoms, atoms_num = zip(*self.natoms)
-        atoms = ("%5s"*len(atoms)+"\n") % atoms
-        atoms_num = ("%5d"*len(atoms_num)+"\n") % atoms_num
-        #string
+        atoms = ("%5s" * len(atoms) + "\n") % atoms
+        atoms_num = ("%5d" * len(atoms_num) + "\n") % atoms_num
+        # string
         info = "Selective Dynamics\nDirect\n"
         # data and tf
         data_tf = ''
         for data, tf in zip(self.data.tolist(), self.tf.tolist()):
-            data_tf += ("%18.12f"*3+"%5s"*3+"\n") % tuple(data+tf)
+            data_tf += ("%18.12f" * 3 + "%5s" * 3 + "\n") % tuple(data + tf)
         # merge all strings
-        content += bases_const+bases+atoms+atoms_num+info+data_tf
+        content += bases_const + bases + atoms + atoms_num + info + data_tf
 
         return content
 
@@ -139,7 +134,7 @@ class AtomCo(VasPy):
         获取晶格体积
         """
         if hasattr(self, 'bases_const') and hasattr(self, 'bases'):
-            bases = self.bases_const*self.bases
+            bases = self.bases_const * self.bases
             volume = np.linalg.det(bases)
             self.volume = volume
         else:
@@ -151,7 +146,7 @@ class AtomCo(VasPy):
     def dir2cart(bases, data):
         A = np.matrix(bases).T
         x = np.matrix(data).T
-        b = A*x
+        b = A * x
 
         return b.T
 
@@ -159,7 +154,7 @@ class AtomCo(VasPy):
     def cart2dir(bases, data):
         b = np.matrix(data.T)
         A = np.matrix(bases).T
-        x = A.I*b
+        x = A.I * b
 
         return x.T
 
@@ -188,6 +183,7 @@ class XyzFile(AtomCo):
       data           np.array, coordinates of atoms, dtype=float64
       ============  =======================================================
     """
+
     def __init__(self, filename):
         super(self.__class__, self).__init__(filename)
         self.load()
@@ -200,13 +196,13 @@ class XyzFile(AtomCo):
         ntot = int(content_list[0].strip())  # total atom number
         step = int(str2list(content_list[1])[-1])  # iter step number
 
-        #get atom coordinate and number info
+        # get atom coordinate and number info
         data_list = [str2list(line) for line in content_list[2:]]
         data_array = np.array(data_list)  # dtype=np.string
         atoms_list = list(data_array[:, 0])  # 1st column
         data = np.float64(data_array[:, 1:])  # rest columns
 
-        #get atom number for each atom
+        # get atom number for each atom
         atoms = []
         for atom in atoms_list:
             if atom not in atoms:
@@ -214,7 +210,7 @@ class XyzFile(AtomCo):
         atoms_num = [atoms_list.count(atom) for atom in atoms]
         natoms = zip(atoms, atoms_num)
 
-        #set class attrs
+        # set class attrs
         self.ntot = ntot
         self.step = step
         self.atoms = atoms
@@ -222,7 +218,7 @@ class XyzFile(AtomCo):
         self.natoms = natoms
         self.data = data
 
-        #get atomco_dict
+        # get atomco_dict
         self.get_atomco_dict(data)
 
         return
@@ -251,6 +247,7 @@ class XyzFile(AtomCo):
 
 
 class PosCar(AtomCo):
+
     def __init__(self, filename='POSCAR'):
         """
         Class to generate POSCAR or CONTCAR-like objects.
@@ -276,7 +273,7 @@ class PosCar(AtomCo):
           ============  =======================================================
         """
         AtomCo.__init__(self, filename)
-        #load all data in file
+        # load all data in file
         self.load()
         self.verify()
 
@@ -285,30 +282,30 @@ class PosCar(AtomCo):
         "Load all information in POSCAR."
         with open(self.filename, 'r') as f:
             content_list = f.readlines()
-        #get scale factor
+        # get scale factor
         bases_const = float(content_list[1])
-        #bases
+        # bases
         bases = [str2list(basis) for basis in content_list[2:5]]
-        #atom info
+        # atom info
         atoms = str2list(content_list[5])
         atoms_num = str2list(content_list[6])  # atom number
         if content_list[7][0] in 'Ss':
             data_begin = 9
         else:
             data_begin = 8
-        #get total number before load data
+        # get total number before load data
         atoms_num = [int(i) for i in atoms_num]
         ntot = sum(atoms_num)
-        #data
+        # data
         data, tf = [], []  # data and T or F info
         tf_dict = {}  # {tf: atom number}
-        for line_str in content_list[data_begin: data_begin+ntot]:
+        for line_str in content_list[data_begin: data_begin + ntot]:
             line_list = str2list(line_str)
             data.append(line_list[:3])
             if len(line_list) > 3:
                 tf_list = line_list[3:]
                 tf.append(tf_list)
-                #gather tf info to tf_dict
+                # gather tf info to tf_dict
                 tf_str = ','.join(tf_list)
                 if tf_str not in tf_dict:
                     tf_dict[tf_str] = 1
@@ -316,17 +313,17 @@ class PosCar(AtomCo):
                     tf_dict[tf_str] += 1
             else:
                 tf.append(['T', 'T', 'T'])
-                #gather tf info to tf_dict
+                # gather tf info to tf_dict
                 if 'T,T,T' not in tf_dict:
                     tf_dict['T,T,T'] = 1
                 else:
                     tf_dict['T,T,T'] += 1
-        #data type convertion
+        # data type convertion
         bases = np.float64(np.array(bases))  # to float
         data = np.float64(np.array(data))
         tf = np.array(tf)
 
-        #set class attrs
+        # set class attrs
         self.bases_const = bases_const
         self.bases = bases
         self.atoms = atoms
@@ -346,7 +343,8 @@ class PosCar(AtomCo):
     def constrain_atom(self, atom, to='F', axis='all'):
         "修改某一类型原子的FT信息"
         # [1, 1, 1, 16] -> [0, 1, 2, 3, 19]
-        idx_list = [sum(self.atoms_num[:i]) for i in range(1, len(self.atoms)+1)]
+        idx_list = [sum(self.atoms_num[:i])
+                    for i in range(1, len(self.atoms) + 1)]
         idx_list = [0] + idx_list
 
         if to not in ['T', 'F']:
@@ -384,6 +382,7 @@ class PosCar(AtomCo):
 
 
 class ContCar(PosCar):
+
     def __init__(self, filename='CONTCAR'):
         '''
         Class to generate POSCAR or CONTCAR-like objects.
@@ -400,6 +399,7 @@ class ContCar(PosCar):
 
 
 class XdatCar(AtomCo):
+
     def __init__(self, filename='XDATCAR'):
         """
         Class to generate XDATCAR objects.
@@ -460,4 +460,3 @@ class XdatCar(AtomCo):
                 prompt = f.readline().strip()
 
                 yield step, np.array(data)
-

@@ -1,19 +1,12 @@
 # -*- coding:utf-8 -*-
 """
-=============================================================================
 Provide Material Studio markup file class which do operations on these files.
-=============================================================================
-Written by PytLab <shaozhengjiang@gmail.com>, August 2015
-Updated by PytLab <shaozhengjiang@gmail.com>, October 2016
-==============================================================
-
 """
+
 from os import getcwd
 import logging
 import xml.etree.cElementTree as ET
-
 import numpy as np
-
 from vaspy import VasPy, LazyProperty
 from vaspy.atomco import AtomCo
 from vaspy.errors import UnmatchedDataShape
@@ -21,6 +14,7 @@ from vaspy.functions import str2list
 
 
 class XsdFile(AtomCo):
+
     def __init__(self, filename):
         """
         Create a Material Studio *.xsd file class.
@@ -94,7 +88,7 @@ class XsdFile(AtomCo):
                     bases.append(basis)
                 break
         bases = np.array(bases)
-        #set base constant as 1.0
+        # set base constant as 1.0
         self.bases_const = 1.0
 
         return bases
@@ -353,14 +347,15 @@ class XsdFile(AtomCo):
         '''
         # get atom type and number of this type
         # [48, 48, 30, 14] -> [48, 96, 126, 140]
-        atoms_num_sum = [sum(self.atoms_num[: i+1])
+        atoms_num_sum = [sum(self.atoms_num[: i + 1])
                          for i in range(len(self.atoms))]
         for idx, n in enumerate(atoms_num_sum):
             if atom_number <= n:
                 atom_idx = idx
                 break
         atom_type = self.atoms[atom_idx]
-        type_atom_number = atom_number - atoms_num_sum[atom_idx-1]  # start from 1
+        type_atom_number = atom_number - \
+            atoms_num_sum[atom_idx - 1]  # start from 1
 
         # go through tags to modify atom color
         color_attr = '%d,%d,%d, 255' % color
@@ -387,6 +382,7 @@ class XsdFile(AtomCo):
 
 
 class ArcFile(VasPy):
+
     def __init__(self, filename):
         """
         Create a Material Studio *.arc file class.
@@ -422,7 +418,8 @@ class ArcFile(VasPy):
             coords = []
             for line in f:
                 line = line.strip()
-                if not collecting and line.startswith("PBC "):  # NOTE: Use "PBC " to tell "PBC=" apart
+                # NOTE: Use "PBC " to tell "PBC=" apart
+                if not collecting and line.startswith("PBC "):
                     collecting = True
                 elif collecting and line.startswith("end"):
                     collecting = False
@@ -486,6 +483,7 @@ class ArcFile(VasPy):
 
 
 class XtdFile(XsdFile):
+
     def __init__(self, filename, arcname=None):
         """
         Create Material Studio *.xtd file class.
@@ -521,6 +519,5 @@ class XtdFile(XsdFile):
             raise ValueError("No ArcFile object in XtdFile.")
 
         for cart_coords in self.arcfile.coords_iterator:
-           dir_coords = self.cart2dir(self.bases, cart_coords)
-           yield np.array(dir_coords)
-
+            dir_coords = self.cart2dir(self.bases, cart_coords)
+            yield np.array(dir_coords)
