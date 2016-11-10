@@ -18,7 +18,7 @@ from scipy.integrate import simps
 from scipy.interpolate import interp2d
 import mpl_toolkits.mplot3d
 import matplotlib.pyplot as plt
-#whether mayavi installed
+# whether mayavi installed
 try:
     from mayavi import mlab
     mayavi_installed = True
@@ -31,6 +31,7 @@ from functions import line2list
 
 
 class DosX(DataPlotter):
+
     def __init__(self, filename, field=' ', dtype=float):
         """
         Create a DOS file class.
@@ -58,7 +59,7 @@ class DosX(DataPlotter):
 
     def __add__(self, dosx_inst):
         sum_dosx = copy.deepcopy(self)
-        #相加之前判断能量分布是否相同
+        # 相加之前判断能量分布是否相同
         same = (self.data[:, 0] == dosx_inst.data[:, 0]).all()
         if not same:
             raise ValueError('Energy is different.')
@@ -96,15 +97,15 @@ class DosX(DataPlotter):
         ys = self.data[:, start:stop:step]
         y = np.sum(ys, axis=1)
         ymax = np.max(y)
-        #plot
+        # plot
         fig = plt.figure()
         ax = fig.add_subplot(111)
         ax.plot(x, y, linewidth=5, color='#104E8B')
-        #plot fermi energy auxiliary line
+        # plot fermi energy auxiliary line
         if show_fermi:
-            #Fermi verical line
-            xfermi = np.array([0.0]*50)
-            yfermi = np.linspace(0, int(ymax+1), 50)
+            # Fermi verical line
+            xfermi = np.array([0.0] * 50)
+            yfermi = np.linspace(0, int(ymax + 1), 50)
             ax.plot(xfermi, yfermi, linestyle='dashed',
                     color='#4A708B', linewidth=3)
         # fill area from minus infinit to 0
@@ -116,8 +117,8 @@ class DosX(DataPlotter):
         # show d band center line
         if show_dbc:
             dbc = self.get_dband_center()
-            x_dbc = np.array([dbc]*50)
-            y_dbc = np.linspace(0, int(ymax+1), 50)
+            x_dbc = np.array([dbc] * 50)
+            y_dbc = np.linspace(0, int(ymax + 1), 50)
             ax.plot(x_dbc, y_dbc, linestyle='dashed',
                     color='#C67171', linewidth=3)
 
@@ -134,7 +135,7 @@ class DosX(DataPlotter):
         data = self.data.tolist()
         content = ''
         for datalist in data:
-            content += ('%12.8f'*ndata + '\n') % tuple(datalist)
+            content += ('%12.8f' * ndata + '\n') % tuple(datalist)
         with open(self.filename, 'w') as f:
             f.write(content)
 
@@ -142,27 +143,28 @@ class DosX(DataPlotter):
 
     def get_dband_center(self):
         "Get d-band center of the DosX object."
-        #合并d轨道DOS
+        # 合并d轨道DOS
         if self.data.shape[1] == 10:
             yd = np.sum(self.data[:, 5:10], axis=1)
-        #获取feimi能级索引
+        # 获取feimi能级索引
         for idx, E in enumerate(self.data[:, 0]):
             if E >= 0:
                 nfermi = idx
                 break
-        E = self.data[: nfermi+1, 0]  # negative inf to Fermi
-        dos = yd[: nfermi+1]  # y values from negative inf to Fermi
-        #use Simpson integration to get d-electron number
+        E = self.data[: nfermi + 1, 0]  # negative inf to Fermi
+        dos = yd[: nfermi + 1]  # y values from negative inf to Fermi
+        # use Simpson integration to get d-electron number
         nelectro = simps(dos, E)
-        #get total energy of dband
-        tot_E = simps(E*dos, E)
-        dband_center = tot_E/nelectro
+        # get total energy of dband
+        tot_E = simps(E * dos, E)
+        dband_center = tot_E / nelectro
         self.dband_center = dband_center
 
         return dband_center
 
 
 class ElfCar(PosCar):
+
     def __init__(self, filename='ELFCAR'):
         """
         Create a ELFCAR file class.
@@ -201,14 +203,14 @@ class ElfCar(PosCar):
         with open(self.filename, 'r') as f:
             for i in range(self.totline):
                 f.readline()
-            #get dimension of 3d array
+            # get dimension of 3d array
             grid = f.readline().strip(whitespace)
             empty = not grid  # empty row
             while empty:
                 grid = f.readline().strip(whitespace)
                 empty = not grid
             x, y, z = line2list(grid, dtype=int)
-            #read electron localization function data
+            # read electron localization function data
             elf_data = []
             for line in f:
                 datalist = line2list(line)
@@ -221,9 +223,9 @@ class ElfCar(PosCar):
         # NGZ is the length of the **2nd** axis #
         #                                       #
         #########################################
-        #reshape to 3d array
+        # reshape to 3d array
         elf_data = np.array(elf_data).reshape((x, y, z), order='F')
-        #set attrs
+        # set attrs
         self.grid = x, y, z
         self.elf_data = elf_data
 
@@ -236,7 +238,7 @@ class ElfCar(PosCar):
         '''
         # expand grid
         widths = np.array(widths)
-        expanded_grid = np.array(grid)*widths  # expanded grid
+        expanded_grid = np.array(grid) * widths  # expanded grid
         # expand eld_data matrix
         expanded_data = copy.deepcopy(data)
         nx, ny, nz = widths
@@ -262,6 +264,7 @@ class ElfCar(PosCar):
         Decorator for contour plot methods.
         Set ndim on x, y axis and z values.
         '''
+
         def contour_wrapper(self, axis_cut='z', distance=0.5,
                             show_mode='show', widths=(1, 1, 1)):
             '''
@@ -277,7 +280,7 @@ class ElfCar(PosCar):
             widths: tuple of int,
                 number of replication on x, y, z axis
             '''
-            #expand elf_data and grid
+            # expand elf_data and grid
             elf_data, grid = self.expand_data(self.elf_data, self.grid,
                                               widths=widths)
             self.__logger.info('data shape = %s', str(elf_data.shape))
@@ -285,15 +288,15 @@ class ElfCar(PosCar):
             if abs(distance) > 1:
                 raise ValueError('Distance must be between 0 and 1.')
             if axis_cut in ['X', 'x']:  # cut vertical to x axis
-                nlayer = int(self.grid[0]*distance)
+                nlayer = int(self.grid[0] * distance)
                 z = elf_data[nlayer, :, :]
                 ndim0, ndim1 = grid[2], grid[1]  # y, z
             elif axis_cut in ['Y', 'y']:
-                nlayer = int(self.grid[1]*distance)
+                nlayer = int(self.grid[1] * distance)
                 z = elf_data[:, nlayer, :]
                 ndim0, ndim1 = grid[2], grid[0]  # x, z
             elif axis_cut in ['Z', 'z']:
-                nlayer = int(self.grid[2]*distance)
+                nlayer = int(self.grid[2] * distance)
                 z = elf_data[:, :, nlayer]
                 ndim0, ndim1 = grid[1], grid[0]  # x, y
 
@@ -308,14 +311,14 @@ class ElfCar(PosCar):
         ndim1: int, point number on y-axis
         z    : 2darray, values on plane perpendicular to z axis
         '''
-        #do 2d interpolation
-        #get slice object
+        # do 2d interpolation
+        # get slice object
         s = np.s_[0:ndim0:1, 0:ndim1:1]
         x, y = np.ogrid[s]
         self.__logger.info('z shape = %s, x shape = %s, y shape = %s',
                            str(z.shape), str(x.shape), str(y.shape))
         mx, my = np.mgrid[s]
-        #use cubic 2d interpolation
+        # use cubic 2d interpolation
         interpfunc = interp2d(x, y, z, kind='cubic')
         newx = np.linspace(0, ndim0, 600)
         newy = np.linspace(0, ndim1, 600)
@@ -325,21 +328,23 @@ class ElfCar(PosCar):
         #-----------for plot3d---------------------
         newz = interpfunc(newx, newy)
 
-        #plot 2d contour map
+        # plot 2d contour map
         fig2d_1, fig2d_2, fig2d_3 = plt.figure(), plt.figure(), plt.figure()
         ax1 = fig2d_1.add_subplot(1, 1, 1)
         extent = [np.min(newx), np.max(newx), np.min(newy), np.max(newy)]
         img = ax1.imshow(newz, extent=extent, origin='lower')
-        #coutour plot
+        # coutour plot
         ax2 = fig2d_2.add_subplot(1, 1, 1)
-        cs = ax2.contour(newx.reshape(-1), newy.reshape(-1), newz, 20, extent=extent)
+        cs = ax2.contour(newx.reshape(-1), newy.reshape(-1),
+                         newz, 20, extent=extent)
         ax2.clabel(cs)
         plt.colorbar(mappable=img)
         # contourf plot
         ax3 = fig2d_3.add_subplot(1, 1, 1)
-        ax3.contourf(newx.reshape(-1), newy.reshape(-1), newz, 20, extent=extent)
+        ax3.contourf(newx.reshape(-1), newy.reshape(-1),
+                     newz, 20, extent=extent)
 
-        #3d plot
+        # 3d plot
         fig3d = plt.figure(figsize=(12, 8))
         ax3d = fig3d.add_subplot(111, projection='3d')
         ax3d.plot_surface(newmx, newmy, newz, cmap=plt.cm.RdBu_r)
@@ -364,17 +369,17 @@ class ElfCar(PosCar):
         if not mayavi_installed:
             self.__logger.info("Mayavi is not installed on your device.")
             return
-        #do 2d interpolation
-        #get slice object
+        # do 2d interpolation
+        # get slice object
         s = np.s_[0:ndim0:1, 0:ndim1:1]
         x, y = np.ogrid[s]
         mx, my = np.mgrid[s]
-        #use cubic 2d interpolation
+        # use cubic 2d interpolation
         interpfunc = interp2d(x, y, z, kind='cubic')
         newx = np.linspace(0, ndim0, 600)
         newy = np.linspace(0, ndim1, 600)
         newz = interpfunc(newx, newy)
-        #mlab
+        # mlab
         face = mlab.surf(newx, newy, newz, warp_scale=2)
         mlab.axes(xlabel='x', ylabel='y', zlabel='z')
         mlab.outline(face)
@@ -442,10 +447,11 @@ class ElfCar(PosCar):
         nct = kwargs['nct'] if 'nct' in kwargs else 5
         widths = kwargs['widths'] if 'widths' in kwargs else (1, 1, 1)
         elf_data, grid = self.expand_data(self.elf_data, self.grid, widths)
-        #create pipeline
+        # create pipeline
         field = mlab.pipeline.scalar_field(elf_data)  # data source
-        mlab.pipeline.volume(field, vmin=vmin, vmax=vmax)  # put data into volumn to visualize
-        #cut plane
+        # put data into volumn to visualize
+        mlab.pipeline.volume(field, vmin=vmin, vmax=vmax)
+        # cut plane
         if axis_cut in ['Z', 'z']:
             plane_orientation = 'z_axes'
         elif axis_cut in ['Y', 'y']:
@@ -463,6 +469,7 @@ class ElfCar(PosCar):
 
 
 class ChgCar(ElfCar):
+
     def __init__(self, filename='CHGCAR'):
         '''
         Create a CHGCAR file class.
@@ -472,4 +479,3 @@ class ChgCar(ElfCar):
         >>> a = ChgCar()
         '''
         ElfCar.__init__(self, filename)
-

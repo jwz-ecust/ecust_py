@@ -212,6 +212,7 @@ class InCar(VasPy):
         """
         Overload euqal operator function.
         查看属性是否相同.
+        改写了 `==` 判断的方法
         """
         self_dict, another_dict = self.compare(another)
 
@@ -256,6 +257,6 @@ path2 = "/Users/zhangjiawei/Code/zjw/xsd/VASPy-master/vaspy/INCAR_uspex"
 a1 = InCar(path1)
 a2 = InCar(path2)
 print a1 != a2
-#  首先 !=   调用 __ne__
-#   __ne__ 调用 __eq__
-# False
+#  首先 !=   调用 __ne__  (!= 的方法被改写)
+#   __ne__ 调用 __eq__  (== 的方法被改写)
+# False (于为改写的类 != 的结果不一致)
