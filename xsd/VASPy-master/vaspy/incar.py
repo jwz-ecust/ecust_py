@@ -226,8 +226,12 @@ class InCar(VasPy):
         Overload not equal operator function.
         """
         print self, another
-        print self == another
         if self == another:
+            # ??? self 和  another 是啥
+            # 对于这个类, 是一个有继承的子类, != 调用 __ne__ 方法的时候返回的是 object 相等
+            # 对于没有继承的类, != 调用 __ne__方法时候返回的就是 instance,  不相等
+            # <__main__.InCar object at 0x10e6cf490> <__main__.InCar object at 0x10e6cf5d0>
+
             return False
         else:
             return True
