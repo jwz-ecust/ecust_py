@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 import sys
 import os
@@ -23,11 +24,13 @@ logger.addHandler(console_hdlr)
 
 
 class VasPy(object):
+
     def __init__(self, filename):
         """
         Base class to be inherited by all classes in VASPy.
         """
         # Check filename validity.
+        # 检查filename是否存在
         if not os.path.exists(filename):
             raise ValueError("{} not exist.".format(filename))
 
@@ -38,6 +41,7 @@ class LazyProperty(object):
     """
     Descriptor for lazy property.
     """
+
     def __init__(self, func):
         self.func = func
 
@@ -45,4 +49,3 @@ class LazyProperty(object):
         val = self.func(instance)
         setattr(instance, self.func.__name__, val)
         return val
-

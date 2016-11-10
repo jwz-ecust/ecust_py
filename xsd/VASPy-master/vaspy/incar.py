@@ -14,6 +14,7 @@ from vaspy import VasPy
 
 
 class InCar(VasPy):
+
     def __init__(self, filename='INCAR'):
         """
         Create a INCAR file class.
@@ -34,11 +35,14 @@ class InCar(VasPy):
         self.load()
 
         # Set logger.
+        # 使用 logging 模块的getLogger函数得到一个 __logger对象实例
+        # 其对象是一个字符串(这里是"vaspy.InCar"),表示Logger对象实例的名字
+        # 即通过该名字来得到响应的Logger对象实例
         self.__logger = logging.getLogger("vaspy.InCar")
 
     def load(self):
         "Load all data in INCAR."
-        tot_pnames, tot_datas = [], []
+        tot_pnames, tot_datas = [], []   # 所有参数列表和所有数据列表
         with open(self.filename, 'r') as f:
             for line in f:
                 matched = self.rdata(line)
@@ -49,11 +53,12 @@ class InCar(VasPy):
         # set attrs
         for pname, data in zip(tot_pnames, tot_datas):
             setattr(self, pname, data)
+            # 对对象设置属性pname, 属性值为data
 
-        # Set parameter names and data lists.
-        #        sorted_pnames, sorted_datas = self.__sort_two_lists(tot_pnames, tot_datas)
-        #        self.pnames = sorted_pnames
-        #        self.datas = sorted_datas
+        # Set parameter names and data lists.  生成排序的参数列表
+        # sorted_pnames, sorted_datas = self.__sort_two_lists(tot_pnames, tot_datas)
+        # self.pnames = sorted_pnames
+        # self.datas = sorted_datas
         self.pnames = tot_pnames
         self.datas = tot_datas
 
@@ -71,9 +76,10 @@ class InCar(VasPy):
 
         return sorted_list1, sorted_list2
 
+    # 这里调用了静态方法, 没有隐式参数的规则. 在类里面调用就跟外面的普通函数一样
     @staticmethod
     def rdata(line):
-        "Get INCAR data(s) in a line."
+        '''Get INCAR data(s) in a line.'''
         line = line.strip()
         if not line or line.startswith(('!', '#')):
             return None
@@ -105,7 +111,10 @@ class InCar(VasPy):
         --------
         >>> incar_obj.set("ISIF", 2)
         """
+        # 改变一个属性的值
         if not hasattr(self, pname):
+            msg = "{} is not in INCAR".format(pname)
+            self.__logger.warning(msg)
             raise ValueError('%s is not in INCAR, ' + 'Use add() instead.' %
                              pname)
         setattr(self, pname, str(data))
@@ -120,10 +129,12 @@ class InCar(VasPy):
         --------
         >>> incar_obj.add("ISIF", 2)
         """
+        # 添加一个属性, 并设置属性的值
         data = str(data)
         if hasattr(self, pname):
             msg = "{} is already in INCAR, set to {}".format(pname, data)
             self.__logger.warning(msg)
+            # 添加属性失败, 并且记录到日志中
         else:
             self.pnames.append(pname)
         setattr(self, pname, data)
@@ -145,6 +156,7 @@ class InCar(VasPy):
         if not hasattr(self, pname):
             msg = "InCar has no parameter '{}'".format(pname)
             self.__logger.warning(msg)
+            # 删除记录失败,添加到日志中
             return
 
         # Delete from pnames and datas.
@@ -153,6 +165,7 @@ class InCar(VasPy):
         data = self.datas.pop(idx)
 
         # Delete attribute.
+        # 删除一个属性
         del self.__dict__[pname]
 
         return pname, data
@@ -169,12 +182,13 @@ class InCar(VasPy):
         --------
         A tuple of two dictionaries containing difference informations.
         """
-        tot_pnames = set(self.pnames + another.pnames)
+        tot_pnames = set(self.pnames + another.pnames)  # 建立两个INcar对象属性的集合
 
-        self_dict, another_dict = {}, {}
+        self_dict, another_dict = {}, {}    # 包含不同元素的字典
         for pname in tot_pnames:
             # If both have, check the difference.
             if (pname in self.pnames and pname in another.pnames):
+                # 相同属性, 则比较属性的值,属性值不同仍返回字典
                 self_data = getattr(self, pname)
                 another_data = getattr(another, pname)
                 if self_data != another_data:
@@ -197,6 +211,7 @@ class InCar(VasPy):
     def __eq__(self, another):
         """
         Overload euqal operator function.
+        查看属性是否相同.
         """
         self_dict, another_dict = self.compare(another)
 
@@ -207,8 +222,11 @@ class InCar(VasPy):
 
     def __ne__(self, another):
         """
+        查看是否不相等
         Overload not equal operator function.
         """
+        print self, another
+        print self == another
         if self == another:
             return False
         else:
@@ -216,6 +234,7 @@ class InCar(VasPy):
 
     def tofile(self, filename=None):
         "Create INCAR file."
+        # 生成新的INCAR文件
         content = '# Created by VASPy\n'
         for pname in self.pnames:
             if not hasattr(self, pname):
@@ -230,3 +249,9 @@ class InCar(VasPy):
             f.write(content)
 
         return
+
+path1 = "/Users/zhangjiawei/Code/zjw/xsd/VASPy-master/vaspy/INCAR"
+path2 = "/Users/zhangjiawei/Code/zjw/xsd/VASPy-master/vaspy/INCAR_uspex"
+a1 = InCar(path1)
+a2 = InCar(path2)
+print a1 != a2
