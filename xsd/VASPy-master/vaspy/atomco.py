@@ -13,7 +13,8 @@ class AtomCo(VasPy):
     "Base class to be inherited by atomco classes."
 
     def __init__(self, filename):
-        VasPy.__init__(self, filename)
+        # VasPy.__init__(self, filename)
+        super(self.__class__, self).__init__(filename)
 
 #    def __repr__(self):
 #        if hasattr(self, 'get_content'):
@@ -244,6 +245,9 @@ class XyzFile(AtomCo):
             f.write(content)
 
         return
+
+a = AtomCo('/Users/zhangjiawei/Code/zjw/xsd/VASPy-master/vaspy/CONTCAR')
+print a.__dict__
 
 
 class PosCar(AtomCo):
