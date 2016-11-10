@@ -225,13 +225,10 @@ class InCar(VasPy):
         查看是否不相等
         Overload not equal operator function.
         """
-        print self, another
         if self == another:
-            # ??? self 和  another 是啥
-            # 对于这个类, 是一个有继承的子类, != 调用 __ne__ 方法的时候返回的是 object 相等
-            # 对于没有继承的类, != 调用 __ne__方法时候返回的就是 instance,  不相等
+            # 这里比较两个是否相等, 会调用 __eq__方法, 会返回True
             # <__main__.InCar object at 0x10e6cf490> <__main__.InCar object at 0x10e6cf5d0>
-
+            # <__main__.InCar object at 0x10e836490> <__main__.InCar object at 0x10e8365d0>
             return False
         else:
             return True
@@ -259,3 +256,6 @@ path2 = "/Users/zhangjiawei/Code/zjw/xsd/VASPy-master/vaspy/INCAR_uspex"
 a1 = InCar(path1)
 a2 = InCar(path2)
 print a1 != a2
+#  首先 !=   调用 __ne__
+#   __ne__ 调用 __eq__
+# False
