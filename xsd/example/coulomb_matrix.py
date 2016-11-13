@@ -13,27 +13,6 @@ NiP 001 surface    Ni: 28  P: 28
 '''
 
 
-def dis_cal(a, b):
-    '''
-    this is used to calculate the distence between two atoms
-    '''
-    return np.sqrt(sum((a - b)**2))
-
-
-def coulomb_effect_cal(i, j):
-    '''
-    this is used to calculate the coulomb effect
-    '''
-    charge_info = {'P': 5.0, 'Ni': 10.0}   # charge
-
-    if i == j:
-        effect = 0.5 * charge_info[atom_list[i]]**2.4
-    else:
-        effect = charge_info[atom_list[
-            i]] * charge_info[atom_list[j]] / dis_cal(atom_array[i], atom_array[j])
-    return effect
-
-
 path = '/Users/zhangjiawei/Code/zjw/xsd/example/NiP.xsd'
 root = ET.ElementTree(file=path)
 
@@ -51,16 +30,58 @@ for element in root.iter():
         coordiante_list.append(coordiante)
 
 atom_array = np.array(coordiante_list, dtype=np.float)
+length = atom_array.shape[0]
+
+
+def dis_cal(i, j):
+    '''
+    this is used to calculate the distence between two atoms
+    '''
+    square = np.square(atom_array[i] - atom_array[j])
+    return np.sqrt(square.sum())
+
+
+def coulomb_effect_cal(i, j):
+    '''
+    this is used to calculate the coulomb effect
+    '''
+    charge_info = {'P': 5.0, 'Ni': 10.0}   # charge
+
+    if i == j:
+        effect = 0.5 * charge_info[atom_list[i]]**2.4
+    else:
+        effect = charge_info[atom_list[
+            i]] * charge_info[atom_list[j]] / dis_cal(i, j)
+    return effect
+
 
 #  获取表面一个Ni site 的坐标
 zjw = atom_array[28:][:, 2]
 a = zjw.argmax()
 number = a + 28
+
 # 计算其他原子到Ni的距离, 库伦作用
+# [
+#   ['columb effect', 'dis']
+#         ....
+#         ....
+#         ....
+#   ['columb effect', 'dis']
+#]
+
+dis_and_coulomb_array = np.zeros((length, 2))
+
+for i in range(0, length):
+    if i == number:
+        dis_and_coulomb_array[i] = [0.0, 0.0]
+    else:
+        dis_and_coulomb_array[i][0] = coulomb_effect_cal(number, i)
+        dis_and_coulomb_array[i][1] = dis_cal(number, i)
+
+print dis_and_coulomb_array
 
 
 # 计算库伦矩阵
-length = atom_array.shape[0]
 atom_matix = np.zeros((length, length))
 for i in range(length):
     for j in range(length):
