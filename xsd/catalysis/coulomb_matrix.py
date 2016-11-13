@@ -13,7 +13,7 @@ NiP 001 surface    Ni: 28  P: 28
 '''
 
 
-path = '/Users/zhangjiawei/Code/zjw/xsd/example/NiP.xsd'
+path = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP.xsd'
 root = ET.ElementTree(file=path)
 
 
@@ -78,8 +78,40 @@ for i in range(0, length):
         dis_and_coulomb_array[i][0] = coulomb_effect_cal(number, i)
         dis_and_coulomb_array[i][1] = dis_cal(number, i)
 
-print dis_and_coulomb_array
+# print dis_and_coulomb_array
 
+
+##########################################################################
+'''
+================================================================================
+考虑与吸附 Site(Ni) 最近的10个原子 (这里先考虑10个原子)
+    1. distance
+    2. 夹角 (考虑 OC-Ni-M 之间的夹角)
+    3. 原子的电负性
+    4. d-band center
+================================================================================
+'''
+
+
+def extract_local_character_N(atom_array, atom_list, number):
+    '''
+    需要输入原子坐标和原子种类列表 以及 吸附site的序号
+    '''
+    local_dis = []
+    ads_site = atom_array[number]
+    for i in range(len(atom_array)):
+        if i == number:
+            local_dis.append((atom_list[i], i, 0.0))
+        else:
+            local_dis.append((atom_list[i], i, dis_cal(i, number)))
+    return sorted(local_dis, key=lambda x: x[2])[1:11]   # 返回距离吸附site最近的10原子
+
+
+for i in extract_local_character_N(atom_array, atom_list, number):
+    print i
+
+
+##########################################################################
 
 # 计算库伦矩阵
 atom_matix = np.zeros((length, length))

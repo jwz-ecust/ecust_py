@@ -7,8 +7,8 @@ import numpy as np
 用来获取距离最近的N个原子(N比如说10...)
 返回一个list 包含了到所有其他原子的距离
 '''
-path = os.getcwd()
-path = os.path.join(path, 'example/1.xsd')
+path = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP.xsd'
+
 
 root = ET.ElementTree(file=path)
 
