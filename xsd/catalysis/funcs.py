@@ -63,7 +63,7 @@ def coulomb_matrix_calculate(i, j, atom_list, atom_array, lattice_info):
 
 
 def _get_coulomb_matrix(atom_list, atom_array, lattice_info):
-    '''
+    '''H
     给定坐标, 原子种类, 和晶胞参数信息
     计算库伦矩阵
     '''
