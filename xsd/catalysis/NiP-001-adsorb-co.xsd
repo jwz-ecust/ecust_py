@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="latin1"?>
+<!DOCTYPE XSD []>
+<XSD Version="6.0">
+	<AtomisticTreeRoot ID="1" NumProperties="55" NumChildren="1">
+		<Property Name="AngleEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="BeadDocumentID" DefinedOn="MesoMoleculeSet" Type="String"/>
+		<Property Name="BendBendEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="BendTorsionBendEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="BondEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="EFGAsymmetry" DefinedOn="Atom" Type="Double"/>
+		<Property Name="EFGQuadrupolarCoupling" DefinedOn="Atom" Type="Double"/>
+		<Property Name="ElectrostaticEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="FaceMillerIndex" DefinedOn="GrowthFace" Type="MillerIndex"/>
+		<Property Name="FacetTransparency" DefinedOn="GrowthFace" Type="Float"/>
+		<Property Name="FermiLevel" DefinedOn="ScalarFieldBase" Type="Double"/>
+		<Property Name="Force" DefinedOn="Matter" Type="CoDirection"/>
+		<Property Name="FrameFilter" DefinedOn="Trajectory" Type="String"/>
+		<Property Name="HarmonicForceConstant" DefinedOn="HarmonicRestraint" Type="Double"/>
+		<Property Name="HarmonicMinimum" DefinedOn="HarmonicRestraint" Type="Double"/>
+		<Property Name="HydrogenBondEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="ImportOrder" DefinedOn="Bondable" Type="UnsignedInteger"/>
+		<Property Name="InversionEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="IsBackboneAtom" DefinedOn="Atom" Type="Boolean"/>
+		<Property Name="IsChiralCenter" DefinedOn="Atom" Type="Boolean"/>
+		<Property Name="IsOutOfPlane" DefinedOn="Atom" Type="Boolean"/>
+		<Property Name="KineticEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="LineExtentPadding" DefinedOn="BestFitLineMonitor" Type="Double"/>
+		<Property Name="LinkageGroupName" DefinedOn="Linkage" Type="String"/>
+		<Property Name="ListIdentifier" DefinedOn="PropertyList" Type="String"/>
+		<Property Name="NMRShielding" DefinedOn="Atom" Type="Double"/>
+		<Property Name="NonBondEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="NormalMode" DefinedOn="Bondable" Type="Direction"/>
+		<Property Name="NormalModeFrequency" DefinedOn="Bondable" Type="Double"/>
+		<Property Name="NumScanSteps" DefinedOn="LinearScan" Type="UnsignedInteger"/>
+		<Property Name="OrbitalCutoffRadius" DefinedOn="Bondable" Type="Double"/>
+		<Property Name="PlaneExtentPadding" DefinedOn="BestFitPlaneMonitor" Type="Double"/>
+		<Property Name="PotentialEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="QuantizationValue" DefinedOn="ScalarFieldBase" Type="Double"/>
+		<Property Name="RelativeVelocity" DefinedOn="Matter" Type="Direction"/>
+		<Property Name="RestraintEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="ScanEnd" DefinedOn="LinearScan" Type="Double"/>
+		<Property Name="ScanStart" DefinedOn="LinearScan" Type="Double"/>
+		<Property Name="SeparatedStretchStretchEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="SimulationStep" DefinedOn="Trajectory" Type="Integer"/>
+		<Property Name="StretchBendStretchEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="StretchStretchEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="StretchTorsionStretchEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="Temperature" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="ThreeBodyNonBondEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="TorsionBendBendEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="TorsionEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="TorsionStretchEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="TotalEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="Units" DefinedOn="ScalarFieldBase" Type="String"/>
+		<Property Name="ValenceCrossTermEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="ValenceDiagonalEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="VanDerWaalsEnergy" DefinedOn="ClassicalEnergyHolder" Type="Double"/>
+		<Property Name="_Stress" DefinedOn="MatterSymmetrySystem" Type="Matrix"/>
+		<Property Name="_TrajectoryStress" DefinedOn="MatterSymmetrySystem" Type="Matrix"/>
+		<SymmetrySystem ID="2" Mapping="3" Children="ci(59):59+4" Normalized="1" Name="NiP-001-adsorb-co-top-u.xsd" XYZ="0,0,0" OverspecificationTolerance="0.05" HasSymmetryHistory="1">
+			<MappingSet ID="63" SymmetryDefinition="62" ActiveSystem="2" NumFamilies="1" OwnsTotalConstraintMapping="1" TotalConstraintMapping="3">
+				<MappingFamily ID="64" NumImageMappings="0">
+					<IdentityMapping ID="65" Element="1,0,0,0,0,1,0,0,0,0,1,0" Constraint="1,0,0,0,0,1,0,0,0,0,1,0" MappedObjects="ci(58):58+4" DefectObjects="62,66" NumImages="58" NumDefects="2">
+						<Atom3d ID="4" Mapping="65" Parent="2" Name="C1" XYZ="0.876236081122864,0.337368774675172,0.592661631240018" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="C"/>
+						<Atom3d ID="5" Mapping="65" Parent="2" Name="O2" XYZ="0.910196563343883,0.363492870382650,0.646725961883266" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="O"/>
+						<Atom3d ID="6" Mapping="65" Parent="2" Name="P3" XYZ="0.460897436328622,0.378911191842065,0.009711118307052" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="7" Mapping="65" Parent="2" Name="P4" XYZ="0.460897436328622,0.878911191842064,0.009711118307052" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="8" Mapping="65" Parent="2" Name="P5" XYZ="0.051962577235301,0.128862121650187,0.009850222396203" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="9" Mapping="65" Parent="2" Name="P6" XYZ="0.051962577235301,0.628862121650187,0.009850222396203" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="10" Mapping="65" Parent="2" Name="P7" XYZ="0.955282613315397,0.458394731739652,0.092462817901286" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="11" Mapping="65" Parent="2" Name="P8" XYZ="0.955282613315397,0.958394731739652,0.092462817901286" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="12" Mapping="65" Parent="2" Name="P9" XYZ="0.557727413243299,0.208608617045293,0.092542836360124" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="13" Mapping="65" Parent="2" Name="P10" XYZ="0.557727413243299,0.708608617045293,0.092542836360124" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="14" Mapping="65" Parent="2" Name="P11" XYZ="0.438690232325939,0.390700001290171,0.172391673920643" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="15" Mapping="65" Parent="2" Name="P12" XYZ="0.438690232325939,0.890700001290170,0.172391673920643" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="16" Mapping="65" Parent="2" Name="P13" XYZ="0.074955761365658,0.140753942691418,0.172428734590078" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="17" Mapping="65" Parent="2" Name="P14" XYZ="0.074955761365658,0.640753942691418,0.172428734590078" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="18" Mapping="65" Parent="2" Name="P15" XYZ="0.948549373258943,0.373520972291200,0.261575257626409" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="19" Mapping="65" Parent="2" Name="P16" XYZ="0.951398281454812,0.874323129555271,0.260546525962416" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="20" Mapping="65" Parent="2" Name="P17" XYZ="0.564211443144772,0.125475684860586,0.261440301954870" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="21" Mapping="65" Parent="2" Name="P18" XYZ="0.563893154331687,0.624042291075739,0.260945452306742" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="22" Mapping="65" Parent="2" Name="P19" XYZ="0.448438201120186,0.448870797420988,0.338587322141189" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="23" Mapping="65" Parent="2" Name="P20" XYZ="0.452652761064835,0.951107570711614,0.338635850360319" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="24" Mapping="65" Parent="2" Name="P21" XYZ="0.063422273589937,0.200394290497651,0.339374850938978" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="25" Mapping="65" Parent="2" Name="P22" XYZ="0.065930004604752,0.697931061874918,0.339353125235072" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="26" Mapping="65" Parent="2" Name="P23" XYZ="0.955878199093844,0.450101181739937,0.428820557822194" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="27" Mapping="65" Parent="2" Name="P24" XYZ="0.965718369622111,0.957461744955507,0.426880721044969" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="28" Mapping="65" Parent="2" Name="P25" XYZ="0.560075774900234,0.213363943805268,0.433585024899801" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="29" Mapping="65" Parent="2" Name="P26" XYZ="0.549509174270546,0.705436272624536,0.426645671456679" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="30" Mapping="65" Parent="2" Name="P27" XYZ="0.448581744453158,0.378344550759318,0.508872548667627" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="31" Mapping="65" Parent="2" Name="P28" XYZ="0.467161696898739,0.875599683742975,0.507571538206121" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="32" Mapping="65" Parent="2" Name="P29" XYZ="0.059724390534719,0.118602022265280,0.507856434961919" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="33" Mapping="65" Parent="2" Name="P30" XYZ="0.046234600463502,0.625093645349346,0.505819826199766" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="P"/>
+						<Atom3d ID="34" Mapping="65" Parent="2" Name="Ni31" XYZ="0.810643305065646,0.297294181658323,0.029600583265150" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="35" Mapping="65" Parent="2" Name="Ni32" XYZ="0.810643305065646,0.797294181658323,0.029600583265150" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="36" Mapping="65" Parent="2" Name="Ni33" XYZ="0.702350500911173,0.047387250433751,0.029609496621497" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="37" Mapping="65" Parent="2" Name="Ni34" XYZ="0.702350500911173,0.547387250433751,0.029609496621497" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="38" Mapping="65" Parent="2" Name="Ni35" XYZ="0.202083825392727,0.287144869435160,0.088907854279029" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="39" Mapping="65" Parent="2" Name="Ni36" XYZ="0.202083825392727,0.787144869435160,0.088907854279029" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="40" Mapping="65" Parent="2" Name="Ni37" XYZ="0.311059621554058,0.037184374748357,0.089007194627094" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="41" Mapping="65" Parent="2" Name="Ni38" XYZ="0.311059621554058,0.537184374748357,0.089007194627094" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="42" Mapping="65" Parent="2" Name="Ni39" XYZ="0.806417952028923,0.301317385204541,0.165479994702203" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="43" Mapping="65" Parent="2" Name="Ni40" XYZ="0.806417952028923,0.801317385204541,0.165479994702203" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="44" Mapping="65" Parent="2" Name="Ni41" XYZ="0.707380533528188,0.051178708973616,0.165573639096927" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="45" Mapping="65" Parent="2" Name="Ni42" XYZ="0.707380533528188,0.551178708973616,0.165573639096927" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="46" Mapping="65" Parent="2" Name="Ni43" XYZ="0.309881684163221,0.293771398017230,0.264672690521020" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="47" Mapping="65" Parent="2" Name="Ni44" XYZ="0.309781919917788,0.793685230290285,0.264454311870867" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="48" Mapping="65" Parent="2" Name="Ni45" XYZ="0.204480978350678,0.044046990546799,0.264206463202836" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="49" Mapping="65" Parent="2" Name="Ni46" XYZ="0.202796379793512,0.543357527289749,0.264029183730815" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="50" Mapping="65" Parent="2" Name="Ni47" XYZ="0.817649640847234,0.029843356137342,0.330838008668819" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="51" Mapping="65" Parent="2" Name="Ni48" XYZ="0.813667854506441,0.529062594611084,0.332465809333784" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="52" Mapping="65" Parent="2" Name="Ni49" XYZ="0.698015466529010,0.279463311147852,0.333933029966070" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="53" Mapping="65" Parent="2" Name="Ni50" XYZ="0.700244157592587,0.779632662671081,0.331444231250888" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="54" Mapping="65" Parent="2" Name="Ni51" XYZ="0.192841689183037,0.279113058635881,0.436670421824176" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="55" Mapping="65" Parent="2" Name="Ni52" XYZ="0.198585149889989,0.782202773009201,0.436505551058438" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="56" Mapping="65" Parent="2" Name="Ni53" XYZ="0.323327014770256,0.031713037324640,0.435622761459414" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="57" Mapping="65" Parent="2" Name="Ni54" XYZ="0.310839406580040,0.531222517369290,0.434239121157471" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="58" Mapping="65" Parent="2" Name="Ni55" XYZ="0.712423709872179,0.045086225875642,0.490712393372474" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="59" Mapping="65" Parent="2" Name="Ni56" XYZ="0.698497733457474,0.545913089058983,0.488245449167726" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="60" Mapping="65" Parent="2" Name="Ni57" XYZ="0.813085679074319,0.297516256027008,0.508274863512844" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<Atom3d ID="61" Mapping="65" Parent="2" Name="Ni58" XYZ="0.808307726991150,0.795752468232136,0.487535448035420" DisplayStyle="Ball and Stick"  BallSize="40" StickRadius="20" Components="Ni"/>
+						<SpaceGroup ID="62" Parent="2" Children="66" DisplayStyle="Solid" Color="255,255,255,255" AVector="6.05,0,0" BVector="0,9.762,0" CVector="0,0,20.50356631" OrientationBase="C along Z, B in YZ plane" Centering="3D Primitive-Centered" Lattice="3D Triclinic" GroupName="P1" Operators="1,0,0,0,0,1,0,0,0,0,1,0" DisplayRange="0,1,0,1,0,1" LineThickness="2" CylinderRadius="0.2" LabelAxes="1" ActiveSystem="2" ITNumber="1" LongName="P 1" Qualifier="Origin-1" SchoenfliesName="C1-1" System="Triclinic" Class="1"/>
+						<ReciprocalLattice3D ID="66" Parent="62" Visible="0"/>
+ 					</IdentityMapping>
+					<MappingRepairs NumRepairs="0"/>
+				</MappingFamily>
+				<InfiniteMapping ID="3" Element="1,0,0,0,0,1,0,0,0,0,1,0" MappedObjects="2"/>
+			</MappingSet>
+			<OriginalObjects ID="67">
+				<SetCollection Objects="ci(58):58+4"/>
+			</OriginalObjects>
+		</SymmetrySystem>
+	</AtomisticTreeRoot>
+</XSD>
+

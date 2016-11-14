@@ -39,6 +39,7 @@ def dis_cal(i, j):
     '''
     square = np.square(atom_array[i] - atom_array[j])
     return np.sqrt(square.sum())
+    # 计算距离的话, 应该晶胞参数 a, b, c
 
 
 def coulomb_effect_cal(i, j):
@@ -96,14 +97,16 @@ for i in range(0, length):
 def extract_local_character_N(atom_array, atom_list, number):
     '''
     需要输入原子坐标和原子种类列表 以及 吸附site的序号
+    返回 距离吸附site Ni 最近的10个原子的列表 组成 (atom_type, atom_number, distance, atom_coordinate)
     '''
     local_dis = []
     ads_site = atom_array[number]
     for i in range(len(atom_array)):
         if i == number:
-            local_dis.append((atom_list[i], i, 0.0))
+            local_dis.append((atom_list[i], i, 0.0, atom_array[i]))
         else:
-            local_dis.append((atom_list[i], i, dis_cal(i, number)))
+            local_dis.append(
+                (atom_list[i], i, dis_cal(i, number), atom_array[i]))
     return sorted(local_dis, key=lambda x: x[2])[1:11]   # 返回距离吸附site最近的10原子
 
 
