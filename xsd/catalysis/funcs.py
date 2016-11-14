@@ -13,6 +13,7 @@ def read_xsd(file_path):
     root = ET.ElementTree(file=file_path)
     # get the spacegroup infor
     direction = ['A', 'B', 'C']
+    # Xpath 寻找任意属性 .//attribute_name
     spacegroup = root.find(".//SpaceGroup")
     lattice_info = np.zeros((3, 3))
     for i in range(3):
@@ -61,6 +62,20 @@ def coulomb_matrix_calculate(i, j, atom_list, atom_array, lattice_info):
     return matrix_element
 
 
+def _get_coulomb_matrix(atom_list, atom_array, lattice_info):
+    '''
+    给定坐标, 原子种类, 和晶胞参数信息
+    计算库伦矩阵
+    '''
+    length = atom_array.shape[0]
+    cou_matrix = np.zero((length, length))
+    for i in range(length):
+        for j in range(length):
+            cou_matrix[i][j] = coulomb_matrix_calculate(
+                i, j, atom_list, atom_array, lattice_info)
+    return cou_matrix
+
+
 def extract_local_structure(atom_array, atom_list, site_ID, lattice_info, n=10):
     '''
     需要输入 坐标数据, 元素种类 以及吸附site的序号(site_ID),  以及局部结构的原子总数(n)
@@ -93,7 +108,7 @@ def local_structure_cal(locals, ads_ID, site_ID, atom_array, lattice_info):
     考虑与吸附 Site(Ni) 最近的10个原子 (这里先考虑10个原子)
         1. distance  finished
         2. 夹角 (考虑 OC-Ni-M 之间的夹角) finished
-        3. 原子的电负性 (考虑中)
+        3. 原子的电负性 (考虑中) ===> 包含在 库伦矩阵中???
         4. d-band center (未考虑)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     '''
@@ -125,13 +140,13 @@ for i in range(length):
 
 # print coulomb_matrix
 # 对库伦矩阵 SVD 分解一下
-_, sig, _ = np.linalg.svd(coulomb_matrix)
-print sig
+# _, sig, _ = np.linalg.svd(coulomb_matrix)
+# print sig
 
 
 locals = extract_local_structure(atom_array, atom_list, site_ID, lattice_info)
 
-#  格式化输出 局部结构的信息:    原子名称,  原子序号, 距离Ni Site多少, 坐标(相对), 键角(M-Ni-C)
+#  格式化输出 局部结构的信息:    原子名称,  原子序号, 距离Ni Site多少, 坐标(相对), 键角(M-Ni-C)comcom
 for i in local_structure_cal(locals, ads_ID, site_ID, atom_array, lattice_info):
     # print i
     print "The atom name is {}, the number is {}, the distence from Ni is {}, the coordiante is {} and the C-Ni-M angle is {}".format(*i)
