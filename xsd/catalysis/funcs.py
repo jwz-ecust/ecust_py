@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+# author: jwz-ecust
+# mail: jwz_ecust@mail.ecust.edu.cn
+
 import xml.etree.cElementTree as ET
 import os
 import numpy as np
