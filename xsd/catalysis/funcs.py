@@ -81,15 +81,28 @@ def extract_local_structure(atom_array, atom_list, site_ID, lattice_info, n=10):
     需要输入 坐标数据, 元素种类 以及吸附site的序号(site_ID),  以及局部结构的原子总数(n)
     返回 (元素种类, 序号, 距离, 元素坐标)
     '''
-    local_dis = []
+    locals = []
     ads_site = atom_array[site_ID]
     for i in range(2, len(atom_list)):
         if i == site_ID:
-            local_dis.append((atom_list[i], i, 0.0, atom_array[i]))
+            locals.append((atom_list[i], i, 0.0, atom_array[i]))
         else:
-            local_dis.append((atom_list[i], i, dis_calculate(
+            locals.append((atom_list[i], i, dis_calculate(
                 i, site_ID, atom_array, lattice_info), atom_array[i]))
-    return sorted(local_dis, key=lambda x: x[2])[1:n + 1]
+    return sorted(locals, key=lambda x: x[2])[1:n + 1]
+
+
+def find_the_max_site(atom_array, atom_list):
+    length = len(atom_list)
+    Ni_list = []
+    for i in range(length):
+        if atom_list[i] == 'Ni':
+            Ni_list.append(i)
+    Ni_array = np.zeros(len(Ni_list), dtype=np.float)
+    for i in range(len(Ni_list)):
+        temp = atom_array[Ni_list[i]][2]
+        Ni_array[i] = temp
+    return Ni_list[Ni_array.argmax()]
 
 
 def bond_angle_cal(i_array, j_array):
@@ -100,34 +113,49 @@ def bond_angle_cal(i_array, j_array):
     return np.arccos(dot_product / (i * j)) * 180 / np.pi
 
 
-def local_structure_cal(locals, ads_ID, site_ID, atom_array, lattice_info):
+def local_structure_cal(locals, site_ID, atom_array, lattice_info):
     '''
     计算局部结构的信息
     返回 键长, 键角
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     考虑与吸附 Site(Ni) 最近的10个原子 (这里先考虑10个原子)
         1. distance  finished
-        2. 夹角 (考虑 OC-Ni-M 之间的夹角) finished
+        2. 夹角 (考虑 Ni-M 之间的夹角 沿着Z轴方向) finished
         3. 原子的电负性 (考虑中) ===> 包含在 库伦矩阵中???
         4. d-band center (未考虑)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     '''
-
-    ads_bond = atom_array[ads_ID] - atom_array[site_ID]
+    along_Z_axis_coor = atom_array[site_ID]
+    along_Z_axis_coor[0:2] = [0.0, 0.0]
+    fix_vector = along_Z_axis_coor
+    # fix_vector is along the Z axis  [0., 0., 0.49001]
     info_local_structure = []
     for i in locals:
         sub_bond = i[-1] - atom_array[site_ID]
-        angle = bond_angle_cal(ads_bond, sub_bond)
+        angle = bond_angle_cal(fix_vector, sub_bond)
         info_list = list(i)
         info_list.append(angle)
         info_local_structure.append(info_list)
     return info_local_structure
 
 
-path = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP-001-adsorb-co.xsd'
+'''
+================================================================================
+starting using
+================================================================================
+'''
+
+# giving the xsd file
+path = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP_001-u.xsd'
+
 atom_array, atom_list, lattice_info = read_xsd(path)
-site_ID = 56
-ads_ID = 1
+
+Ni_site_number = find_the_max_site(atom_array, atom_list)
+# 注意 numpy原子序号从0开始  而xsd文件中的是从1开始,  数值差1
+# 得到吸附位点的序号(==>numpy)
+
+site_ID = Ni_site_number   # need to give the Ni site (ads site)
+
 length = atom_array.shape[0]
 # for i in extract_local_structure(atom_array, atom_list, site_ID):
 #     print i
@@ -145,8 +173,10 @@ for i in range(length):
 
 
 locals = extract_local_structure(atom_array, atom_list, site_ID, lattice_info)
-
-#  格式化输出 局部结构的信息:    原子名称,  原子序号, 距离Ni Site多少, 坐标(相对), 键角(M-Ni-C)comcom
-for i in local_structure_cal(locals, ads_ID, site_ID, atom_array, lattice_info):
-    # print i
-    print "The atom name is {}, the number is {}, the distence from Ni is {}, the coordiante is {} and the C-Ni-M angle is {}".format(*i)
+'''
+格式化输出 局部结构的信息:
+        原子名称,  原子序号, 距离Ni Site多少, 坐标(相对), 键角(M - Ni - Z_axis)
+'''
+for i in local_structure_cal(locals, site_ID, atom_array, lattice_info):
+    print "The atom name is {}, the number is {}, the distence from Ni is {},\
+ the coordiante is {} and the C - Ni-Z-axis angle is {}".format(*i)
