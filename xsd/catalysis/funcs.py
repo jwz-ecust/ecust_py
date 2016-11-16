@@ -46,8 +46,9 @@ def dis_calculate(i, j, atom_array, lattice_info):
     相对坐标需要转化为绝对坐标
     '''
     abc = lattice_info.diagonal()
-    i_ads_coor = atom_array[i].dot(abc)
-    j_ads_coor = atom_array[j].dot(abc)
+    print abc
+    i_ads_coor = atom_array[i] * abc
+    j_ads_coor = atom_array[j] * abc
     return np.linalg.norm(i_ads_coor - j_ads_coor)
 
 
@@ -86,12 +87,14 @@ def extract_local_structure(atom_array, atom_list, site_ID, lattice_info, n=10):
     '''
     locals = []
     ads_site = atom_array[site_ID]
-    for i in range(2, len(atom_list)):
+    for i in range(len(atom_list)):
         if i == site_ID:
+            print i
             locals.append((atom_list[i], i, 0.0, atom_array[i]))
         else:
-            locals.append((atom_list[i], i, dis_calculate(
-                i, site_ID, atom_array, lattice_info), atom_array[i]))
+            distence = dis_calculate(i, site_ID, atom_array, lattice_info)
+            print distence, i
+            locals.append((atom_list[i], i, distence, atom_array[i]))
     return sorted(locals, key=lambda x: x[2])[1:n + 1]
 
 
@@ -123,21 +126,23 @@ def local_structure_cal(locals, site_ID, atom_array, lattice_info):
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     考虑与吸附 Site(Ni) 最近的10个原子 (这里先考虑10个原子)
         1. distance  finished
-        2. 夹角 (考虑 Ni-M 之间的夹角 沿着Z轴方向) finished
+        2. 夹角 (考虑 Ni-C 键反向与X, Z轴方向的夹角)  C: Coordinate
         3. 原子的电负性 (考虑中) ===> 包含在 库伦矩阵中???
         4. d-band center (未考虑)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     '''
-    along_Z_axis_coor = atom_array[site_ID]
-    along_Z_axis_coor[0:2] = [0.0, 0.0]
-    fix_vector = along_Z_axis_coor
+    X_axis = np.array([1.0, 0.0, 0.0])
+    Z_axis = np.array([0.0, 0.0, 1.0])
+
+    fix_vector = Z_axis
     # fix_vector is along the Z axis  [0., 0., 0.49001]
     info_local_structure = []
     for i in locals:
-        sub_bond = i[-1] - atom_array[site_ID]
-        angle = bond_angle_cal(fix_vector, sub_bond)
-        info_list = list(i)
-        info_list.append(angle)
+        sub_bond_vec = i[-1] - atom_array[site_ID]
+        angle_Y = bond_angle_cal(Z_axis, sub_bond_vec)
+        angle_X = bond_angle_cal(X_axis, sub_bond_vec)
+        info_list = [str(m) for m in i]
+        info_list.extend([str(angle_X), str(angle_Y)])
         info_local_structure.append(info_list)
     return info_local_structure
 
@@ -180,6 +185,15 @@ locals = extract_local_structure(atom_array, atom_list, site_ID, lattice_info)
 格式化输出 局部结构的信息:
         原子名称,  原子序号, 距离Ni Site多少, 坐标(相对), 键角(M - Ni - Z_axis)
 '''
-for i in local_structure_cal(locals, site_ID, atom_array, lattice_info):
-    print "The atom name is {}, the number is {}, the distence from Ni is {},\
- the coordiante is {} and the C - Ni-Z-axis angle is {}".format(*i)
+
+
+local_infomation = local_structure_cal(
+    locals, site_ID, atom_array, lattice_info)
+
+print local_infomation
+
+with open('./data.txt', 'w') as fuck:
+    fuck.write('locat structure data information\n')
+    for i in local_infomation:
+        s = '    '.join(i) + '\n'
+        fuck.write(s)
