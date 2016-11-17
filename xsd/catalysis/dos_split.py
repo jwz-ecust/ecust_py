@@ -3,11 +3,6 @@ import re
 import os
 import numpy as np
 
-cwd = os.getcwd()
-dos_path = os.path.join(cwd, 'DOSCAR')
-# incar_path = os.path.join(cwd, 'INCAR')
-outcar_path = os.path.join(cwd, 'OUTCAR')
-
 
 def clean_null(l):
     return [_ for _ in l if _]
@@ -67,4 +62,19 @@ def get_d_band_center(path, feimi):
     return sum_multi / sum
 
 
-_split(dos_path)
+if __name__ == '__main__':
+    '''
+    步骤:
+        1. 获取当前路径, 获取DOSCAR路径,OUTCAR路径
+        2. 获取费米能级
+        3. 生成DOSCAR文件
+        4. 获取d带中心
+    '''
+    cwd = os.getcwd()
+    dos_path = os.path.join(cwd, 'DOSCAR')
+    # incar_path = os.path.join(cwd, 'INCAR')
+    outcar_path = os.path.join(cwd, 'OUTCAR')
+    _split(dos_path)
+    fermi = _get_feimi(outcar_path)
+    file_list = os.listdir(cwd)
+    # 需要指定具体哪个原子
