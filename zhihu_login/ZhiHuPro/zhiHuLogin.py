@@ -78,4 +78,5 @@ def zhiHuLogin():
     spy.output(text, "out/home.html")
 
 if __name__ == '__main__':
+    # print __file__
     zhiHuLogin()
