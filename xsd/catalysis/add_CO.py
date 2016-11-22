@@ -8,9 +8,9 @@ import numpy as np
 生成新的POSCAR
 '''
 
-cwd = os.getcwd()
-contcar = os.path.join(cwd, 'CONTCAR')
-poscar = os.path.join(cwd, 'POSCAR')
+# cwd = os.getcwd()
+# contcar = os.path.join(cwd, 'CONTCAR')
+# poscar = os.path.join(cwd, 'POSCAR')
 
 
 def add_CO(contcar, poscar):
@@ -54,3 +54,15 @@ def add_CO(contcar, poscar):
                 print i
             with open(poscar, 'w') as ttt:
                 ttt.writelines(new_content)
+
+
+# rootdir = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/gathered_contcar'
+#
+# list_dirs = os.listdir(rootdir)
+#
+# for i in list_dirs:
+#     full_path = os.path.join(rootdir, i)
+#     if os.path.isdir(full_path):
+#         contcar = os.path.join(full_path, 'CONTCAR')
+#         poscar = os.path.join(full_path, 'POSCAR')
+#         add_CO(contcar, poscar)
