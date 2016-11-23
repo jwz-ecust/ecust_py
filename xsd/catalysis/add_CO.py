@@ -56,6 +56,10 @@ def add_CO(contcar, poscar):
                 ttt.writelines(new_content)
 
 
+contcar = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/CONTCAR'
+poscar = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/POSCAR'
+add_CO(contcar, poscar)
+
 # rootdir = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/gathered_contcar'
 #
 # list_dirs = os.listdir(rootdir)

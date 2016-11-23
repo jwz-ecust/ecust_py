@@ -11,6 +11,7 @@ import os
 
 sublist_path = '/home/users/jwzhang/sublist'
 path = '/home/users/jwzhang/machine-learning-data/NiP-ads/work'
+
 path_list = []
 requirement = ['INCAR', 'KPOINTS', 'POTCAR', 'POSCAR', 'vasp.script']
 for i in os.walk(path):
