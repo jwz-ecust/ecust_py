@@ -27,6 +27,7 @@ def _split(dos_path, n_site=None):
     n_site 就是 实际对应的原子序号(从1 开始)
     生成DOS0 是总的DOS
     '''
+
     g_dos_path = os.path.dirname(dos_path)
     with open(dos_path, 'r') as fuck:
         number = int(fuck.readline().strip().split(' ')[0])

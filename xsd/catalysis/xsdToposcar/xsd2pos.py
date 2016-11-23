@@ -7,6 +7,11 @@ import os
 import numpy as np
 
 
+'''
+get POSCAR
+'''
+
+
 def xsd2pos(file_path, pos_path):
     '''
     read data from xsd file to generate POSCAR
