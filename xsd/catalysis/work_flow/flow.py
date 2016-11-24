@@ -3,6 +3,7 @@ import subprocess
 import re
 import os
 import logging
+import sys
 '''
 1. 读取sublist 内作业的目录
 2. qstat -f 提取运行下(Q+R)的作业目录
@@ -10,7 +11,11 @@ import logging
 4. 如果sublist的目录不在运行, 则投作业
         -如果投作业成功, 删掉对应目录
         -如果投作业失败, 不删掉
+
+==> 新增: 根据运行作业数量, 计算还可以投多少作业.
 '''
+
+total_job_number = 100   # short job 数目, 根据服务器情况可调
 # create logger
 logger_name = "qsub_job"
 logger = logging.getLogger(logger_name)
@@ -56,9 +61,16 @@ for item in qstat_:
             runlist.append(out)
 
 
+residual_number = total_job_number - len(runlist)
+if residual_number == 0:
+    print "No residual job number for qsubing"
+    sys.exit("sorry, goodbye!")
+
 # 检查作业是否有这五个文件
 input_files = ['INCAR', 'KPOINTS', 'POSCAR', 'POTCAR', 'vasp.script']
-for i in sublist:
+# for i in sublist:
+for i in range(residual_number):
+    i = sublist[i]
     i = i.strip()
     print i
     # 检查 INCAR POTCAR KPOINTS vasp.script POSCAR是否全
