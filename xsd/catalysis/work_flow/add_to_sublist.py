@@ -39,7 +39,6 @@ for item in qstat_:
             out = '/'.join(out.split('/')[:-1])
             runlist.append(out)
 
-print runlist
 
 path_list = []
 requirement = ['INCAR', 'KPOINTS', 'POTCAR', 'POSCAR', 'vasp.script']
@@ -55,9 +54,8 @@ for i in os.walk(path):
         # os.path.exists(out_path) 判断是否已经在跑或者跑完
         """需要判断 当前路径是否在 sublist 或者 runlist???"""
         if not any([os.path.exists(out_path), i[0] in runlist, i[0] in sublist]):
-            print i
             path_list.append(i[0])
 
-with open(sublist_path, 'wa') as fck:
+with open(sublist_path, 'w') as fck:
     for i in path_list:
         fck.write(i + '\n')
