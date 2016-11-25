@@ -13,7 +13,8 @@ def search(lines, pattern, history=5):
         previous_lines.append(li)
 
 
-lines = ['zjw', 'z', 'zz', 'j', 'jjj', 'zzzzz', 'www', 'w', 'jb', 'jjj', 'jwz', 'ecust']
+lines = ['zjw', 'z', 'zz', 'j', 'jjj', 'zzzzz',
+         'www', 'w', 'jb', 'jjj', 'jwz', 'ecust']
 pattern = 'j'
 history = 3
 

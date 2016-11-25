@@ -33,16 +33,24 @@ runlist = get_running_dirs()
 work_dir = '/home/users/jwzhang/machine-learning-data/NiP-ads/work'
 save_file = '/home/users/jwzhang/sublist'
 
+# 获取所待投作业目录, 返回列表
+file = open(save_file, 'r')
+sublist = [_.strip() for _ in file.readlines() if _]
+file.close()
+
+
 dirs = os.listdir(work_dir)
-with open(save_file, 'wa') as fuck:
+with open(save_file, 'a') as fuck:
     for i in dirs:
-        if i.startswith('USPEX'):      # 排除108, 还没跑
-            slab_path = work_dir + '/' + i
-            dos_path_1 = work_dir + '/' + i + '/dos_cal/step1'
-            dos_path_2 = work_dir + '/' + i + '/dos_cal/step2'
-            # 判断dos_step_1是否在队列中, 是否投掉作业
-            if dos_path_1 not in runlist and os.path.exists(os.path.join(dos_path_1, 'CHGCAR')):
-                fuck.write(dos_path_2 + '\n')
-                shutil.copy(os.path.join(dos_path_1, 'CHGCAR'), dos_path_2)
-                shutil.copy(os.path.join(dos_path_1, 'CONTCAR'), dos_path_2)
-                print dos_path_2
+        slab_path = work_dir + '/' + i
+        dos_path_1 = work_dir + '/' + i + '/dos_cal/step1'
+        dos_path_2 = work_dir + '/' + i + '/dos_cal/step2'
+        # 判断dos_step_1是否在队列中, 是否投掉作业
+        if dos_path_1 not in runlist and dos_path_2 not in sublist and os.path.exists(os.path.join(dos_path_1, 'CHGCAR')):
+            fuck.write(dos_path_2 + '\n')
+            # shutil.copy 使用类似与linux中的cp命令
+            # 指定待复制的文件和复制到目录的文件(文件名可指定)
+            shutil.copy(os.path.join(dos_path_1, 'CHGCAR'), dos_path_2)
+            shutil.copy(os.path.join(dos_path_1, 'CONTCAR'),
+                        os.path.join(dos_path_2, 'POSCAR'))
+            print dos_path_2
