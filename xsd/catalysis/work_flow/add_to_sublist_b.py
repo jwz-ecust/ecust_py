@@ -3,20 +3,11 @@ import os
 import subprocess
 
 '''
-遍历目录的所有job目录 =======> os.walk(dir)
-    判断DOSCAR是否存在
-        存在(判断是否在Runlist里?)
-            是:
-                还在running, 不虚
-            否(看Forces是否标准):
-                是: ==> 很好
-                否: ==> 不然就输出路径重新处理
-        不存在(是否在Runlist或者Queuelist中):
-            是:
-                慢慢等呗
-            否(检查五个文件全不全):
-                全: ==> 加入QueueList
-                不全: ==> 等待编写作业
+遍历目录的所有job目录
+1. 判断是否运行,
+2. 是否满足投作业要求,
+3. 是否已经在sublist里面
+==> 匹配就讲目录写入sublist
 
 '''
 
@@ -28,8 +19,7 @@ file = open(sublist_path, 'r')
 sublist = [_.strip() for _ in file.readlines() if _]
 file.close()
 
-
-# 获取在队列中的job的目录列表 ==> runlist
+# 获取在队列中的job的目录列表
 runlist = []
 qstat_info = subprocess.check_output("qstat -f", shell=True)
 qstat_ = qstat_info.split("Job Id: ")
