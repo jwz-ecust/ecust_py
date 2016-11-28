@@ -79,7 +79,7 @@ with open(sub_dir, 'w') as fff:
                     try:
                         subprocess.check_call(['qsub', vasp_script])
                     except:
-                        print "保存下哈哈"
+                        print "Fuck! Jobs have up to limit"
                         fff.writelines(sublist)   # 退出前保存下所有路径
                         logger.info("{} up to submit limit!".format(i))
                         sys.exit("jobs has already up to limit, Bye Bye!")

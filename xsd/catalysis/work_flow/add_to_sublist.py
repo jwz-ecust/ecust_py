@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import subprocess
+import shutil
 
 '''
 遍历目录的所有job目录 =======> os.walk(dir)
@@ -78,7 +79,6 @@ with open(sublist_path, 'a') as fucku:
         if os.path.exists(outcar):
             # 判断是否在runlist里面
             if sub_dir in runlist:
-                pass
                 print "This job in {} is still running!".format(sub_dir)
                 # 不在runlist里面的话判断是否收敛
             else:
@@ -116,6 +116,16 @@ with open(sublist_path, 'a') as fucku:
                         print "This job in {} needs to be subed!".format(sub_dir)
                         fucku.write(_sub_dir)
                     else:
-                        # 输入文件不全, 待我编写作业
-                        pass
-                        print "This job in {} need to be written!".format(sub_dir)
+                        if 'step2' in sub_dir:
+                            step1 = sub_dir[:-1] + '1'
+                            try:
+                                chgcar = os.path.join(step1, "CHGCAR")
+                                _poscar = os.path.join(step1, "POSCAR")
+                                shutil.copy(chgcar, sub_dir)
+                                shutil.copy(_poscar, sub_dir)
+                                fucku.write(_sub_dir)
+                            except:
+                                pass
+                                # 输入文件不全, 待我编写作业
+                        else:
+                            print "This job in {} need to be written!".format(sub_dir)
