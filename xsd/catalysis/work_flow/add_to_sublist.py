@@ -17,55 +17,105 @@ import subprocess
             否(检查五个文件全不全):
                 全: ==> 加入QueueList
                 不全: ==> 等待编写作业
-
 '''
 
 sublist_path = '/home/users/jwzhang/sublist'
-path = '/home/users/jwzhang/machine-learning-data/NiP-ads/work'
+top_path = '/home/users/jwzhang/machine-learning-data/NiP-ads/work'
 
 # 读取 sublist
 file = open(sublist_path, 'r')
-sublist = [_.strip() for _ in file.readlines() if _]
+sublist = file.readlines()
 file.close()
 
 
-# 获取在队列中的job的目录列表 ==> runlist
-runlist = []
-qstat_info = subprocess.check_output("qstat -f", shell=True)
-qstat_ = qstat_info.split("Job Id: ")
-for item in qstat_:
-    item = item.split("    ")
+def get_run_list():
+    # 获取在队列中的job的目录列表 ==> 返回runlist
 
-    for tag in item:
-        if "job_state" in tag:
-            status = tag.split('=')[-1].strip()
-            if status == 'C':
-                break
+    runlist = []
+    qstat_info = subprocess.check_output("qstat -f", shell=True)
+    qstat_ = qstat_info.split("Job Id: ")
+    for item in qstat_:
+        item = item.split("    ")
 
-        if "Output" in tag:
-            out = tag.split('=')[-1].strip().split(':')[-1]
-            out = ''.join(out.split('\t'))
-            out = ''.join(out.split('\n'))
-            out = '/'.join(out.split('/')[:-1])
-            runlist.append(out)
+        for tag in item:
+            if "job_state" in tag:
+                status = tag.split('=')[-1].strip()
+                if status == 'C':
+                    break
+
+            if "Output" in tag:
+                out = tag.split('=')[-1].strip().split(':')[-1]
+                out = ''.join(out.split('\t'))
+                out = ''.join(out.split('\n'))
+                out = '/'.join(out.split('/')[:-1])
+                runlist.append(out)
+    return runlist
 
 
-path_list = []
-requirement = ['INCAR', 'KPOINTS', 'POTCAR', 'POSCAR', 'vasp.script']
-for i in os.walk(path):
-    flag = True
-    for _ in requirement:
-        temp_path = os.path.join(i[0], _)
+def check_5_inputfiles(path):
+    '''
+    检查是否存在五个输入文件.....未完待续
+    返回 True or False
+    '''
+    requirement = ['INCAR', 'KPOINTS', 'POTCAR', 'POSCAR', 'vasp.script']
+    for tt in requirement:
+        temp_path = os.path.join(path, tt)
         if not os.path.exists(temp_path):
-            flag = False
+            return False
             break
-    if flag:
-        out_path = os.path.join(i[0], 'OUTCAR')
-        # os.path.exists(out_path) 判断是否已经在跑或者跑完
-        """需要判断 当前路径是否在 sublist 或者 runlist???"""
-        if not any([os.path.exists(out_path), i[0] in runlist, i[0] in sublist]):
-            path_list.append(i[0])
+    else:
+        return True
 
-with open(sublist_path, 'w') as fck:
-    for i in path_list:
-        fck.write(i + '\n')
+
+# 获取runlist==>
+runlist = get_run_list()
+# 开始遍历, 同时打开文件准备修改
+with open(sublist_path, 'a') as fucku:
+    for sub in os.walk(top_path):
+        sub_dir = sub[0]
+        # 判断路径是否存在OUTCAR
+        outcar = os.path.join(sub_dir, 'OUTCAR')
+        if os.path.exists(outcar):
+            # 判断是否在runlist里面
+            if sub_dir in runlist:
+                pass
+                print "This job in {} is still running!".format(sub_dir)
+                # 不在runlist里面的话判断是否收敛
+            else:
+                # 判断是否收敛
+                output = subprocess.check_output(['grep', 'FORCES:', outcar])
+                final_force = output.strip().split('\n')[-1].split(' ' * 4)[1]
+                if float(final_force) <= 0.05:
+                    print "This job in {} has been finished!".format(sub_dir)
+                else:
+                    # 可以复制CONTACAR, 删掉 重投-----to-be-updated
+                    # 并且不是DOS路径
+                    if 'dos' not in sub_dir:
+                        print "the force in {} is not convergence, resubing".format(sub_dir)
+                        origin_file_list = [
+                            'INCAR', 'KPOINTS',
+                            'POTCAR', 'POSCAR',
+                            'vasp.script', 'CONTCAR']
+                        for _ in os.listdir(sub_dir):
+                            if os.path.isfile(os.path.join(sub_dir, _)) and _ not in origin_file_list:
+                                os.remove(os.path.join(sub_dir, _))
+                        os.rename(os.path.join(sub_dir, 'CONTCAR'),
+                                  os.path.join(sub_dir, 'POSCAR'))
+                        fucku.write(sub_dir + '\n')
+
+        else:
+            _sub_dir = sub_dir + "\n"
+            # 检查当前路径是否在runlist 或者 sublist中
+            if sub_dir in runlist or _sub_dir in sublist:
+                print "This job in {} is Queue! Just waiting!".format(sub_dir)
+            else:
+                if len(sub[-1]) >= 4:
+                    # 检查5个输入文件
+                    if check_5_inputfiles(sub_dir):
+                        # 满足条件, 并写入sublist
+                        print "This job in {} needs to be subed!".format(sub_dir)
+                        fucku.write(_sub_dir)
+                    else:
+                        # 输入文件不全, 待我编写作业
+                        pass
+                        print "This job in {} need to be written!".format(sub_dir)
