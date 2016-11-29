@@ -14,6 +14,7 @@ import sys
 
 ==> 新增: 根据运行作业数量, 计算还可以投多少作业.XXX (容易出错)
 ====> 一旦qsub 超过限制, 则立马退出程序 (这样可以避免计算作业数量)
+++++++++ 如果sublist里面空的处理
 '''
 
 # create logger
@@ -68,6 +69,7 @@ with open(sub_dir, 'w') as fff:
     for sub in sublist:
         i = sub.strip()
         # 检查 INCAR POTCAR KPOINTS vasp.script POSCAR是否齐全
+
         try:
             os.chdir(i)
         except OSError as e:
