@@ -67,6 +67,7 @@ class batch_qsub(object):
     def qsub(self, path):
         if self._check_requirement(path):
             if path not in self.runlist:
+                os.chdir(path)
                 vasp_script = os.path.join(path, 'vasp.script')
                 try:
                     subprocess.check_call(['qsub', vasp_script])

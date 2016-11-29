@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 import subprocess
 import shutil
 
@@ -79,7 +80,7 @@ class add_to_sublist(object):
             if path in self.runlist:
                 print "the job in {} is stilling runing".format(path)
             else:
-                final_force = _get_force(outcar)
+                final_force = self._get_force(outcar)
                 if final_force <= 0.05:
                     print "this job in {} has been finished".format(path)
                 else:
@@ -103,7 +104,7 @@ class add_to_sublist(object):
             else:
                 if self._check_requirement(path):
                     print "This job in {} would be added to sublist!".format(path)
-                    sublist.append(path)
+                    self.sublist.append(path)
                 else:
                     if "step2" in path:
                         step1 = path[:-1] + '1'
@@ -112,17 +113,16 @@ class add_to_sublist(object):
                         if os.path.exists(_chgcar) and os.path.exists(_poscar):
                             shutil.copy(_chgcar, path)
                             shutil.copy(_poscar, path)
-                            sublist.append(path)
+                            self.sublist.append(path)
                     else:
                         print "This job in {} is not complete".format(path)
 
-    @classmethod
-    def _get_force(outcar):
+    def _get_force(self, outcar):
         output = subprocess.check_output(['grep', 'FORCES:', outcar])
         return float(output.strip().split('\n')[-1].split(" " * 4)[1])
 
     def all_walk(self):
-        for sub in iterlist:
+        for sub in self.iterlist:
             self._check(sub)
         self.tosubfile()
 
