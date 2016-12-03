@@ -37,6 +37,7 @@ def read_xsd(file_path):
 
     # transform raw XYZ into numpy array
     atom_array = np.array(coordiante_list, dtype=np.float)
+    print atom_array, atom_list, lattice_info
     return atom_array, atom_list, lattice_info
 
 
@@ -154,7 +155,7 @@ starting using
 '''
 
 # giving the xsd file
-path = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP_001-u.xsd'
+path = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/all dos/USPEX_generation_1.xsd'
 
 atom_array, atom_list, lattice_info = read_xsd(path)
 
@@ -163,6 +164,7 @@ Ni_site_number = find_the_max_site(atom_array, atom_list)
 # 得到吸附位点的序号(==>numpy)
 
 site_ID = Ni_site_number   # need to give the Ni site (ads site)
+print site_ID
 
 length = atom_array.shape[0]
 # for i in extract_local_structure(atom_array, atom_list, site_ID):
@@ -190,7 +192,7 @@ locals = extract_local_structure(atom_array, atom_list, site_ID, lattice_info)
 local_infomation = local_structure_cal(
     locals, site_ID, atom_array, lattice_info)
 
-print local_infomation
+# print local_infomation
 
 with open('./data.txt', 'w') as fuck:
     fuck.write('locat structure data information\n')
