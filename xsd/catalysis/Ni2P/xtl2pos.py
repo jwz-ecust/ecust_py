@@ -56,7 +56,7 @@ def coordinate_z_half(coordinates):
     for i in xyz:
         i[2] = i[2] / 2
         _coordinates.append(
-            "  " + '     '.join([str(_t).ljust(8) for _t in i]) + '\n')
+            "  " + '     '.join([str(_t).rjust(12) for _t in i]) + '    T    T    T\n')
     return _coordinates
 
 
