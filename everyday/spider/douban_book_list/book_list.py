@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import requests
 import time
 import datetime
+import subprocess
+import os
 
 r = requests.get('https://book.douban.com')
 html = r.text
@@ -86,3 +88,6 @@ def save():
 
 if __name__ == '__main__':
     save()
+    path = '/Users/zhangjiawei/Code/myblog'
+    os.chdir(path)
+    subprocess.call(['hexo', 'd', '-g'])
