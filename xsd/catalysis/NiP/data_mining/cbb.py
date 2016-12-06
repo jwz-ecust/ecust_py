@@ -5,39 +5,7 @@
 import xml.etree.cElementTree as ET
 import os
 import numpy as np
-
-
-def read_xsd(file_path):
-    '''
-    read data from xsd file
-    return coordiante_array and atom_list
-    Target: 需要读取 原子种类, 原子坐标, 晶胞参数
-    '''
-    root = ET.ElementTree(file=file_path)
-    # get the spacegroup infor
-    direction = ['A', 'B', 'C']
-    # Xpath 寻找任意属性 .//attribute_name
-    spacegroup = root.find(".//SpaceGroup")
-    lattice_info = np.zeros((3, 3))
-    for i in range(3):
-        key_name = '{}Vector'.format(direction[i])
-        lattice_info[i] = np.array(spacegroup.get(
-            key_name).split(','), dtype=np.float)
-
-    atom_list = []
-    coordiante_list = []
-
-    for element in root.iter():
-
-        if 'XYZ' in element.keys() and 'Components' in element.keys():
-            atom_name = element.get('Components')
-            coordiante = element.get('XYZ').split(',')
-            atom_list.append(atom_name)
-            coordiante_list.append(coordiante)
-
-    # transform raw XYZ into numpy array
-    atom_array = np.array(coordiante_list, dtype=np.float)
-    return atom_array, atom_list, lattice_info
+import re
 
 
 def read_contcar(contcar_path):
@@ -77,10 +45,6 @@ def read_contcar(contcar_path):
             coordinate[i] = [float(_) for _ in temp]
 
     return coordinate, atom_array, lattice
-
-
-# zjw = "/Volumes/WD/data/NiP_data/surface/contcar/CONTCAR_slab_100"
-# read_contcar(zjw)
 
 
 def dis_calculate(i, j, atom_array, lattice_info):
@@ -189,52 +153,46 @@ def local_structure_cal(locals, site_ID, atom_array, lattice_info):
     return info_local_structure
 
 
-'''
-================================================================================
-starting mining
-================================================================================
-'''
-
-# giving the contcar file
-# zjw = "/Volumes/WD/data/NiP_data/surface/contcar/CONTCAR_slab_100"
-
-zjw = "/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP/data_mining/CONTCAR"
-
-# path = '/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP_001-u.xsd'
-
-atom_array, atom_list, lattice_info = read_contcar(zjw)
-
-Ni_site_number = find_the_max_site(atom_array, atom_list)
-# 注意 numpy原子序号从0开始  而xsd文件中的是从1开始,  数值差1
-# 得到吸附位点的序号(==>numpy)
-
-site_ID = Ni_site_number   # need to give the Ni site (ads site)
-print site_ID
-length = atom_array.shape[0]
-# for i in extract_local_structure(atom_array, atom_list, site_ID):
-#     print i
-# 顺便算一下库伦矩阵
-coulomb_matrix = np.zeros((length, length))
-for i in range(length):
-    for j in range(length):
-        coulomb_matrix[i][j] = coulomb_matrix_calculate(
-            i, j, atom_list, atom_array, lattice_info)
+def get_final_energy(oszicar_path):
+    '''
+    给定 OSZICAR 文件的路径
+    通过正则获取能量数据
+    并返回最后一步的能量
+    '''
+    with open(oszicar_path) as fuck:
+        return float(re.findall('E0= (.+?\+\d{2})', fuck.read())[-1])
 
 
-locals = extract_local_structure(atom_array, atom_list, site_ID, lattice_info)
-'''
-格式化输出 局部结构的信息:
-        原子名称,  原子序号, 距离Ni Site多少, 坐标(相对), 键角(M - Ni - Z_axis)
-'''
+#  get all data
+def get_data():
+    energy_of_CO = -14.7714764
+    path = "/Volumes/WD/data/NiP_data/"
+    with open('./data.txt', 'w') as fuck:
+        for num in range(1, 111):
+            contcar = path + "surface/contcar/CONTCAR_slab_{}".format(num)
+            surface_path = path + "surface/oszicar/OSZICAR_{}".format(num)
+            co_and_surface_path = path + \
+                "surface_and_CO/oszicar/OSZICAR_{}".format(num)
+            energy_of_surface = get_final_energy(surface_path)
+            energy_of_CO_and_surface = get_final_energy(co_and_surface_path)
+            energy_of_adsorption = energy_of_CO_and_surface - energy_of_surface - energy_of_CO
 
+            atom_array, atom_list, lattice_info = read_contcar(contcar)
+            site_ID = find_the_max_site(atom_array, atom_list)
+            length = atom_array[0]
 
-local_infomation = local_structure_cal(
-    locals, site_ID, atom_array, lattice_info)
+            locals = extract_local_structure(
+                atom_array, atom_list, site_ID, lattice_info)
+            local_infomation = local_structure_cal(
+                locals, site_ID, atom_array, lattice_info)
 
-print local_infomation
+        # with open('./data.txt', 'a') as fuck:
+            fuck.write("Number: " + str(num) + '\n')
+            fuck.write("CO Adsorption Energy: " +
+                       str(energy_of_adsorption) + '\n')
+            for zzz in local_infomation:
+                fuck.write('\t'.join(zzz) + '\n')
+            fuck.write('\n\n\n')
 
-with open('./data.txt', 'w') as fuck:
-    fuck.write('local structure data information\n')
-    for i in local_infomation:
-        s = '    '.join(i) + '\n'
-        fuck.write(s)
+# path = "/Volumes/WD/data/NiP_data/surface/contcar"
+get_data()
