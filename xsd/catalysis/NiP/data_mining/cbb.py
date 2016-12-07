@@ -167,7 +167,7 @@ def get_final_energy(oszicar_path):
 def get_data():
     energy_of_CO = -14.7714764
     path = "/Volumes/WD/data/NiP_data/"
-    with open('./data.txt', 'w') as fuck:
+    with open('./coulomb.txt', 'w') as fuck:
         for num in range(1, 111):
             contcar = path + "surface/contcar/CONTCAR_slab_{}".format(num)
             surface_path = path + "surface/oszicar/OSZICAR_{}".format(num)
@@ -186,13 +186,33 @@ def get_data():
             local_infomation = local_structure_cal(
                 locals, site_ID, atom_array, lattice_info)
 
-        # with open('./data.txt', 'a') as fuck:
-            fuck.write("Number: " + str(num) + '\n')
-            fuck.write("CO Adsorption Energy: " +
-                       str(energy_of_adsorption) + '\n')
-            for zzz in local_infomation:
-                fuck.write('\t'.join(zzz) + '\n')
-            fuck.write('\n\n\n')
+            # 获取局部结构的库伦矩阵
+            charge_info = {'C': 4.0, 'O': 6.0, 'P': 5.0, 'Ni': 10.0}
+            # print len(local_matrix_prepare)
 
-# path = "/Volumes/WD/data/NiP_data/surface/contcar"
+            ads_site = atom_array[site_ID]
+            local_matrix = []
+
+            for i in range(10):
+                atom_1 = local_infomation[i][0]
+                dis = local_infomation[i][2]
+                atom_2 = 'Ni'
+                local_matrix.append(
+                    charge_info[atom_1] * charge_info[atom_2] / (float(dis)**2))
+            local_matrix.append(energy_of_adsorption)
+            fuck.write(' '.join([str(_) for _ in local_matrix]) + '\n')
+
+            # fuck.write("Number: " + str(num) + '\n')
+            # fuck.write("CO Adsorption Energy: " +
+            #            str(energy_of_adsorption) + '\n')
+            # for zzz in local_infomation:
+            #     fuck.write('\t'.join(zzz) + '\n')
+            # fuck.write('\n\n\n')
+
 get_data()
+
+
+'''
+[['P', '4', '2.24590162186', '0.554157217815', '0.298572318951', '0.366982911299', '151.90541729', '99.7450722323'], ['P', '0', '2.27117855945', '0.792101481684', '0.629077925573', '0.45215429285', '138.047707674', '88.9721968434'], ['Ni', '14', '2.85224244144', '0.9169475028', '0.519923728992', '0.349488612883', '153.858928226', '101.675522767'], ['Ni', '15', '3.39176270569', '0.279106614609', '0.482372246793', '0.420991499626', '143.776141306', '93.1034035534'], ['Ni', '25', '3.63757073634', '0.587745443076', '0.809879583216', '0.378250268377', '150.453993379', '98.438250089'], ['P', '1', '4.03753251757', '0.118871141074', '0.145476765681', '0.483421266236', '131.928445882', '84.803850225'], ['Ni', '20', '4.10835189777', '0.456089829314', '0.0359280135099', '0.281521535392', '157.782619675', '107.956588701'], ['Ni', '22', '4.34919801556', '0.578335324851', '0.522443901902', '0.271208107602', '157.907003071', '108.743157236'], ['P', '5', '4.45788220366', '0.0673769801427', '0.148560800667', '0.384276910284', '149.61941014', '97.7201579506'], ['P', '11', '4.75401908466', '0.803851880123', '0.871503174942', '0.295808664744', '157.425232414', '106.796956292']]
+
+'''

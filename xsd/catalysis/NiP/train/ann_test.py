@@ -6,20 +6,24 @@ from pybrain.supervised.trainers import BackpropTrainer
 
 
 # preparing data
-data_path = "/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP/train/ml_data.txt"
+data_path = "/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP/train/coulomb.txt"
 data = numpy.loadtxt(data_path)
 length = data.shape[0]
 
 
-net = buildNetwork(36, 6, 1)
-ds = SupervisedDataSet(36, 1)
+net = buildNetwork(10, 4, 1)
+ds = SupervisedDataSet(10, 1)
 for i in range(length):
-    ds.addSample(data[i][:36], data[i][36])
+    ds.addSample(data[i][:10], data[i][10])
 
-tstdata, trndata = ds.splitWithProportion(0.25)
+trndata, tstdata = ds.splitWithProportion(0.25)
 
-trainer = BackpropTrainer(net, dataset=trndata,
-                          momentum=0.1, verbose=True, weightdecay=0.01)
 
-for i in range(1000):
-    trainer.trainEpochs(10)
+print tstdata
+print trndata
+
+# trainer = BackpropTrainer(net, dataset=trndata,
+#                           momentum=0.1, verbose=True, weightdecay=0.01)
+#
+# for i in range(1000):
+#     trainer.trainEpochs(10)
