@@ -3,6 +3,7 @@ from pybrain.tools.shortcuts import buildNetwork
 from pybrain.structure import SigmoidLayer
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
+from pybrain.utilities import percentError
 
 
 # preparing data
@@ -16,14 +17,13 @@ ds = SupervisedDataSet(10, 1)
 for i in range(length):
     ds.addSample(data[i][:10], data[i][10])
 
-trndata, tstdata = ds.splitWithProportion(0.25)
+trndata, testdata = ds.splitWithProportion(0.75)
+# print trndata.getLength()
+# print testdata.getLength()
 
-
-print tstdata
-print trndata
-
-# trainer = BackpropTrainer(net, dataset=trndata,
-#                           momentum=0.1, verbose=True, weightdecay=0.01)
-#
-# for i in range(1000):
-#     trainer.trainEpochs(10)
+trainer = BackpropTrainer(net, dataset=trndata,
+                          momentum=0.1, verbose=True, weightdecay=0.01)
+print len(testdata['input'])
+print testdata['target']
+for i in range(10):
+    trainer.trainEpochs(10)
