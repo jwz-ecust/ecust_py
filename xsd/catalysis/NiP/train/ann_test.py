@@ -7,15 +7,16 @@ from pybrain.utilities import percentError
 
 
 # preparing data
-data_path = "/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP/train/coulomb.txt"
+data_path = "/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP/train/bader_coulomb.txt"
 data = numpy.loadtxt(data_path)
-length = data.shape[0]
 
+length = data.shape[1]
 
-net = buildNetwork(10, 4, 1)
-ds = SupervisedDataSet(10, 1)
+# print length
+net = buildNetwork(length - 1, 3, 1)
+ds = SupervisedDataSet(length - 1, 1)
 for i in range(length):
-    ds.addSample(data[i][:10], data[i][10])
+    ds.addSample(data[i][:length - 1], data[i][length - 1])
 
 trndata, testdata = ds.splitWithProportion(0.75)
 # print trndata.getLength()
@@ -23,7 +24,7 @@ trndata, testdata = ds.splitWithProportion(0.75)
 
 trainer = BackpropTrainer(net, dataset=trndata,
                           momentum=0.1, verbose=True, weightdecay=0.01)
-print len(testdata['input'])
-print testdata['target']
-for i in range(10):
+for i in range(10000):
     trainer.trainEpochs(10)
+
+print trainer.testOnData(dataset=testdata, verbose=True)

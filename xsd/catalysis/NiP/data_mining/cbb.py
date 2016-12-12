@@ -163,12 +163,22 @@ def get_final_energy(oszicar_path):
         return float(re.findall('E0= (.+?\+\d{2})', fuck.read())[-1])
 
 
+def read_bader(bader_path):
+    bader = []
+    with open(bader_path) as bd:
+        content = bd.readlines()
+        for i in content[2:-4]:
+            bader.append(i.strip().split(" " * 5)[4])
+    return bader
+
+
 #  get all data
 def get_data():
     energy_of_CO = -14.7714764
     path = "/Volumes/WD/data/NiP_data/"
     with open('./coulomb.txt', 'w') as fuck:
         for num in range(1, 111):
+            bader_path = path + "surface/bader/ACF_{}.dat".format(num)
             contcar = path + "surface/contcar/CONTCAR_slab_{}".format(num)
             surface_path = path + "surface/oszicar/OSZICAR_{}".format(num)
             co_and_surface_path = path + \
@@ -189,17 +199,20 @@ def get_data():
             # 获取局部结构的库伦矩阵
             charge_info = {'C': 4.0, 'O': 6.0, 'P': 5.0, 'Ni': 10.0}
             # print len(local_matrix_prepare)
+            # 获取bader 列表
+            bader = read_bader(bader_path)
 
             ads_site = atom_array[site_ID]
             local_matrix = []
 
             for i in range(10):
-                atom_1 = local_infomation[i][0]
+                atom_number = int(local_infomation[i][1])
                 dis = local_infomation[i][2]
-                atom_2 = 'Ni'
+                #atom_2 = 'Ni'
                 local_matrix.append(
-                    charge_info[atom_1] * charge_info[atom_2] / (float(dis)**2))
+                    float(bader[atom_number]) * float(bader[site_ID]) / (float(dis)**2))
             local_matrix.append(energy_of_adsorption)
+
             fuck.write(' '.join([str(_) for _ in local_matrix]) + '\n')
 
             # fuck.write("Number: " + str(num) + '\n')
