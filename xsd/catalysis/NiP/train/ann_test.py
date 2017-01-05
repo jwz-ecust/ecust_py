@@ -7,24 +7,25 @@ from pybrain.utilities import percentError
 
 
 # preparing data
-data_path = "/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP/train/bader_coulomb.txt"
+data_path = "/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP/train/rdf9.txt"
 data = numpy.loadtxt(data_path)
+print data.shape
 
-length = data.shape[1]
+length = data.shape
 
 # print length
-net = buildNetwork(length - 1, 3, 1)
-ds = SupervisedDataSet(length - 1, 1)
-for i in range(length):
-    ds.addSample(data[i][:length - 1], data[i][length - 1])
+net = buildNetwork(length[1] - 1, 8, 4, 1)
+ds = SupervisedDataSet(length[1] - 1, 1)
+for i in range(length[0]):
+    ds.addSample(data[i][:length[1] - 1], data[i][length[1] - 1])
 
+print ds.data
 trndata, testdata = ds.splitWithProportion(0.75)
-# print trndata.getLength()
-# print testdata.getLength()
 
 trainer = BackpropTrainer(net, dataset=trndata,
                           momentum=0.1, verbose=True, weightdecay=0.01)
-for i in range(10000):
+for i in range(100):
     trainer.trainEpochs(10)
 
-print trainer.testOnData(dataset=testdata, verbose=True)
+a = trainer.testOnData(dataset=testdata, verbose=True)
+print a
