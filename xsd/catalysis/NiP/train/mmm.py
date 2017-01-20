@@ -22,13 +22,14 @@ def svm_learn(train, test):
     return real, p[0]
 
 
-path = "/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP/train/rdf9.txt"
+path = "/Users/zhangjiawei/Code/zjw/xsd/catalysis/NiP/train/gab.txt"
 data = np.loadtxt(path)
 shape = data.shape
 rmse = 0.0
 for i in range(shape[0]):
     train, test = leave_one_validation(i, data)
     r, p = svm_learn(train, test)
+    print p, r
     rmse += (r - p)**2
 
 RMSE = (rmse/60)**0.5

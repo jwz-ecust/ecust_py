@@ -22,9 +22,11 @@ def save(url, p_path):
     #         ff.write(chunk)
 
 
-p_path = '/Users/zhangjiawei/Pictures/hupu_photo'
+p_path = '/Users/zhangjiawei/Pictures/2017/hupu_photo'
 
 with open('./urls.txt', 'r') as fuck:
     urls = fuck.readlines()
     for url in urls:
+        url = 'http:' + url
+        print url
         save(url, p_path)
