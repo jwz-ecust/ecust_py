@@ -1,6 +1,0 @@
-numpy
-mpmath
-matplotlib
-scipy
-gmpy
-sympy
