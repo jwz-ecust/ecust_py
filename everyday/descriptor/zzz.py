@@ -4,15 +4,15 @@
 """
 from PIL import Image  # 需要加载PIL库
 import os
-# import urllib
+import urllib
 import StringIO
 import pytesseract  # 这是我自己写的
-# url = 'http://202.119.81.113:8080/verifycode.servlet'  # 验证码URL
-# r = urllib.urlopen(url)
+url = 'http://202.119.81.113:8080/verifycode.servlet'  # 验证码URL
+r = urllib.urlopen(url)
 # f = open('VCode.jpg', 'wb')    #这里是将验证码图片写入到本地文件
 # f.write(r.read())
 # f.close()
-# imgBuf = StringIO.StringIO(r.read())  # 采用StringIO直接将验证码文件写到内存，省去写入硬盘
+imgBuf = StringIO.StringIO(r.read())  # 采用StringIO直接将验证码文件写到内存，省去写入硬盘
 img = Image.open(imgBuf)  # PIL库加载图片
 print img.format, img.size, img.mode  # 打印图片信息，可以删去
 img = img.convert('RGBA')  # 转换为RGBA

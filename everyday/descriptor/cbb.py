@@ -5,14 +5,12 @@ a.x 查找的顺序:
 
 
 class Ts(object):
-
     def __init__(self):
         self.a = 10090238409382
         self.b = 200
 
 
 class Ts2(object):
-
     def __init__(self):
         self.a = 1
         self.b = 0.1
@@ -27,7 +25,6 @@ class Ts2(object):
 
 
 class TT1(object):
-
     def __init__(self):
         self.x = 1000
         self.y = 100
