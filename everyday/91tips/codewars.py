@@ -41,6 +41,25 @@ def fibonacci(n):
         return res
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 result = fibonacci(21)
 
 sum_result = sum([Fraction(i[0], i[1]) for i in zip(result[1:], result[0:-1])])

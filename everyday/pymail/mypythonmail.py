@@ -5,7 +5,8 @@ from email.header import Header
 
 sender = "13162582627@163.com"
 pwd="zjw865614"
-receivers = ['897978644@qq.com', "aaronzjww@icloud.com", "1258327833@qq.com"]
+# receivers = ['897978644@qq.com', "aaronzjww@icloud.com", "1258327833@qq.com"]
+receivers = "aaronzjw@icloud.com"
 
 msg = MIMEText("张佳伟", _subtype='plain', _charset='utf-8')
 msg["Subject"] = Header("A mail send by python")
