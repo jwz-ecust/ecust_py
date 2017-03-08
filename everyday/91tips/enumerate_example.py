@@ -1,26 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Created by jwz@ecust on 16/10/14
-
-# from collections import namedtuple
-#
-# def enum(*posarg, **keysarg):
-#     #   返回一个类, type 可以构造类
-#     return type("Enum", (object,),
-#                 dict(zip(posarg, xrange(len(posarg))), **keysarg))
-#
-#
-# Seasons = enum("Spring","Summer", "Autumn", winter=1)
-# print Seasons
-# print type(Seasons)
-# print Seasons.__dict__
-#
-#
-# Season = namedtuple("Season", "spring summer autumn winter")._make(range(4))
-# print Season
-# Season._replace(spring=2)
-# print Season
-
 from flufl.enum import Enum
 
 

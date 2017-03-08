@@ -12,10 +12,7 @@ def check(a, b):
 team_1 = ['a', 'b', 'c']
 team_2 = ['x', 'y', 'z']
 
-# for j in itertools.permutations(team_1, 3):
-#     print j
-#     print check(j, team_2)
-#     print "#"*50
+
 
 check_list = [('a', 'x'), ('c', 'x'), ('c', 'z')]
 # for i in itertools.permutations(team_1, 3):
