@@ -21,7 +21,6 @@
 # Season._replace(spring=2)
 # print Season
 
-
 from flufl.enum import Enum
 
 

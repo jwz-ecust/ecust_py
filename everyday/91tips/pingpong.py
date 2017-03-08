@@ -23,7 +23,6 @@ check_list = [('a', 'x'), ('c', 'x'), ('c', 'z')]
 #     if f(i, team_2) == 3:
 #         print i, team_2
 
-
 for i in itertools.permutations(team_1, 3):
     for j in zip(i, team_2):
         if j in check_list:

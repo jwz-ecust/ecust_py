@@ -1,9 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-from Mylogging import INFO,WARNING
+from Mylogging import INFO, WARNING
 """
 this documention deal with request
 """
+
+
 def str_to_unicode(text, encoding='utf-8'):
     """
     convert string to unicode
@@ -13,11 +15,17 @@ def str_to_unicode(text, encoding='utf-8'):
     elif isinstance(text, unicode):
         return text
     else:
-        raise TypeError('str_to_unicode must receive a str or unicode object, got %s' % type(text).__name__)
+        raise TypeError(
+            'str_to_unicode must receive a str or unicode object, got %s' %
+            type(text).__name__)
 
 
 class Request(object):
-    __slots__ = ['encoding','formdata','url','method','headers','callback','filename','download_type']
+    __slots__ = [
+        'encoding', 'formdata', 'url', 'method', 'headers', 'callback',
+        'filename', 'download_type'
+    ]
+
     def __init__(self, *args, **kwargs):
 
         try:
@@ -37,17 +45,21 @@ class Request(object):
 
         try:
             formdata = kwargs.pop('formdata')
-            if(self.method == "GET"):
-                WARNING("[request] ...there exists dict of formdata turn 'GET' to 'POST'")
+            if (self.method == "GET"):
+                WARNING(
+                    "[request] ...there exists dict of formdata turn 'GET' to 'POST'"
+                )
                 self.method = 'POST'
         except Exception:
             formdata = None
-            if(self.method == 'POST'):
-                WARNING("[request]...formdata is empty auto turn 'POST' to 'GET'")
+            if (self.method == 'POST'):
+                WARNING(
+                    "[request]...formdata is empty auto turn 'POST' to 'GET'")
                 self.method = 'GET'
 
         if formdata:
-            items = formdata.iteritems() if isinstance(formdata, dict) else formdata
+            items = formdata.iteritems() if isinstance(formdata,
+                                                       dict) else formdata
             self.formdata = [(str_to_unicode(k, encoding = 'utf-8'), str_to_unicode(v, encoding = 'utf-8')) \
                     for k,v in items]
 
@@ -73,10 +85,7 @@ class Request(object):
             self.download_type = kwargs.pop('download_type')
         except Exception:
             if self.method == "DOWNLOAD":
-                WARNING("[request] method is download,but there isn't exists and method??, stop it!!")
+                WARNING(
+                    "[request] method is download,but there isn't exists and method??, stop it!!"
+                )
                 return
-
-
-
-
-

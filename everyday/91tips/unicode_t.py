@@ -1,4 +1,4 @@
-# coding=utf-8
-s = "张佳伟"
+# coding:utf-8
+s = u"张佳伟"
 print isinstance(s, unicode)
-print s.decode("utf-8").encode("gbk")
+print s.encode("utf-8")
