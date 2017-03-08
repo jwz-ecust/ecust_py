@@ -20,7 +20,7 @@ def ploy_generate(n):
     power_list = range(n)
     for i in range(n):
         coef_list.append(random.randint(1, 100))
-    print coef_list
+    # print coef_list
     return lambda x: sum([j[0] * x**j[1] for j in zip(coef_list, power_list)])
 
 
