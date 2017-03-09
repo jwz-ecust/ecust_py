@@ -1,193 +1,58 @@
-Python受推崇的super！
-如果你没有被Python内置的 super() 惊艳到，那很有可能是你并没有真正了解它能够做什么，以及如何高效地使用它。
-关于 super() 的文章已经有很多了，其中很多文章以失败告终。这篇文章尝试通过以下几种方式来改变这种情形：
-
-提供实际使用的例子
-对于工作原理给出清晰的模型
-每次都展示出使它工作的要点
-对于使用 super() 来创建类给出具体建议
-给出有帮助的真实示例而不是抽象的 ABCD 钻石图表
-这篇文章中的示例包含 Python 2 语法 及 Python 3 语法两种版本。
-
-我们使用 Python 3 语法，从一个基础的示例开始，一个扩展了Python内置类型方法的子类。
-
-class LoggingDict(dict):
-    def __setitem__(self, key, value):
-        logging.info('Settingto %r' % (key, value))
-        super().__setitem__(key, value)
-这个类拥有与它父类（字典）相同的所有功能，不过它扩展了 __setitem__ 方法，无论哪一个键被更新，该条目都会被记录下来。记录完更新的条目之后，该方法使用 super() 将更新键值对的实际工作委托给它的父类。
-
-在介绍 super() 之前，我们可能会使用具体的类名来调用 dict.__setitem__(self, key, value) .但是， super() 会更好一些，因为它是通过计算得到的非直接引用。
-
-非直接引用的好处之一是我们不必通过具体的类名来指定执行操作的对象。如果你修改源代码，将原来的基类变成别的类，那么 super() 引用会自动变成对应的基类。下面这个实例可以说明这一点：
-
-# new base class
-class LoggingDict(SomeOtherMapping):
-    def __setitem__(self, key, value):
-        logging.info('Settingto %r' % (key, value))
-        # no change needed
-        super().__setitem__(key, value)
-除了与外界相独立的改变之外，非直接引用还有一个主要的好处，而那些使用静态语言的人对此可能比较不熟悉。既然非直接引用是运行时才进行计算，那我们就可以自由地改变计算过程，让它指向其它类。
-
-这个计算由调用 super 的类和它的祖先树共同决定。第一个要素，也就是调用 super 的类，是由实现这个类的源代码所决定。在我们的示例中， super() 是在 LoggingDict.__setitem__ 方法中被调用。这个要素是固定的。第二个要素，也是更有趣的要素，就是变量（我们可以创建新的子类，让这个子类具有丰富的祖先树））。
-
-我们使用这个对我们有利的方法，来构建一个logging ordered dictionary，而不用修改已经存在的代码。
-
-class LoggingOD(LoggingDict, collections.OrderedDict):
-    pass
-我们构建的新类的祖先树是： LoggingOD, LoggingDict, OrderedDict, dict, object。对于我们的目标来说，重要的结果是 OrderedDict 被插入到 LoggingDict 之后，并且在 dict 之前。这意味着现在 LoggingDict.__setitem__ 中的 super() 调用把更新键值对的工作交给了 OrderedDict 而不是 dict 。
-
-稍微思考一下这个结果。我们之前并没有替换掉 LoggingDict 的源代码。相反，我们创建了一个子类，它的唯一逻辑就是将两个已有的类结合起来，并控制它们的搜索顺序。
-
-搜索顺序
-
-我所说的搜索顺序或者祖先树，正式的名称是 方法解析顺序，简称 MRO。通过打印 __mro__ 属性，我们很容易就能获取MRO。
-
->>> pprint(LoggingOD.__mro__)
-(<class '__main__.LoggingOD'>,
- <class '__main__.LoggingDict'>,
- <class 'collections.OrderedDict'>,
- <class 'dict'>,
- <class 'object'>)
-如果我们的目标是创建一个具有我们想要的MRO的子类，我们需要知道它是如何被计算出来的。基础部分很简单。这个序列包含了类本身，它的基类，以及基类的基类，一直到所有类的祖先类 object 。这个序列经过了排序，因此一个类总是出现在它的父类之前，如果有多个父类，它们保持与基类元组相同的顺序。
-
-上面展示的 MRO 遵循以下的限制：
-
-LoggingOD 在它的父类 LoggingDict 和 OrderedDict 之前
-LoggingDict 在 OrderedDict 之前，因为 LoggingOD.__base__ 的值为 (LoggingDict, OrderedDict)
-LoggingDict 在它的父类 dict 之前
-OrderedDict 在它的父类 dict 之前
-dict 在它的父类 object 之前
-解决这些限制的过程被称为线性化， 关于这个话题有许多优秀的论文，但要创建具有我们想要的MRO的一个子类，我们只需要知道两条限制：子类在父类之前、出现的顺序遵从 __base__ 中的顺序。
-
-实用的建议
-
-super() 的工作就是将方法调用委托给祖先树中的某个类。要让可重排列的方法调用正常工作，我们需要对这个类进行联合的设计。这也显露出了三个易于解决的实际问题：
-
-被 super() 调用的方法必须存在
-调用者和被调用者需要具有相同的参数签名
-该方法的每次调用都需要使用 super()
-1）我们先来看看使调用者与被调用者的参数签名相匹配的策略。比起传统的方法调用（提前知道被调用者是谁），这会有一点点挑战性。使用 super()编写一个类时，我们并不知道被调用者是谁（因为之后编写的子类可能会在 MRO 中引入新的类）。
-
-一种方式是使用固定的签名，也就是位置参数。像 __setitem__ 这样的方法拥有两个参数的固定签名，一个键和一个值，这种情况下能够很好地工作。这个技术在 LoggingDict 的示例中展示过，其中 __setitem__ 在 LoggingDict 和 dict 中拥有同样的参数签名。
-
-一种更加灵活的方式是将每一个祖先类中对应的方法都共同设计成接收关键字参数和一个关键字参数字典，将它需要的参数移除，并将剩余的参数通过 **kwds 继续传递，最终会在最后的调用中剩下一个空字典。
-
-每一层都移除它所需要的关键字参数，最后的空字典可以被传递给一个不需要任何参数的方法（例如： object.__init__ 不需要任何参数）
-
-class Shape:
-    def __init__(self, shapename, **kwds):
-        self.shapename = shapename
-        super().__init__(**kwds)
-
-class ColoredShape(Shape):
-    def __init__(self, color, **kwds):
-        self.color = color
-        super().__init__(**kwds)
-
-cs = ColoredShape(color='red', shapename='circle')
-2) 看完了使调用者和被调用者的参数模式相匹配的策略，我们现在来看看如何确保目标方法存在。
-
-上面的示例展示了最简单的情况。我们知道 object 有一个 __init__ 方法，并且 object 永远是 MRO 链中的最后一个类，所以任何调用 super().__init__ 的序列都会以调用 object.__init__ 方法作为结尾。换句话说，我们能确保 super() 调用的目标肯定存在，一定不会发生 AttributeError 的错误。
-
-对于我们想要的方法在 object 中并不存在的情况（例如 draw() 方法），我们需要编写一个一定会在 object 之前被调用的根类（root class）。这个根类的作用是在 object 之前将该方法吞噬掉，避免 super() 的继续调用。
-
-Root.draw 还能够利用防御式编程，通过使用 assertion 语句来确保它没有屏蔽掉 MRO 链中的其它 draw() 调用。当一个子类错误地合并一个拥有 draw() 方法的类，但却没有继承 Root 类时就可能发生这种情况：
-
-class Root:
-    def draw(self):
-        # the delegation chain stops here
-        assert not hasattr(super(), 'draw')
-
-class Shape(Root):
-    def __init__(self, shapename, **kwds):
-        self.shapename = shapename
-        super().__init__(**kwds)
-    def draw(self):
-        print('Drawing.  Setting shape to:', self.shapename)
-        super().draw()
-
-class ColoredShape(Shape):
-    def __init__(self, color, **kwds):
-        self.color = color
-        super().__init__(**kwds)
-    def draw(self):
-        print('Drawing.  Setting color to:', self.color)
-        super().draw()
-
-cs = ColoredShape(color='blue', shapename='square')
-cs.draw()
-如果子类想要将其它类插入到 MRO 链中，那么那些被插入的类也需要继承 Root ，以确保任何途径下调用 draw() 方法都不会到达 object 类，而会被 Root.draw 所拦截而终止。
-
-这一点应该清楚地写到文档中，这样一来如果有人编写与之相关的类，就知道应该继承 Root 类了。这一限制，与 Python 要求所有异常类都要继承 BaseException 没有多大区别。
-
-3) 上面展示的技术假定了 super() 调用的是一个已知存在、并且参数签名正确的方法。然而，我们仍依赖于 super() 在每一步中都被调用，代表链得以继续不至于断裂。我们如果联合设计这些类，那么这一点很容易达到——只需要在链中的每一个方法中都添加一个 super() 调用。
-
-上面列出的三种技术，提供了一些方式让我们设计出能够通过子类来组合或重排序的联合类。
-
-如何合并一个非联合（Non-cooperative）类
-
-偶然情况下，一个子类可能想要对一个并非给它设计的第三方类使用联合多继承技术（可能该第三方类的有关方法并没有使用 super() 或可能它并没有继承 Root 类）。这种情况可以通过创建一个符合规则的适配器类（adapter class）来轻松解决。
-
-例如，下面的 Moveable 类没有调用 super() ，并且它的 __init__() 与 object.__init__() 的签名不兼容，此外它还没有继承 Root ：
-
-class Moveable:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-    def draw(self):
-        print('Drawing at position:', self.x, self.y)
-如果我们想要将该类与我们联合设计的 ColoredShape 分层结构（hierarchy）一起使用，我们需要创建一个适配器，包含必要的 super() 调用：
-
-class MoveableAdapter(Root):
-    def __init__(self, x, y, **kwds):
-        self.movable = Moveable(x, y)
-        super().__init__(**kwds)
-    def draw(self):
-        self.movable.draw()
-        super().draw()
-
-class MovableColoredShape(ColoredShape, MoveableAdapter):
-    pass
-
-MovableColoredShape(color='red', shapename='triangle',
-                    x=10, y=20).draw()
-完整示例（只为乐趣）
-
-在 Python 2.7 和 3.2 中，collections 模块有 Counter 和 OrderedDict 两个类。这两个类可以容易地组合成一个 OrderedCounter 类：
-
-from collections import Counter, OrderedDict
-
-class OrderedCounter(Counter, OrderedDict):
-     'Counter that remembers the order elements are first seen'
-     def __repr__(self):
-         return '%s(%r)' % (self.__class__.__name__,
-                            OrderedDict(self))
-     def __reduce__(self):
-         return self.__class__, (OrderedDict(self),)
-
-oc = OrderedCounter('abracadabra')
-说明和引用
-
-当继承内置的数据类型如 dict() 来创建子类的时候，通常有必要同时重载或扩展多个方法。在上面的示例中，__setitem__ 的扩展没有被其它方法如 dict.update 所使用，因此也可能有必要对那些方法进行扩展。这一要求并非是 super() 所特有的，相反，任何通过继承内置类型创建子类的情况都需要满足这个要求。
-
-如果一个类依赖于一个父类，而这个父类又依赖于另一个类（例如，LoggingOD 依赖于 LoggingDict，而后者出现在 OrderedDict 之前，最后才是 dict），那么很容易通过添加断言（assertions）来验证并记录预计的方法解析顺序（MRO）：
-
-  position = LoggingOD.__mro__.index
-  assert position(LoggingDict) < position(OrderedDict)
-  assert position(OrderedDict) < position(dict)
-关于线性化算法的优秀文章可以参考 Python MRO documentation 和 Wikipedia entry for C3 Linearization
-
-Dylan 编程语言有一个 next-method 构造函数，类似于 Python 的 super() 。有关它工作原理的简短文章，请参考 Dylan's class docs
-
-这篇文章使用的是 Python 3 版本的 super()。全部的源码可以在此处获取：Recipe 577720 。Python 2 语法的不同之处在于传递给 super() 方法的参数在类型和对象上是明确的。另外，Python 2 版本的 super() 只对新式的(new-style)类有效（即那些明确从某个对象或其它内置类型继承的类）。使用 Python 2 语法的全部源码可以在此处获取： Recipe 577721 。
-
-致谢
-
-数位 Python 开发者做了此文章发表前的审阅。他们的意见很大程度上提高了这篇文章的质量。
-
-他们是：Laura Creighton, Alex Gaynor, Philip Jenvey, Brian Curtin, David Beazley, Chris Angelico, Jim Baker, Ethan Furman, and Michael Foord. Thanks one and all.
-
-译者补充
-
-花了一些时间，终于翻译完了这篇文章。原文中有一些地方本身写得易于理解，但翻译成中文会有点绕。由于水平有限，翻译得不准确的地方还请大家指出，如果有什么想法欢迎留言一起探讨。
+Adsorption of CO on Low-Energy, Low-Symmetry Pt Nanoparticles: Energy Decomposition Analysis and Prediction via Machine-Learning Models
+ABSTRACT: We present a systematic analysis of CO adsorption on Pt nanoclusters in the 0.2−1.5 nm size range with the aim of unraveling size-dependent trends and developing predictive models for site-specific adsorption behavior. Using an empirical- potential-based genetic algorithm and density functional theory (DFT) modeling, we show that there exists a size window (40−70 atoms) over which Pt nanoclusters bind CO weakly, the binding energies being comparable to those on (111) or (100) facets. The size-dependent adsorption energy trends are, however, distinctly nonmonotonic and are not readily captured using traditional descriptors such as d-band energies or (generalized) coordination numbers of the Pt binding sites. Instead, by applying machine-learning algorithms, we show that multiple descriptors, broadly categorized as structural and electronic descriptors, are essential for qualitatively capturing the CO adsorption trends. Nevertheless, attaining quantitative accuracy requires further refinement, and we propose the use of an additional descriptorsthe fully frozen adsorption energythat is a computationally inexpensive probe of CO−Pt bond formation. With these three categories of descriptors, we achieve an absolute mean error in CO adsorption energy prediction of 0.12 eV, which is similar to the underlying error of DFT adsorption calculations. Our approach allows for building quantitatively predictive models of site-specific adsorbate binding on realistic, low-symmetry nanostructures, which is an important step in modeling reaction networks as well as for rational catalyst design in general.
+1. INTRODUCTION Platinum nanoparticles are extensively used as catalysts for electrochemical reactions, in particular having a long history as among the best catalysts for hydrogen and methanol fuel cells. 1,2 While it is generally desirable to prepare nanoparticles with sizes as small as possible in order to attain high electrocatalytic surface area while optimally utilizing the precious metal, ultrasmall (∼1 nm) nanoparticles begin to present significant deviations in properties relative to their larger, bulk-like counterparts. Examples of such behavior have been shown in many cases experimentally and computationally, 3−5 with the particularly well-known example of gold, which is normally inert, turning into an effective nanocluster catalyst. 6−8 In addition it has been observed that at the nanometer size range catalytic properties of nanoparticles can become exquisitely sensitive to the particle structure, adding more complexity to the issue. 6,9−11 Hence, in this work we seek to understand the properties of sub-nanometer
+Pt clusters, as they correlate with changing particle size, and attempt to find suitable predictors for adsorbate binding energies that can help circumvent expensive density functional theory (DFT) calculations. Multiple computational groups have also addressed this topic but with a key limitation, namely, focusing only on high-symmetry cluster morphologies. 5,12−14 Experimen- tal evidence and computational modeling have shown that real nanoparticles do not adopt high-symmetry structures, and instead adopt somewhat disordered low-symmetry structures. 15−17 The effects of such morphological variations on the electronic structure are particularly noticeable at small size clusters, as shown in our previous work on supported and unsupported Pt 13
+nanoclusters. 18,19 In this work, we present a systematic analysis of the influence of cluster size and morphology on adsorbate binding using the well-known catalyst poison, carbon monoxide, as an example.
+There have been several investigations into the trends of adsorbate binding energies with size on Pt nanoparticles. Li et al. 5 studied CO and O adsorption on selected surface sites on Pt nanoclusters and showed that the adsorption energies with respect to cluster size converge to the bulk values rapidly (at ∼147 atoms) and monotonically. Toyoda et al. 12 showed experimentally that the d-band center of Pt nanoparticles tends to shift toward the Fermi level with decreasing size and correlated this shift with a change in electrocatalytic activity; unfortunately, their analysis did not extend into the sub-nanometer size range, where we would expect deviations from quantum size effects to arise. Calle-Vallejo et al. 14 showed on a few truncated octahedral Pt nanoparticles that coordination number is linearly correlated with O, O 2 , OOH, H 2 O, and H 2 O 2 adsorption energies across size range but also pointed out that the d-band center model can fail on nanocluster systems. Yudanov et al. 4 investigated explicitly the relationship of CO adsorption energy with size on various high-symmetry Pd nanoparticles, densely sampling sizes below 116 atoms. They observed a definite minimum in CO adsorption energy around a size of 40 atoms, and a linear dependence of cluster d-band center with size. Han et al. 13 showed that the d-band center model is accurate for predicting adsorption behavior of O and OH on the facets of cuboctahedral clusters but fails to predict the edge and vertex adsorption behavior accurately. In short, small molecule adsorption on nanoclusters of different geometries have led to contradictory conclusions: monotonic convergence with respect to size 5 versus the existence of local minima 4 and evidence that simple linear prediction models are accurate 6 versus their breakdown. 13,14 These examples from literature form a contradictory picture, possibly because the properties of nanocluster catalysts can exhibit significant sensitivity to both size and structure. Hence, we seek to investigate in more detail the trends of CO adsorption energy with size of Pt nanoclusters that have realistic, global minimum geometries at all sizes considered; this is necessary in order to fully understand whether the conclusions arrived at are truly due to size effects and not merely due to variations in arbitrarily selected particle geometries. Furthermore, beyond addressing the issue of structure sensitivity, we also explore whether single-predictor models (e.g., based on d-band centers or coordination number) are sufficient to quantify adsorbate binding energies on low- symmetry, low-energy clusters or if multipredictor models are essential for quantitative accuracy.
+The first key feature of our current workat variance with previous studies 5,12−14 is that we conduct CO adsorption calculations on low-symmetry, low-energy nanoclusters. These cluster morphologies are obtained by the application of an empirical bond-order potential driven genetic algorithm (GA), described in our previous work. 19 As shown in that work, the empirical-potential-based GA reliably predicts low-energy, low- symmetry cluster morphologies as confirmed by subsequent verification via DFT calculations across a range of cluster sizes. Hence, this approach both allows us to examine realistic minimum- energy structures for any given size of nanoparticle and eliminates having to decide between the fitness of various arbitrary, high- symmetry geometries. Once low-energy cluster morphologies are obtained from the GA at relatively low computational cost, the remainder of the computational effort can be expended in higher- level DFT calculations of adsorbate binding on these clusters. One of the main challenges of investigating adsorbate binding on
+these low-symmetry structures is that they generally do not possess symmetry-equivalent sites unlike bulk-terminated crystal facets and high-symmetry clusters. Because of this, some form of statistical sampling must be undertaken for calculating even simple adsorption properties, requiring a compromise between accuracy and computational effort spent on repeatedly sampling the same cluster. Thus, it becomes extremely useful to be able to predict both average as well as site-specific adsorption energies on these disordered structures using relatively simple structural metrics and/or limited electronic structure information without having to undertake full-blown DFT adsorption calculations on every available surface site. In order to approach this challenging problem, the second key feature of our work is the application of a machine learning tool 20,21 to the prediction of CO adsorp- tion energies on sub-nanometer Pt clusters. The use of machine learning techniques in materials science is in its infancy and
+growing, 22,23 and a few groups have recently explored using machine learning for predictions of adsorbate binding on transition-metal surfaces, reporting modest errors (∼0.1 eV) with respect to DFT. 24,25 The gradient-boosting algorithm was used recently by Takigawa et al. 26 to accurately predict the d-band center of bulk alloys and alloy surfaces based only on mechanical and structural properties, demonstrating the potential usefulness of machine learning approaches for computational catalysis research. To the best of our knowledge, machine-learning algorithms have yet to be applied to predict adsorbate binding on clusters and our work represents an early example of the promise of this approach to this class of problems.
+2.1. Genetic Algorithm and Minimum-Energy Nano- particle Morphologies. Realistic structures for Pt N (N = 4−147) clusters were obtained by sampling the hyper- dimensional energy surface using a GA, the details of which are reported in ref 19. Pt−Pt interactions are described using Albe et al.’s Tersoff-style empirical potential. 27 As shown
+previously, 19 minimum-energy structures found by the GA consistently displayed low symmetry and were confirmed via DFT to be lower in energy than icosahedral and cuboctahedral clusters, indicating the robustness of the GA and the accuracy of Albe et al.’s potential. The GA-optimized clusters are then used as the starting point for subsequent DFT calculations of CO adsorption. The combined empirical-potential-based GA and DFT approach allows us to investigate the coupled effects of morphology and size on the catalytic activity of the clusters.
+2.2. Density Functional Theory Calculations. Non-spin- polarized DFT calculations were performed using the Vienna Ab Initio Simulation Package (VASP). 28−31 The core and valence electrons were treated using the projector-augmented wave method. 32,33 The Perdew−Burke−Ernzerhof (PBE) form of the generalized-gradient approximation was used to describe electron exchange and correlation. 34 From convergence studies, we chose a kinetic energy cutoff of 400 eV and a second-order Methfessel-Paxton smearing 35 of 0.05 eV. All atomic positions were relaxed with a force tolerance of 0.01 eV/Å. The Brillouin zone was sampled using a single Γ point.
+Initial structures for the Pt N clusters were taken from the empirical bond-order potential based GA described above and subjected to an additional conjugate-gradient minimization in VASP to generate the low-energy DFT reference state. While the empirical-potential and DFT potential energy surfaces (PES) are not identical, we have shown previously 19 that the ordering of low-energy structural isomers is almost always consistently
+preserved between the empirical potential and DFT, which justifies our approach of simply importing the GA structure into DFT without further exhaustive sampling of the PES. High-symmetry icosahedral (I h ) and cuboctahedral (O h ) clusters were also sampled at discrete “magic-number” sizes (13, 55, and 147 atoms). For the purposes of this study, sampling of CO adsorption was only undertaken at the on-top adsorption sites as this configuration has been found to generally be the most favorable site for CO adsorption on Pt nanoclusters. 18 The CO molecule was placed initially at a distance of 1.88 Å from the selected Pt atom along the radial direction as defined by a vector directed from the nanocluster center-of-mass to the Pt atom. This Pt−C bond distance was chosen from initial test calcula- tions of CO adsorption on clusters that showed this to be the converged Pt−C bond length, on average. CO binding on Pt N clusters was calculated at numerous on-top sites (between 8 and 20 per cluster) to sample the full range of d-band center positions and coordination numbers available on the cluster. The high- symmetry I h and O h clusters were sampled at all the symmetry- inequivalent sites and cluster averages were calculated with weights corresponding to the site multiplicity.
+The adsorption energy (E ads ) of a CO molecule on a Pt N cluster is calculated as where E(Pt N +CO) is the total energy of the N atom Pt cluster with one adsorbed CO molecule, E(Pt N ) is the energy of the isolated N atom Pt cluster, and E(CO) is the energy of the isolated CO molecule. To separate out the contributions from charge redistribution during CO chemisorption from strain relaxation in the molecule and/or the cluster, we employ three distinct definitions adsorption energy. In the first instance, the adsorption energy (E AF ads ; AF = all frozen) is calculated at the starting adsorption configuration as discussed above by keeping all atoms (Pt cluster and CO) frozen. In the second instance, only the CO molecule is allowed to fully relax while the Pt cluster is frozen; the resulting adsorption energy (E FC ads ; FC = frozen cluster) now quantifies the ligand effect. Finally, the adsorption energy is calculated by allowing for complete relaxation of the cluster and the molecule, and the resulting quantity (E AR ads ; AR = all relaxed) accounts for all the underlying processes including the ligand effect as well as strain relaxation in the cluster. The utility of these three definitions in separating out (approximately) the various physical effects upon adsorbate binding as well as their utility as descriptors will be discussed in more detail below.
+3.1. Cluster-Size-Dependence of d-band Center En- ergies. The d-band center energy of surface atoms is a widely employed and reliable descriptor for the adsorption energy of small molecules on transition-metal surfaces. 23 In previous work we have also shown that the average d-band center energy of surface atoms on Pt 13 nanoclusters can serve as a reasonable descriptor for the adsorption energies of methanol-decomposition intermediates and CO. 19,18,36 Thus, we first examine the average d-band center energy of the surface atoms ( ε d sur ) for Pt N (N = 4−147) clusters corresponding to particle diameters of 0.4− 1.5nm,toidentifysize-dependenttrendsaswellasvariationsbetween low-symmetry and high-symmetry (I h and O h ) morphologies.
+Figure 1 displays the variation in ε d sur with cluster size for both GA-optimized, low-energy clusters as well as high-symmetry ones.
+Figure 1. Average d-band center energy of the surface atoms, ε d sur as a function of cluster size, N. The solid curve passing through data for GA-optimized structures is merely a guide to the eye. Error bars are standard deviations; representative error bars are shown only for certain sizes to maintain legibility. The exact values of d-band center energy with confidence intervals for every data point can be found in Table S1. Horizontal dashed lines indicate the reference d-band center energies on bulk-terminated, FCC Pt(111) and (100) surfaces.
+For highsymmetry clusters, ε d sur decreases rapidly with increasing cluster size, converging toward the bulk values for Pt(111) and (100) facets. This behavior can be rationalized by noting that the number of atoms on the (111) and (100) nanocrystal faces increases more rapidly than the number of atoms on (under- coordinated) edge or vertex sites with increasing crystal size, thus driving the average d-band position toward the bulk values. While the I h clusters have only (111) facets and the O h clusters display both (111) and (100) facets on the surface, ε d sur does not converge precisely to the bulk Pt(111) values for the former or to a weighted average for Pt(111) and (100) values for the latter, thus reflecting the as yet non-negligible contributions to the ensemble average from uncoordinated edge or vertex atoms that have relatively high d-band centers (Figure S1). The limiting bulk values should be recovered in the thermodynamic limit (N → ∞). Irrespective of these details, the main point of note here is the monotonic decrease in ε d sur toward the limiting bulk values for high-symmetry (magic-number) clusters as a function of size. In contrast, the low-energy, low-symmetry, GA-optimized clusters consistently show lower ε d sur than the high symmetry structures over the size range (4−147 atoms) considered here. Moreover, we observe that by the time the cluster is approximately 30 atoms large, ε drops below the corresponding values for (111) and
+sur d (100) facets reaching a minimum value around N = 100. Beyond N = 100, there is a slight upshift in ε d sur but this remains below the values for (111) and (100) facets. While systematic modeling of clusters larger than 150 atoms was prohibitively expensive, we attempted an additional test calculation (Figure S2) for a larger Pt cluster and even in that case ε d sur remains about 0.1 eV below
+309 the Pt(111) value. The existence of a local minimum for ε d sur is particularly interesting as it suggests a preferred cluster size that might bind adsorbates more weakly and, for example, improve the resistance to CO poisoning. It should be noted though that the statistical errors in ε d sur for our low-symmetry clusters are large enough to suggest that this result is more suggestive of a size range (approximately 50−150 atoms) over which Pt nanoclusters bind adsorbates more weakly than macroscopic crystal facets.
+While trends in d-band center energies are suggestive of lower adsorbate binding energies, they do not furnish definitive proof of such behavior. For sub-nanometer clusters, one can expect significant deformation of the cluster upon adsorbate binding and the magnitude of this effect could substantially alter con- clusions based on relative d-band positions alone. Hence, we carry out DFT modeling of CO adsorption on Pt nanoclusters next to explicitly calculate CO adsorption energies as a function of cluster size and cluster morphology.
+3.2. Cluster-Size-Dependent CO Adsorption Energies and Their Correlation with d-Band Center Energies. We sampled single-molecule CO adsorption energies across a wide range of GA-optimized Pt N (N = 4−147) clusters considering approximately 200 adsorption sites in total that span the full range of both coordination number and site-specific d-band centers that the surfaces offer. High-symmetry I h and O h structures were also studied for comparison against their low- symmetry counterparts as these structures are often used as models for catalyst clusters. Figure 2 displays the results for average CO adsorption, (with full relaxation of the adsorbate and cluster)
+Figure 2. Average adsorption energy ( E ads AR ) of a single CO molecule as a function of cluster size on lower-energy, low-symmetry, GA-optimized Pt clusters found, and on high-symmetry icosahedral and cuboctahedral clusters. The CO molecule and Pt clusters are fully relaxed in these calculations. Statistical error bars represent Student-T 95% confidence intervals (except for Pt 4 and Pt 8 for which every adsorption site was sampled and we report the standard deviation); error bars for the high- symmetry clusters are too small to be visible in this plot. Horizontal dashed lines indicate the reference adsorption energy values on bulk- terminated, FCC Pt(111) and (100) surfaces. The corresponding data for this plot are listed in Table S2.
+as a function of cluster size and morphology. While the sample size for high-symmetry I h and O h clusters is limited by geometric considerations to 13, 55, and 147 atomsthe Pt 309 cluster being too large for detailed adsorption studiesit is nevertheless possible to drawsome key distinctions relative to the GA-optimized clusters. First, we find that, with increasing cluster size, the CO adsorption energies monotonically approach the values for bulk surfaces although the results are still far from converged to the bulk values at these cluster sizes. In contrast, the GA-optimized Pt clusters show the presence of a local maximum in the CO adsorption energy (less negative implying weaker adsorbate binding) at a cluster size of N = 55 for which the CO adsorption energy is almost equal, within statistical error, to that of the Pt(111) surface. As before, taking into account the statistical errors, we see that within a
+size range of approximately 40−70 atoms, the Pt nanoclusters bind CO molecules as strongly as the Pt(100) or (111) facets. Second, for all sizes considered, the low-symmetry Pt nanoclusters bind CO more weakly than the high symmetry ones. This result can be understood as resulting from the increased stability of the low- symmetry structures relative to the high-symmetry ones, manifested through fewer undercoordinated atoms and lower d-band centers. This gap in adsorption energies becomes smaller as cluster size increases and is expected to eventually close at large sizes once the cluster surface is dominated by crystalline facets. Nevertheless, in the sub-nanometer range, the differences are certainly non-negligible, ranging from 0.1 to 1.0 eV, thus justifying the need for proper optimization of cluster morphology via global minimization techniques as opposed to ad hoc choices of structures.
+To understand more fully the trends of CO adsorption energy with size, and to quantify the relative magnitudes of the ligand and strain effects, we decompose the adsorption process into three distinct steps, as described in section 2.2. Briefly, we calculate adsorption energies for entirely frozen CO molecules and Pt clusters (E AF ads ) when the CO molecule is placed at a typical C−Pt bond length at an on-top site, relaxed CO molecules but frozen Pt clusters (E FC ads ), and fully relaxed CO molecules and Pt clusters (E AR ads ). As the Pt cluster is frozen in the calculation of E FC ads , this definition of the adsorption energy quantifies the ligand effect. The difference ΔE def = E AR ads − E FC ads is a measure of the contribution from the energy of deformation of the Pt cluster (strain effect) to the total adsorption energy E AR ads . The utility of E AF ads will be discussed in detail in section 4. Figure 3 displays
+Figure 3. (a) Average single-molecule CO adsorption energies on Pt clusters calculated with a fully frozen configuration ( E ads AF ), relaxed CO
+but frozen Pt clusters ( E ads FC ), and fully relaxed configurations ( E ads AR ).
+(b) The deformation energy, ΔE def = E ads AR − E ads FC , as a function of cluster size, which accounts approximately for the contribution from cluster deformation (strain effects) to the adsorption energy. Error bars are Student-T 95% confidence intervals with the exception of the four- atom cluster where every site was sampled, and we report standard deviation; only a few representative error bars are shown in (a) for clarity. The exact values with confidence intervals on every data point are reported in Table S2.
+these various quantities, averaged over clusters surface sites with the relevant data being summarized in Table S2. As seen from Figure 3a, the trends in average adsorption energies with
+constrained molecular/cluster configurations ( E ads FC , E ads AF ) are
+quite similar to the fully relaxed adsorption energies ( E ads AR ), displaying a local maximum for the Pt 55 cluster. As before, we note that the statistical errors are large enough here that the trends are more indicative of a size range for clusters with lower CO binding energy rather than a precise cluster size. We
+also observe from the relative magnitude of E ads FC to the difference
+ΔE = E AR − E FC [Figure 3b] that the ligand effect
+def ads ads dominates the CO adsorption process. Interestingly, while the calculated values of ΔE def are rather noisyexacerbated by being a difference of two noisy quantitiesthe calculated cluster deformation energies generally lie between 0.2 and 0.5 eV for the range of sub-nanometer Pt clusters studies here.
+The existence of a preferred size range, as seen in Figures 2 and 3, over which low-symmetry Pt nanoclusters bind CO more weakly is a noteworthy result of our adsorption calculations as it points to a useful design principle for robust, CO-tolerant Pt nanocatalysts. (Other practical considerations including, for example, support effects can be taken into consideration in the future using similar modeling approaches.) Yet, arriving at this conclusion has required full-blown DFT simulations of CO adsorption, and it is useful to inquire whether simpler descriptors based on cluster geometry and/or electronic structure might be developed to arrive at similar conclusions with much less computational effort. To this end, a quick comparison of Figures 1 and 2 shows that the optimal cluster size for low CO binding, N ≈ 55, does not coincide with the minimum in the average surface d-band center at N ≈ 100. The coordination number of surface atoms, another potential descriptor, grows monotonically with size and approaches that for the low-energy
+facets 19 and, hence, cannot by itself capture the local maximum in the adsorption energy curve. These problems in arriving at a single-descriptor based model are magnified even further if one attempts to consider site-specific adsorption energies 13 rather than surface averages. Moreover, the inability of single-descriptor models to capture the adsorption energy trends accurately cannot be attributed to unusual relaxation effects in these sub-nanometer clusters as the adsorption energy trends persist even for the frozen cluster calculations [Figure 3a]. Hence, we turn next to more systematic approaches based on machine-learning algorithms that can help us arrive at robust multidescriptor models.
+3.3. Prediction of CO Adsorption Energies via Machine Learning. Having established that single-descriptor models are of limited use in accurately predicting CO adsorption energies, we resort to the application of machine-learning (ML) tools in the search for suitable multidescriptor models. Specifically, we employ the gradient-boosting regression (GBR) algorithm as implemented in the scikit-learn python package. 20,21 The GBR model was used recently by Takigawa et al. and shown to be accurate in predicting the d-band center energies of crystal surfaces for various bimetallic alloys using readily available mechanical properties of the metals. 26 The GBR is superior to a simple linear regression when working with nonlinear data relationships such as are seen between d-band center and CO adsorption energy on the nanoparticles under examination in this work.
+To train the ML algorithm and access the accuracy of ML predictions, CO adsorption energies on different surface sites of
+Pt clusters, including both GA clusters and high symmetry clusters, were used as the target data. A few low- but not minimum-energy clusters that were produced by the GA in some of the early generations were also sampled to explore a wider descriptor and target space. In total, 195 sites were sampled for CO adsorption, 75% of which were used for training and the remaining 25% for testing. To reduce bias in data partitioning, we used stratified 5-fold validation, wherein the CO adsorption data for each cluster was randomly split into five different train−test sets, which are constructed to ensure that every data point is in a test set at least once.
+Descriptors associated with each adsorption site that are used for the prediction of adsorption energy are broadly grouped into three types:
+(i) Type 1 descriptors involve only the electronic structure information calculated from DFT for each adsorption site. One of the most widely used descriptors of this type is the d-band center energy ε i d defined here for a specific adsorption site i. Here, we use a slightly modified version, namely, the generalized d-band center energy gε i d , following the concept of generalized coordination number, defined as
+which is in essence a local average of the atomic d-band centers. In eq 2, cn i is the coordination number of atom i, and the sum runs over all nearest neighbors j of site i. While either the usual site-specific d-band center energy or the generalized version can be used with little difference in the quality of the regression analysis for our present purposes (on-top binding), the latter is a more intuitive and convenient definition for further extensions to bridge or hollow binding sites that are not specifically associated with a single atom. Other Type 1 descriptors that were tested in the primary analysis also include s-band and p-band centers, electronic bandwidths, and Bader charges 37 of adsorption sites. Several of these were either highly correlated with the d-band properties or led to no further improvement in the testing errors. Hence, we work with the generalized d-band center energy as the sole Type 1 descriptor for now.
+(ii) Type 2 descriptors involve only structural information on bare clusters, including average nearest-neighbor bond
+length d̅ i Pt−Pt , generalized coordination number gcn i , and cluster radius of gyration R g . The average bond length for a Pt atom i is calculated as
+where d ij is the distance between an atom i and its nearest neighbors j, and cn i is the coordination number of atom i. The general coordination number gcn i defined as
+is generally a better descriptor for adsorption energy than coordination number as has been shown for several small molecules on metal nanoparticle surfaces. 14 In eq 4, cn bulk is the coordination number of a Pt atom in the bulk FCC phase. The radius of gyration R g is a cluster property and is the same for all sites on a cluster. These three descriptors thus quantify local, nonlocal, and global structural properties of the cluster and are readily calculated from the optimized cluster structure.
+(iii) Type 3 descriptors include for now a single descriptor that encapsulates both electronic and structural information on the adsorption site, namely, the fully frozen CO adsorption energy E AF ads . As the Pt cluster (that has already been previously relaxed) and the CO molecule do not undergo any further ionic relaxation in this calculation (see section 2), E AF ads can be obtained roughly 2 orders of magnitude faster than E AR ads . It is also clear from Figure 3 that E AF ads closely tracks the size-dependent trends of the target values of E AR ads thus making it a sensible choice of descriptor.
+The descriptors chosen here are by no means unique and other choices are equally reasonable. For now, we proceed with the above three classes and analyze their utility in predicting site- dependent CO adsorption energies.
+Figure 4 displays the correlation between DFT-calculated and ML-predicted CO adsorption energies (site-specific and not
+Figure 4. DFT-calculated CO adsorption energies on the surface sites of Pt clusters versus the prediction from GBR model with different sets of descriptors: (a) Generalized d-band center, (b) Type 2 descriptors, (c) E AF ads alone, (d) generalized d-band center and Type 2 descriptors, (e) all three descriptor types (five descriptors total). Reported AME (absolute mean error) of the model predictions are the average over 5-fold cross validation to avoiding splitting bias. The displayed data points are from one such randomly split data set. Insets in (b), (d), and (e) show the relative importance of the descriptors in the models.
+cluster average) using different combinations of descriptors. When trained by Type 1 descriptors (the generalized d-band center energy) alone, the model shows an absolute mean error (AME) of −0.22 eV in the test sets [Figure 4a]. It is evident that there are a large number of outliers in even the training set and this is exacerbated for the testing set. Similarly, using purely structural information [Type 2 descriptors; Figure 4b] or only E AF ads [Type 3 descriptors; Figure 4c] both result in AMEs of 0.17. In short, using just one class of descriptors is rather unsatisfactory in predicting the CO adsorption energies. A combination of
+electronic structure and structural information results only in a slightly improved AME [Figure 4d]. By combining all descriptor classes though, the AME can be substantially reduced to 0.12 eV [Figure 4e]. This error is of the same order as that reported recently by Xin and co-workers in ML predictions of adsorption of CO on a wide variety of pure transition metal and alloy
+surfaces. 24,25 Importantly, visual inspection of Figure 4e shows that the CO adsorption data is predicted quite accurately across a broad energy window of ∼4 eV. We note in passing that the apparent trend wherein training points are biased below the parity line in this figure is simply a quirk of this particular random split and is not representative of the overall behavior of the GBR model. The inset bar graphs in Figure 4 display the importances of the various descriptors in the final prediction. Focusing on the full descriptor set in Figure 4e, we see that the (generalized) d-band center, average Pt−Pt bond length, and (generalized) coordination numberconventional descriptors based on sound fundamental insightsare still indispensable, as reconfirmed by the ML algorithm. When focusing on sub-nanometer clusters, physical intuition would suggest that size effects (quantified by R g ) ought to become relevant for cluster deformation as confirmed by the ML algorithm. Similarly, we expect that the inclusion of E AF ads as a descriptor incorporates some of the fundamental electronic processes during CO chemisorption that are difficult to capture by simple electronic structure information alone (d-band positions and/or widths) thereby significantly improving the predictive capability of the ML algorithm. For completeness, we also tested models with numerous other descriptors (Figure S3) and found little to no improvement over the smaller, physically motivated subset of descriptors employed here. Overall, the model suggests that the CO adsorption process on Pt nanoclusters is a particularly complex one to capture, requiring consideration of multiple factors including site-specific electronic structure and coordination; cluster size effects; and at least an approximate consideration of adsorbate−metal bond formation. It remains to be seen whether these considerations carry over more broadly to adsorbate binding on metal nano- clusters and to what extent model simplification is possible as cluster sizes begin to approach submicron regimes where one might expect size effects to be less significant. Nevertheless, for sub-nanometer clusters we are now able to implement accurate, inexpensive, and robust predictive models by combining modern computational tools with traditional physical insights, which can help push the frontier of rational catalyst design beyond macroscopic crystal surfaces to low-symmetry nanoscale catalysts.
+4. CONCLUSIONS We studied Pt nanoclusters, ranging from 0.2−1.5 nm in diameter, to understand size-dependent trends in the energetics of CO binding and to correlate these with morphological and electronic descriptors. An important aspect of our approach was to employ a genetic algorithm to determine unambiguously the low-energy morphologies of the Pt nanoclusters, which uniformly adopt low-symmetry structures for the sizes considered here. GA-optimized clusters show a nonmonotonic trend of surface d-band centers with respect to size, going from very high values at small sizes to a minimum around Pt 100 , before slowly asymptoting toward the Pt(111) surface value. This is in clear contrast to the essentially monotonic behavior of high-symmetry, cuboctahedral and icosahedral morphologies, which are not true low-energy structures for sub-nanometer Pt clusters. The CO adsorption behavior on GA-optimized clusters also presents similar non- monotonic behavior with a global maximum at around Pt 55 .
+By employing machine learning algorithms, we showed that the nonmonotonic trends in CO adsorption energies are not accurately captured by traditional single descriptor models based on d-band center energies or coordination number. Multidescriptor models based on d-band centers and structural information (coordination number, bond lengths, and cluster size) do not perform much better either. By adding a new descriptor to our models, namely, the “all-frozen” adsorption energy (E AF ads ), which partially incorporates some of the features of CO-Pt bond formation, we were able to achieve significant improvement in the machine-learning model. We suggest that this descriptor, E AF ads , which can be calculated at minimal computational overhead, might be broadly applied across other systems to predict site-specific adsorption energies with higher accuracy; studies along these lines will be pursued elsewhere.
+Overall, our work demonstrates the potential for developing accurate, predictive models of adsorbate binding on realistic nano- cluster morphologies by integrating robust structural optimization methods with machine learning algorithms. Progress along these lines can significantly aid rational design of nanoscale catalysts, particularly in the sub-nanometer range where both structural and electronic properties differ fundamentally from those at larger length scales.

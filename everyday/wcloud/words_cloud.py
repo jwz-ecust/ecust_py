@@ -19,4 +19,5 @@ my_wordcloud = WordCloud().generate(wl_space_split)
 
 plt.imshow(my_wordcloud)
 plt.axis("off")
+plt.savefig("zjw.png", dpi=600)
 plt.show()
