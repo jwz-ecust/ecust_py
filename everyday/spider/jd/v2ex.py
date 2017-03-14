@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+'''
+可以登录v2ex
+'''
+
 import requests
 from bs4 import BeautifulSoup
 
