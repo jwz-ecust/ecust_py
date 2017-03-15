@@ -4,13 +4,14 @@
 '''
 import requests
 from bs4 import BeautifulSoup
+import time
 
 url = "https://www.douban.com/group/haixiuzu/discussion?start="  # 0, 25, 50, 75...
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.84 Safari/537.36"
 header = {"User-Agent": UA}
 
 # f = open("./zjw.txt", "w")
-
+s = 0
 for n in range(50):
     url0 = url + str(n * 25)
     req = requests.get(url0, headers=header, verify=False)
@@ -21,6 +22,7 @@ for n in range(50):
     for i in tiezi:
         aa = i.a
         href = aa["href"]
+        print href
         # title = aa['title'].encode("utf-8")
         # f.write(href + "\n")
         # f.write(title + "\n")
@@ -30,10 +32,14 @@ for n in range(50):
         photo = soup2.find("div", attrs={"topic-figure"})
         try:
             plink = photo.img['src']
+            print plink
 
             #        "https://img1.doubanio.com/view/group_topic/large/public/p70426527.jpg"
             ppath = "./shamephoto/" + plink.split("/")[-1]
             with open(ppath, 'wb') as fuck:
+                s += 1
+                print "第{}张照片下载中.....................".format(s)
+                time.sleep(10)
                 image = requests.get(plink, stream=True, verify=False).content
                 fuck.write(image)
         except:
