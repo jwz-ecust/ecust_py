@@ -7,16 +7,12 @@ import numpy as np
 from PIL import Image
 
 
-text_from_file_with_apath = open("/Users/zhangjiawei/Code/zjw/everyday/wcloud/wsbrook.txt").read()
-mask = np.array(Image.open("/Users/zhangjiawei/Code/zjw/everyday/wcloud/zjw.jpeg"))
-
-stopwords = set(STOPWORDS)
-stopwords.add("said")
+text_from_file_with_apath = open("./wsbrook.txt").read()
+# mask = np.array(Image.open("./zjw.jpeg"))
 
 # wordlist = jieba.cut(text_from_file_with_apath, cut_all=True)
 # wl_space_split = " ".join(wordlist)
-
-my_wordcloud = WordCloud(background_color='white', mask=mask, max_words=200).generate(text_from_file_with_apath)
+my_wordcloud = WordCloud().generate(text_from_file_with_apath)
 
 # store to file
 my_wordcloud.to_file("./cbb.jpg")
