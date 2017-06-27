@@ -50,6 +50,7 @@ url = "http://www.hupu.com"
 zjw = _Request(url)
 
 
+
 class Request(object):
 	"""The :class:`Request` object. It carries out all functionality of
 	Requests. Recommended interface is with the Requests functions.
