@@ -1,10 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
+'''
+如何画关联图
+matplotlib  annatation
+'''
 np.random.seed(10)
 n = 10
-a = np.random.random((n, n))
-pearsons = a*a.T*10
+pearsons = (np.random.random((n, n)) - 0.5) * 10
+print(pearsons)
+# pearsons = a*a.T*10
 features = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
 coordinate = np.random.random((n, 2))
 fig = plt.figure()
@@ -17,7 +24,12 @@ for i in range(n):
     # ax.annotate(features[i], xy=coordinate[i], textcoords='data')
 for i in range(n):
     for j in range(i, n):
-        plt.plot((coordinate[i][0],coordinate[j][0]),(coordinate[i][1],coordinate[j][1]), linewidth=abs(pearsons[i][j]))
+        p = pearsons[i][j]
+        # print(p)
+        if p >= 0:
+            plt.plot((coordinate[i][0],coordinate[j][0]),(coordinate[i][1],coordinate[j][1]), linewidth=abs(p), color="blue")
+        else:
+            plt.plot((coordinate[i][0],coordinate[j][0]),(coordinate[i][1],coordinate[j][1]), linewidth=abs(p), color="green")
         # ax.annotate("", xy=(coordinate[i]), xytext=(coordinate[j]), textcoords='data', arrowprops=dict(arrowstyle="-", width=1.0, connectionstyle="angle3"))
 
 plt.show()
