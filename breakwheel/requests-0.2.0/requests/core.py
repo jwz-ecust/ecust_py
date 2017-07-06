@@ -46,11 +46,6 @@ class _Request(urllib2.Request):
 		return urllib2.Request.get_method(self)
 
 
-url = "http://www.hupu.com"
-zjw = _Request(url)
-
-
-
 class Request(object):
 	"""The :class:`Request` object. It carries out all functionality of
 	Requests. Recommended interface is with the Requests functions.
@@ -118,7 +113,7 @@ class Request(object):
 		    :param anyway: If True, request will be sent, even if it has
 		    already been sent.
 		"""
-		self._checks()   # 检查网址有没有问题
+		self._checks()   # 检查url是否为None
 
 		success = False
 
@@ -127,9 +122,8 @@ class Request(object):
 
 				# url encode GET params if it's a dict
 				if isinstance(self.params, dict):
-					params = urllib.urlencode(self.params)
+					params = urllib.urlencode(self.params)   # 转码  {'age': 23, 'name': 'wsp'} and baidu.com ==> www.baidu.com?age=23&name=wsp
 				else:
-
 					params = self.params
 
 				req = _Request(("%s?%s" % (self.url, params)), method=self.method)
@@ -199,7 +193,7 @@ class Request(object):
 
 					success = True
 
-				except urllib2.HTTPError, why:
+				except urllib2.HTTPError as why:
 					self.response.status_code = why.code
 
 
