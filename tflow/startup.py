@@ -49,7 +49,7 @@ train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 sess = tf.InteractiveSession()
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 accuracys = np.zeros((2000, 2), dtype=float)
 sess.run(init)
 for i in range(2000):
