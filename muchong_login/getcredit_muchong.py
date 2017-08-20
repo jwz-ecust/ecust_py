@@ -19,7 +19,7 @@ formhash = re.findall(r'<input type="hidden" name="formhash" value="(.*?)">',
 data = {
     'formhash': None,
     'username': 'aaronzjw',
-    'password': 'zjw897978644',
+    'password': 'xxxxxxxxxx',
     'cookietime': '31536000',
     'loginsubmit': '%B5%C7%C2%BD%D0%A1%C4%BE%B3%E6'}
 data['formhash'] = formhash
