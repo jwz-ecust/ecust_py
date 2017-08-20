@@ -1,23 +1,4 @@
-class _const(object):
-    class ConstError(TypeError):
-        pass
+import numpy as np
+a = np.array([1, 2, 3])
+print(a)
 
-    class ConstCaseError(ConstError):
-        pass
-
-    def __setattr__(self, name, value):
-        # if self.__dict__.has_key(name):
-        if name in self.__dict__:
-            raise self.ConstError, "Can't change const.%s" % name
-        if not name.isupper():
-            raise self.ConstCaseError,\
-                'const name "%s" is not all uppercase' % name
-        self.__dict__[name] = value
-
-
-import sys
-sys.modules[__name__] = _const()
-import const
-const.COLLEGE = "ECUST"
-const.AGE = 26
-const.COMPANY = "Google"
