@@ -598,6 +598,11 @@ Winter	../everyday/91tips/enumerate_example.py	/^    Winter = 4$/;"	kind:variabl
 Winter	../everyday/ex/cbb/day_57_ini_manage_python/flufl_enum.py	/^    Winter = "winter"$/;"	kind:variable	line:7
 Winter	../everyday/ex/day_57_ini_manage_python/flufl_enum.py	/^    Winter = "winter"$/;"	kind:variable	line:8
 WordCloud	../everyday/wcloud/words_cloud.py	/^from wordcloud import WordCloud, STOPWORDS$/;"	kind:namespace	line:4
+X	../kdtree.py	/^X = np.random.randint(0,50, size=(50,2))$/;"	kind:variable	line:78
+X_max	../kdtree.py	/^X_max = np.max(X[:, 0])$/;"	kind:variable	line:82
+X_min	../kdtree.py	/^X_min = 0$/;"	kind:variable	line:80
+Y_max	../kdtree.py	/^Y_max = np.max(X[:, 1])$/;"	kind:variable	line:83
+Y_min	../kdtree.py	/^Y_min = 0$/;"	kind:variable	line:81
 ZhilianSpider	../everyday/spider/zhilianjob/zhilianjob/spiders/zhilian_spider.py	/^class ZhilianSpider(scrapy.Spider):$/;"	kind:class	line:7
 ZhilianjobItem	../everyday/spider/zhilianjob/zhilianjob/items.py	/^class ZhilianjobItem(scrapy.Item):$/;"	kind:class	line:12
 ZhilianjobItem	../everyday/spider/zhilianjob/zhilianjob/spiders/zhilian_spider.py	/^from zhilianjob.items import ZhilianjobItem$/;"	kind:namespace	line:4
@@ -1453,6 +1458,7 @@ current_page	../everyday/spider/download_zol_pic.py	/^    current_page = start_p
 current_time	../everyday/ex/django/zyc/zyc/urls.py	/^from .views import hello,my_home_page,current_time,time,cbb,zyc$/;"	kind:namespace	line:18
 current_time	../everyday/ex/django/zyc/zyc/views.py	/^def current_time(request):$/;"	kind:function	line:13
 cursor	../everyday/ex/cbb/day57/mysql.py	/^cursor = conn.cursor()$/;"	kind:variable	line:6
+cycle	../kdtree.py	/^from itertools import cycle$/;"	kind:namespace	line:2
 d	../everyday/cookbook/data_structure/multivaluedict.py	/^d = defaultdict(list)$/;"	kind:variable	line:3
 d	../everyday/ex/cbb/day33/33.py	/^d = dict(zjw='zhangjiawei', zyc='zhangyichen', cbb='chenbeibei')$/;"	kind:variable	line:7
 d	../everyday/ex/cbb/day35/deque_test.py	/^d = deque()$/;"	kind:variable	line:14
@@ -2403,6 +2409,7 @@ matplotlib	../everyday/spider/code_/mergeimages/load_image_memory.py	/^import ma
 matplotlib	../everyday/spider/code_/synmusic/synmusic.py	/^import matplotlib.pyplot$/;"	kind:namespace	line:11
 matplotlib	../everyday/spider/code_/timeit/testunit.py	/^import matplotlib.pyplot$/;"	kind:namespace	line:9
 matplotlib	../everyday/wcloud/words_cloud.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:3
+matplotlib	../kdtree.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:3
 matplotlib	../wavplot.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:2
 matplotlib	../wechatrobot/zjw.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:1
 maxInDict	../everyday/ex/cbb/day12/12.py	/^def maxInDict(dict):$/;"	kind:function	line:22
@@ -2594,6 +2601,7 @@ np	../everyday/ex/leet/nnnn.py	/^import numpy as np$/;"	kind:namespace	line:2
 np	../everyday/ex/pandas/zzz.py	/^import numpy as np$/;"	kind:namespace	line:4
 np	../everyday/pickle_learn/pickle_learn.py	/^import numpy as np$/;"	kind:namespace	line:3
 np	../everyday/wcloud/words_cloud.py	/^import numpy as np$/;"	kind:namespace	line:6
+np	../kdtree.py	/^import numpy as np$/;"	kind:namespace	line:1
 np	../wavplot.py	/^import numpy as np$/;"	kind:namespace	line:3
 np	../wechatrobot/zjw.py	/^import numpy as np$/;"	kind:namespace	line:2
 ns	../everyday/spider/hupu-pic/hupu.py	/^        ns = BeautifulSoup(_temp, 'html.parser')$/;"	kind:variable	line:45
@@ -2797,9 +2805,11 @@ platform	../everyday/ex/zhihu/zhihu-python-master/auth.py	/^import os, sys, time
 platform	../everyday/ex/zhihu/zhihu-python-master/zhihu.py	/^import os, sys, time, platform, random$/;"	kind:namespace	line:53
 plink	../everyday/spider/jd/spider_no_shame.py	/^            plink = photo.img['src']$/;"	kind:variable	line:34
 plot	../everyday/Pybrain/1.py	/^from pylab import ion, ioff, figure, draw, contourf, clf, show, hold, plot$/;"	kind:namespace	line:7
+plotline	../kdtree.py	/^def plotline(c1, c2):$/;"	kind:function	line:7
 ploy_generate	../my-python-example/find_coefficient.py	/^def ploy_generate(n):$/;"	kind:function	line:15
 plt	../everyday/91tips/code.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:3
 plt	../everyday/wcloud/words_cloud.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:3
+plt	../kdtree.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:3
 plt	../wavplot.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:2
 plt	../wechatrobot/zjw.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:1
 plus	../everyday/91tips/digui.py	/^def plus(n):$/;"	kind:function	line:8
@@ -3308,6 +3318,7 @@ spider_no_shame.py	../everyday/spider/jd/spider_no_shame.py	1;"	kind:file	line:1
 spider_opened	../everyday/spider/zhilianjob/zhilianjob/middlewares.py	/^    def spider_opened(self, spider):$/;"	kind:member	line:55
 spider_queue	../everyday/ex/cbb/day31/31_spider.py	/^    spider_queue = Queue.Queue()$/;"	kind:variable	line:112
 splitDataset	../everyday/spider/code_/bayes/bayesfunction.py	/^def splitDataset(dataset, split_ratio):$/;"	kind:function	line:23
+splitX	../kdtree.py	/^def splitX(X, X_min, Y_min, X_max, Y_max, s=0):$/;"	kind:function	line:24
 split_data_set	../everyday/spider/code_/entropy/entropy.py	/^def split_data_set(dataset, index, value):$/;"	kind:function	line:28
 split_pic	../everyday/cookbook/aaronzjw.py	/^def split_pic($/;"	kind:function	line:5
 splitcharacter.py	../everyday/cookbook/splitcharacter.py	1;"	kind:file	line:1
@@ -3429,6 +3440,7 @@ sys	../everyday/spider/crawler/单线程爬虫-上线资源包/show_me_the_code/
 sys	../everyday/spider/download_zol_pic.py	/^import sys$/;"	kind:namespace	line:17
 sys	../homemadescrapy/myScrapy/Download.py	/^import sys$/;"	kind:namespace	line:3
 sys	../homemadescrapy/myScrapy/storage.py	/^import sys$/;"	kind:namespace	line:2
+sys	../kdtree.py	/^import sys$/;"	kind:namespace	line:4
 t	../everyday/descriptor/cbb.py	/^    t = TT1()$/;"	kind:variable	line:40
 t	../everyday/descriptor/zjw.py	/^    t = tss()$/;"	kind:variable	line:100
 t	../everyday/spider/hupu-pic/hupu.py	/^        t = _url.split('.')$/;"	kind:variable	line:35
